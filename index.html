@@ -424,7 +424,101 @@
         <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Confirm & Print</button>
       </div>
     </div>
-  </div>
+  </div><script>
+// ==========================================
+// ریٹ لسٹ کو مستقل محفوظ کرنے اور گوگل ڈرائیو کا فائنل کوڈ
+// ==========================================
+
+let tempRateChanges = {};
+
+// 1. عارضی طور پر ریٹ ہولڈ کرنے کے لیے
+function handleRateInputChange(itemName, newRate) {
+    tempRateChanges[itemName] = Number(newRate);
+}
+
+// 2. جب آپ ریٹ لسٹ میں 'Save' کا بٹن دبাবেন
+function saveSingleItemRatePermanently(itemName) {
+    const newRate = tempRateChanges[itemName];
+    if (newRate !== undefined) {
+        if (typeof itemsList !== 'undefined') {
+            itemsList.forEach(item => {
+                if (item.nameEn === itemName || item.nameUr === itemName || item.name === itemName) {
+                    item.rate = newRate;
+                }
+            });
+            localStorage.setItem('rehma_items', JSON.stringify(itemsList));
+        }
+        
+        if (typeof renderRateListTable === 'function') renderRateListTable();
+        if (typeof renderMultiItemBox === 'function') renderMultiItemBox();
+
+        alert("ریٹ کامیابی سے پرماننٹ سیو ہو گیا ہے!");
+    } else {
+        alert("پہلے اس کا ریٹ تبدیل کریں!");
+    }
+}
+
+// 3. گوگل ڈرائیو بیک اپ (درست ای میل: drmuhammedjaved@gmail.com کے ساتھ)
+function handleGoogleDriveBackup() {
+    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصلی گوگل کلائنٹ آئی ڈی لکھیں
+    
+    const client = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/drive.file',
+        hint: 'drmuhammedjaved@gmail.com',
+        callback: (response) => {
+            if (response && response.access_token) {
+                uploadAppDataToDrive(response.access_token);
+            } else {
+                alert("گوگل لاگ ان منسوخ ہو گیا ہے۔");
+            }
+        },
+    });
+
+    client.requestAccessToken();
+}
+
+function uploadAppDataToDrive(accessToken) {
+    const appData = {
+        itemsList: typeof itemsList !== 'undefined' ? itemsList : [],
+        dbBills: typeof dbBills !== 'undefined' ? dbBills : [],
+        backupDate: new Date().toISOString()
+    };
+
+    const fileContent = JSON.stringify(appData, null, 2);
+    const file = new Blob([fileContent], { type: 'application/json' });
+    const metadata = {
+        name: 'RehmaTraders_Backup.json',
+        mimeType: 'application/json'
+    };
+
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+    form.append('file', file);
+
+    fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+        method: 'POST',
+        headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+        body: form
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.id) {
+            alert("مبارک ہو! گوگل ڈرائیو پر بیک اپ کامیابی سے بن गया ہے (drmuhammedjaved@gmail.com)۔");
+        } else {
+            alert("بیک اپ محفوظ کرنے میں مسئلہ آیا ہے۔");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("انٹرنیٹ یا سرور کا کنکشن فیل ہو گیا!");
+    });
+}
+</script>
+
+</body>
+</html>
+
 
   <script src="app.js"></script>
   <script>
