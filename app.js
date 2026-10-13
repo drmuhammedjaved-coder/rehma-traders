@@ -1,4 +1,4 @@
-let currentLang = 'en';
+let currentLang = localStorage.getItem('rehma_lang') || 'en';
 
 const dict = {
   en: {
@@ -84,7 +84,25 @@ let dbBills = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let currentBillItems = [];
 
 // ==========================================
-// ریٹ لسٹ کی مکمل اور پرماننت سیونگ کا نظام
+// زبان بدلنے کا فنکشن
+// ==========================================
+function switchLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('rehma_lang', lang);
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[lang] && dict[lang][key]) {
+            el.innerText = dict[lang][key];
+        }
+    });
+
+    if (typeof renderRateListTable === 'function') renderRateListTable();
+    if (typeof renderMultiItemBox === 'function') renderMultiItemBox();
+}
+
+// ==========================================
+// ریٹ لسٹ رینڈرنگ اور پرماننٹ سیونگ ود 'Save' بٹن
 // ==========================================
 let tempRateChanges = {};
 
@@ -100,15 +118,67 @@ function saveSingleItemRatePermanently(itemName) {
                 item.rate = newRate;
             }
         });
-        // ریٹ لسٹ کو براؤزر اور لوکل اسٹوریج میں ہمیشہ کے لیے محفوظ کرنا
         localStorage.setItem('rehma_items', JSON.stringify(itemsList));
         
         if (typeof renderRateListTable === 'function') renderRateListTable();
         if (typeof renderMultiItemBox === 'function') renderMultiItemBox();
 
-        alert("ریٹ لسٹ کامیابی سے پرماننٹ سیو ہو گئی ہے!");
+        alert(currentLang === 'ur' ? "ریٹ لسٹ کامیابی سے پرماننٹ سیو ہو گئی ہے!" : "Rate saved permanently!");
     } else {
-        alert("پہلے ریٹ تبدیل کریں!");
+        alert(currentLang === 'ur' ? "پہلے ریٹ تبدیل کریں!" : "Please change the rate first!");
+    }
+}
+
+function renderRateListTable() {
+    const tbody = document.getElementById('rateListTableBody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    itemsList.forEach((item, index) => {
+        const displayName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.code || '-'}</td>
+            <td>${displayName}</td>
+            <td>
+               <input type="number" value="${item.rate}" onchange="handleRateInputChange('${item.nameEn}', this.value)" style="width: 80px; padding: 4px; text-align: center;" />
+            </td>
+            <td>
+               <button onclick="saveSingleItemRatePermanently('${item.nameEn}')" style="background: gold; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                 💾 Save
+               </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// ==========================================
+// واٹس ایپ پر ایچ ڈی جے پی جی (HD JPG) شیئرنگ
+// ==========================================
+function shareRateListAsImage() {
+    if (typeof html2canvas === 'function') {
+        const element = document.getElementById('rateListPrintArea') || document.body;
+        html2canvas(element, { scale: 2 }).then(canvas => {
+            canvas.toBlob(blob => {
+                const file = new File([blob], "RehmaTraders_RateList.jpg", { type: "image/jpeg" });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: 'Rehma Traders Rate List',
+                        text: 'رہما ٹریڈر کی تازہ ترین ریٹ لسٹ'
+                    }).catch(() => {});
+                } else {
+                    const link = document.createElement('a');
+                    link.download = 'RehmaTraders_RateList.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.9);
+                    link.click();
+                }
+            }, 'image/jpeg', 0.9);
+        });
+    } else {
+        alert(currentLang === 'ur' ? "شیئرنگ لائبریری لوڈ ہو رہی ہے..." : "Sharing tool is loading...");
     }
 }
 
@@ -116,7 +186,7 @@ function saveSingleItemRatePermanently(itemName) {
 // گوگل ڈرائیو بیک اپ (drmuhammedjaved@gmail.com)
 // ==========================================
 function handleGoogleDriveBackup() {
-    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // اپنی گوگل کلائنٹ آئی ڈی یہاں درج کریں
+    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصل کلائنٹ آئی ڈی درج کریں
     
     const client = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
