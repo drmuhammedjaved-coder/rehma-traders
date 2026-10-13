@@ -97,30 +97,30 @@ function switchLanguage(lang) {
         }
     });
 
-    if (typeof renderRateListTable === 'function') renderRateListTable();
+    renderRateListTable();
     if (typeof renderMultiItemBox === 'function') renderMultiItemBox();
 }
 
 // ==========================================
-// ریٹ لسٹ ایڈیٹنگ اور پرماننٹ سیو کا نظام (بشمول بٹن)
+// ریٹ لسٹ ایڈیٹنگ اور پرماننٹ سیو کا نظام
 // ==========================================
 let tempRateChanges = {};
 
-function handleRateInputChange(itemName, newRate) {
-    tempRateChanges[itemName] = Number(newRate);
+function handleRateInputChange(itemCode, newRate) {
+    tempRateChanges[itemCode] = Number(newRate);
 }
 
-function saveSingleItemRatePermanently(itemName) {
-    const newRate = tempRateChanges[itemName];
+function saveSingleItemRatePermanently(itemCode) {
+    const newRate = tempRateChanges[itemCode];
     if (newRate !== undefined) {
         itemsList.forEach(item => {
-            if (item.nameEn === itemName || item.nameUr === itemName || item.name === itemName) {
+            if (item.code === itemCode || item.nameEn === itemCode) {
                 item.rate = newRate;
             }
         });
         localStorage.setItem('rehma_items', JSON.stringify(itemsList));
         
-        if (typeof renderRateListTable === 'function') renderRateListTable();
+        renderRateListTable();
         if (typeof renderMultiItemBox === 'function') renderMultiItemBox();
 
         alert(currentLang === 'ur' ? "ریٹ لسٹ کامیابی سے پرماننٹ سیو ہو گئی ہے!" : "Rate saved permanently!");
@@ -129,7 +129,7 @@ function saveSingleItemRatePermanently(itemName) {
     }
 }
 
-// ریٹ لسٹ کا وہ فنکشن جو اسکرین پر ٹیبل اور ایڈیٹنگ/سیو بٹن ظاہر کرتا ہے
+// ریٹ لسٹ ٹیبل کو رینڈر کرنے اور ایڈیٹنگ/سیو بٹن دکھانے کا اصل فنکشن
 function renderRateListTable() {
     const tbody = document.getElementById('rateListTableBody');
     if (!tbody) return;
@@ -137,16 +137,18 @@ function renderRateListTable() {
     tbody.innerHTML = '';
     itemsList.forEach((item, index) => {
         const displayName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+        const identifier = item.code || item.nameEn;
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${item.code || '-'}</td>
             <td>${displayName}</td>
+            <td>${item.stock || 0}</td>
             <td>
-               <input type="number" value="${item.rate}" onchange="handleRateInputChange('${item.nameEn}', this.value)" style="width: 80px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 4px;" />
+               <input type="number" value="${item.rate}" onchange="handleRateInputChange('${identifier}', this.value)" style="width: 70px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 4px;" />
             </td>
             <td>
-               <button onclick="saveSingleItemRatePermanently('${item.nameEn}')" style="background: gold; color: black; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+               <button onclick="saveSingleItemRatePermanently('${identifier}')" style="background: gold; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                  💾 Save
                </button>
             </td>
@@ -155,8 +157,8 @@ function renderRateListTable() {
     });
 }
 
-// ایپ لوڈ ہونے پر خود بخود ریٹ لسٹ ظاہر کرنا
-window.addEventListener('DOMContentLoaded', () => {
+// ایپ لوڈ ہونے پر خود بخود لسٹ شو کرنا
+document.addEventListener('DOMContentLoaded', () => {
     renderRateListTable();
 });
 
@@ -192,7 +194,7 @@ function shareRateListAsImage() {
 // گوگل ڈرائیو بیک اپ (drmuhammedjaved@gmail.com)
 // ==========================================
 function handleGoogleDriveBackup() {
-    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصل گوگل کلائنٹ آئی ڈی درج کریں
+    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصل کلائنٹ آئی ڈی درج کریں
     
     const client = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
