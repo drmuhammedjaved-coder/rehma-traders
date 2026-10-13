@@ -72,10 +72,10 @@ let defaultItems = [
   { nameEn: 'Square Large', nameUr: 'چورس بڑا', code: '2013147621000', rate: 380, stock: 12 },
   { nameEn: 'Gloves Pair', nameUr: 'دستانے جوڑی', code: '2011476821000', rate: 155, stock: 60 },
   { nameEn: 'Fridge Handle Cover', nameUr: 'فرج ہینڈل کور', code: '2017447641000', rate: 90, stock: 30 },
-  { nameEn: 'Port Holder', nameUr: 'پورٹ ہولڈر', code: '', rate: 70, stock: 100 },
-  { nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی چھوٹا', code: '', rate: 220, stock: 18 },
-  { nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بڑا', code: '', rate: 250, stock: 14 },
-  { nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', code: '', rate: 430, stock: 22 },
+  { nameEn: 'Port Holder', nameUr: 'پورٹ ہولڈر', code: '2017447641001', rate: 70, stock: 100 },
+  { nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی چھوٹا', code: '2017447641002', rate: 220, stock: 18 },
+  { nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بڑا', code: '2017447641003', rate: 250, stock: 14 },
+  { nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', code: '1036001001584', rate: 430, stock: 22 },
   { nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', code: '1036001001585', rate: 450, stock: 25 }
 ];
 
@@ -102,7 +102,7 @@ function switchLanguage(lang) {
 }
 
 // ==========================================
-// ریٹ لسٹ رینڈرنگ اور پرماننٹ سیونگ ود 'Save' بٹن
+// ریٹ لسٹ ایڈیٹنگ اور پرماننٹ سیو کا نظام (بشمول بٹن)
 // ==========================================
 let tempRateChanges = {};
 
@@ -129,6 +129,7 @@ function saveSingleItemRatePermanently(itemName) {
     }
 }
 
+// ریٹ لسٹ کا وہ فنکشن جو اسکرین پر ٹیبل اور ایڈیٹنگ/سیو بٹن ظاہر کرتا ہے
 function renderRateListTable() {
     const tbody = document.getElementById('rateListTableBody');
     if (!tbody) return;
@@ -142,10 +143,10 @@ function renderRateListTable() {
             <td>${item.code || '-'}</td>
             <td>${displayName}</td>
             <td>
-               <input type="number" value="${item.rate}" onchange="handleRateInputChange('${item.nameEn}', this.value)" style="width: 80px; padding: 4px; text-align: center;" />
+               <input type="number" value="${item.rate}" onchange="handleRateInputChange('${item.nameEn}', this.value)" style="width: 80px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 4px;" />
             </td>
             <td>
-               <button onclick="saveSingleItemRatePermanently('${item.nameEn}')" style="background: gold; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+               <button onclick="saveSingleItemRatePermanently('${item.nameEn}')" style="background: gold; color: black; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
                  💾 Save
                </button>
             </td>
@@ -153,6 +154,11 @@ function renderRateListTable() {
         tbody.appendChild(row);
     });
 }
+
+// ایپ لوڈ ہونے پر خود بخود ریٹ لسٹ ظاہر کرنا
+window.addEventListener('DOMContentLoaded', () => {
+    renderRateListTable();
+});
 
 // ==========================================
 // واٹس ایپ پر ایچ ڈی جے پی جی (HD JPG) شیئرنگ
@@ -186,7 +192,7 @@ function shareRateListAsImage() {
 // گوگل ڈرائیو بیک اپ (drmuhammedjaved@gmail.com)
 // ==========================================
 function handleGoogleDriveBackup() {
-    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصل کلائنٹ آئی ڈی درج کریں
+    const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // یہاں اپنی اصل گوگل کلائنٹ آئی ڈی درج کریں
     
     const client = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
