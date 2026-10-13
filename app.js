@@ -88,6 +88,7 @@ let currentPendingBillObj = null;
 let globalUndoStack = [];
 let globalRedoStack = [];
 
+// --- PWA Service Worker & In-App Update Handling ---
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(reg => {
@@ -116,6 +117,7 @@ function applyAppUpdate() {
   window.location.reload();
 }
 
+// --- Safe Restore Code Functionality ---
 function safeRestoreAppCode() {
   if (confirm("کیا آپ ایپ کا کوڈ ڈیفالٹ حالت پر بحال کرنا چاہتے ہیں؟\n\nواضح رہے کہ آپ کے کسٹمرز کا ڈیٹا اور بل ہسٹری محفوظ رہے گی اور ڈیلیٹ نہیں ہوگی۔")) {
     if ('caches' in window) {
@@ -266,7 +268,7 @@ function renderMultiItemBox() {
       <div class="multi-item-row" style="${isOutOfStock ? 'opacity:0.6;' : ''}">
         <label style="font-size:12px; cursor:pointer;">
           <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:6px;">
-          ${displayName}${codeStr} ${stockBadge}
+          ${displayName}${codeStr}${stockBadge}
         </label>
         <span style="font-size:12px; color:var(--gold-primary); font-weight:bold;">Rs. ${item.rate}</span>
       </div>
@@ -304,6 +306,7 @@ function addSelectedMultipleItems() {
   calculateBillTotals();
 }
 
+// --- ریٹ لسٹ ٹیبل اور پرماننٹ سیو بٹن ---
 function renderRateListTable() {
   const tbody = document.querySelector('#rateListTable tbody');
   if (!tbody) return;
@@ -319,7 +322,7 @@ function renderRateListTable() {
     let stockWarningStyle = currStock <= 0 ? 'background:#fca5a5; color:#7f1d1d; font-weight:bold;' : '';
 
     tbody.innerHTML += `<tr>
-      <td style="border:1px solid #000; padding:4px;"><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
+      <td style="border:1px solid #000; padding:4px;"><input type="text" value="${item.code \vert{}\vert{} ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
       <td style="border:1px solid #000; padding:4px;"><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
       <td style="border:1px solid #000; padding:4px;"><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:4px; margin:0; width:70px; border:1px solid #ccc; background:#fff; color:#000;"></td>
       <td style="border:1px solid #000; padding:4px;"><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:4px; margin:0; width:60px; border:1px solid #ccc; background:#fff; color:#000; ${stockWarningStyle}"></td>
@@ -342,7 +345,7 @@ function updateItemStock(idx, val) { registerGlobalChange(); itemsList[idx].stoc
 
 function saveSingleItemRateDirectly(idx) {
   savePermanentRatesList();
-  alert(currentLang === 'ur' ? "آئٹم کا ریٹ اور معلومات کامیابی سے سیو ہو گئی ہیں!" : "Item rate and info saved successfully!");
+  alert(currentLang === 'ur' ? "آئٹم کا ریٹ اور معلومات کامیابی سے پرماننٹ سیو ہو گئی ہیں!" : "Item rate and info saved permanently!");
 }
 
 function deleteRateListItem(idx) { registerGlobalChange(); itemsList.splice(idx, 1); savePermanentRatesList(); renderRateListTable(); }
@@ -416,352 +419,4 @@ function renderCurrentBillTable() {
       <td>${idx + 1}</td>
       <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:80px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
       <td>${nameShow}</td>
-      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td>Rs. ${i.total}</td>
-      <td><button onclick="removeBillItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">❌</button></td>
-    </tr>`;
-  });
-}
-
-function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); }
-function updateBillItemQty(idx, val) {
-  registerGlobalChange();
-  let newQty = parseInt(val) || 1;
-  currentBillItems[idx].qty = newQty;
-  currentBillItems[idx].total = newQty * currentBillItems[idx].rate;
-  calculateBillTotals();
-}
-
-function updateBillItemRate(idx, val) {
-  registerGlobalChange();
-  let newRate = parseFloat(val) || 0;
-  currentBillItems[idx].rate = newRate;
-  currentBillItems[idx].total = currentBillItems[idx].qty * newRate;
-  calculateBillTotals();
-}
-
-function calculateBillTotals() {
-  let subtotal = currentBillItems.reduce((sum, i) => sum + i.total, 0);
-  let discount = parseFloat(document.getElementById('discountInput').value) || 0;
-  let prevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-
-  let netTotal = (subtotal - discount) + prevBalance;
-  document.getElementById('grandTotalTxt').innerText = 'Rs. ' + netTotal;
-}
-
-function openBillPreview() {
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-  const manualPrevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-
-  if (!name || currentBillItems.length === 0) {
-    alert("براہ کرم کسٹمر کا نام اور کم از کم ایک آئٹم شامل کریں۔");
-    return;
-  }
-
-  let subtotal = currentBillItems.reduce((sum, i) => sum + i.total, 0);
-  let netBillAmount = (subtotal - discount) + manualPrevBalance;
-
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  currentPendingBillObj = {
-    id: 'INV-' + (dbBills.length + 1001),
-    customer: name,
-    phone: phone,
-    date: dateStr,
-    timestamp: now.getTime(),
-    items: [...currentBillItems],
-    subtotal: subtotal,
-    discount: discount,
-    netAmount: netBillAmount,
-    prevBalance: manualPrevBalance
-  };
-
-  renderBillToPrintArea(currentPendingBillObj);
-  document.getElementById('previewModal').style.display = 'block';
-}
-
-function closeBillPreview() {
-  document.getElementById('previewModal').style.display = 'none';
-}
-
-function changePaperSize(val) {
-  const container = document.getElementById('printableBillContainer');
-  if (container) container.className = val;
-}
-
-function executeFinalPrint() {
-  if (!currentPendingBillObj) return;
-
-  registerGlobalChange();
-
-  currentPendingBillObj.items.forEach(bItem => {
-    if (bItem.itemIndex !== undefined && itemsList[bItem.itemIndex]) {
-      let currentStk = itemsList[bItem.itemIndex].stock || 0;
-      let newStk = currentStk - bItem.qty;
-      itemsList[bItem.itemIndex].stock = newStk < 0 ? 0 : newStk;
-    }
-  });
-
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
-
-  dbBills.push(currentPendingBillObj);
-  localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
-
-  window.print();
-
-  document.getElementById('previewModal').style.display = 'none';
-
-  currentBillItems = [];
-  renderCurrentBillTable();
-  document.getElementById('custName').value = '';
-  document.getElementById('custPhone').value = '';
-  document.getElementById('discountInput').value = '';
-  document.getElementById('prevBalanceInput').value = '';
-  document.getElementById('grandTotalTxt').innerText = 'Rs. 0';
-
-  updateDashboard();
-  renderLedger(dbBills);
-  renderRateListTable();
-  updateNextBillNo();
-  currentPendingBillObj = null;
-}
-
-function exportBillJpgAndShare() {
-  const container = document.getElementById('printableBillContainer');
-  if (!container) return;
-
-  html2canvas(container, { 
-    scale: 2, 
-    useCORS: true, 
-    allowTaint: true,
-    logging: false
-  }).then(canvas => {
-    canvas.toBlob(blob => {
-      const file = new File([blob], `${currentPendingBillObj ? currentPendingBillObj.id : 'Bill'}.jpg`, { type: 'image/jpeg' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          files: [file],
-          title: 'REHMA TRADERS Invoice',
-          text: `Bill for ${currentPendingBillObj ? currentPendingBillObj.customer : ''}`
-        });
-      } else {
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/jpeg');
-        a.download = `${currentPendingBillObj ? currentPendingBillObj.id : 'Bill'}.jpg`;
-        a.click();
-      }
-    });
-  });
-}
-
-function previewHistoryBill(index) {
-  const bill = dbBills[index];
-  if (!bill) return;
-  currentPendingBillObj = bill;
-  renderBillToPrintArea(bill);
-  document.getElementById('previewModal').style.display = 'block';
-}
-
-function cloneAndRepeatBill(index) {
-  const bill = dbBills[index];
-  if (!bill) return;
-
-  registerGlobalChange();
-
-  document.getElementById('custName').value = bill.customer || '';
-  document.getElementById('custPhone').value = bill.phone || '';
-  document.getElementById('prevBalanceInput').value = '';
-  currentBillItems = bill.items.map(i => ({ ...i }));
-
-  renderCurrentBillTable();
-  calculateBillTotals();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function renderBillToPrintArea(b) {
-  let isUr = currentLang === 'ur';
-
-  document.getElementById('billHeaderTitle').innerText = isUr ? 'رحمہ ٹریڈرز' : 'REHMA TRADERS';
-  document.getElementById('billPropLabel').innerText = isUr ? 'پروپرائٹر:' : 'Proprietor:';
-
-  let headersHtml = isUr ? `
-    <th style="border:1px solid #000; padding:4px;">نمبر شمار</th>
-    <th style="border:1px solid #000; padding:4px;">تفصیل سامان</th>
-    <th style="border:1px solid #000; padding:4px;">آئٹم کوڈ</th>
-    <th style="border:1px solid #000; padding:4px;">تعداد</th>
-    <th style="border:1px solid #000; padding:4px;">ریٹ</th>
-    <th style="border:1px solid #000; padding:4px;">کل رقم</th>
-  ` : `
-    <th style="border:1px solid #000; padding:4px;">Sr #</th>
-    <th style="border:1px solid #000; padding:4px;">Item Description</th>
-    <th style="border:1px solid #000; padding:4px;">Item Code</th>
-    <th style="border:1px solid #000; padding:4px;">Qty</th>
-    <th style="border:1px solid #000; padding:4px;">Rate</th>
-    <th style="border:1px solid #000; padding:4px;">Total</th>
-  `;
-
-  let itemsRows = b.items.map((it, idx) => {
-    let itemTitle = isUr ? it.nameUr : it.nameEn;
-    return `<tr>
-      <td style="border:1px solid #000; padding:4px;">${idx + 1}</td>
-      <td style="border:1px solid #000; padding:4px;">${itemTitle}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.code}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.qty}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.rate}</td>
-      <td style="border:1px solid #000; padding:4px;">Rs. ${it.total}</td>
-    </tr>`;
-  }).join('');
-
-  let labels = isUr ? {
-    billNo: 'بل نمبر:',
-    cust: 'مشتری/کسٹمر:',
-    date: 'تاریخ و وقت:',
-    subtotal: 'موجودہ بل کل رقم:',
-    disc: 'ڈسکاؤنٹ:',
-    net: 'صافی رقم / کل بل:',
-    prev: 'سابقہ ادھار:'
-  } : {
-    billNo: 'Bill #:',
-    cust: 'Customer:',
-    date: 'Date & Time:',
-    subtotal: 'Subtotal:',
-    disc: 'Discount:',
-    net: 'Net Total:',
-    prev: 'Previous Balance:'
-  };
-
-  let prevBalHtml = b.prevBalance > 0 ? `<p style="margin:2px 0; color:#555;">${labels.prev} Rs. ${b.prevBalance}</p>` : '';
-
-  document.getElementById('billPrintContent').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px;">
-      <div><strong>${labels.billNo}</strong> ${b.id}<br><strong>${labels.cust}</strong> ${b.customer} (${b.phone || 'N/A'})</div>
-      <div style="text-align:right;"><strong>${labels.date}</strong> ${b.date}</div>
-    </div>
-    
-    <table style="width:100%; border-collapse:collapse; margin:8px 0; text-align:center; font-size:11px;">
-      <thead><tr style="background:#f2f2f2;">${headersHtml}</tr></thead>
-      <tbody>${itemsRows}</tbody>
-    </table>
-
-    <div style="width:230px; margin-left:auto; text-align:right; font-size:11px; margin-top:8px;">
-      <p style="margin:2px 0;">${labels.subtotal} Rs. ${b.subtotal}</p>
-      <p style="margin:2px 0;">${labels.disc} Rs. ${b.discount}</p>
-      ${prevBalHtml}
-      <hr style="border:0.5px solid #000; margin:4px 0;">
-      <p style="margin:2px 0; font-size:13px; font-weight:bold; color:#d4af37;">${labels.net} Rs. ${b.netAmount}</p>
-    </div>
-  `;
-}
-
-function updateDashboard() {
-  let totalSales = dbBills.reduce((s, b) => s + (b.netAmount || 0), 0);
-
-  const now = new Date();
-  const todayStr = now.toLocaleDateString('en-GB');
-
-  let todaySales = dbBills.filter(b => b.date && b.date.startsWith(todayStr)).reduce((s, b) => s + (b.netAmount || 0), 0);
-
-  const oneWeekAgo = now.getTime() - (7 * 24 * 60 * 60 * 1000);
-  let weeklySales = dbBills.filter(b => b.timestamp && b.timestamp >= oneWeekAgo).reduce((s, b) => s + (b.netAmount || 0), 0);
-
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-  let monthlySales = dbBills.filter(b => {
-    if (!b.timestamp) return false;
-    let d = new Date(b.timestamp);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  }).reduce((s, b) => s + (b.netAmount || 0), 0);
-
-  if (document.getElementById('dashSales')) document.getElementById('dashSales').innerText = 'Rs. ' + totalSales;
-  if (document.getElementById('dashTodaySales')) document.getElementById('dashTodaySales').innerText = 'Rs. ' + todaySales;
-  if (document.getElementById('dashWeeklySales')) document.getElementById('dashWeeklySales').innerText = 'Rs. ' + weeklySales;
-  if (document.getElementById('dashMonthlySales')) document.getElementById('dashMonthlySales').innerText = 'Rs. ' + monthlySales;
-}
-
-function renderLedger(data) {
-  const tbody = document.querySelector('#ledgerTable tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  data.forEach((b, idx) => {
-    tbody.innerHTML += `<tr>
-      <td>${b.id}</td>
-      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--gold-primary);">${b.customer}</strong></td>
-      <td>${b.date}</td>
-      <td style="color:var(--gold-primary); font-weight:bold;">Rs. ${b.netAmount}</td>
-      <td>
-        <button class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
-        <button class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
-      </td>
-    </tr>`;
-  });
-}
-
-function filterLedger() {
-  const query = document.getElementById('searchCust').value.toLowerCase();
-  const filtered = dbBills.filter(b => b.customer && b.customer.toLowerCase().includes(query));
-  renderLedger(filtered);
-}
-
-function filterByCustomer(custName) {
-  document.getElementById('searchCust').value = custName;
-  filterLedger();
-}
-
-function showAllBills() {
-  document.getElementById('searchCust').value = '';
-  renderLedger(dbBills);
-}
-
-function exportDataBackup() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dbBills));
-  const dlAnchorElem = document.createElement('a');
-  dlAnchorElem.setAttribute("href", dataStr);
-  dlAnchorElem.setAttribute("download", "RehmaTraders_MasterBackup.json");
-  dlAnchorElem.click();
-}
-
-function importDataBackup(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const importedBills = JSON.parse(e.target.result);
-      if (Array.isArray(importedBills)) {
-        dbBills = importedBills;
-        localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
-        updateDashboard();
-        renderLedger(dbBills);
-        updateNextBillNo();
-        alert("آپ کا تمام بیک اپ ڈیٹا کامیابی سے بحال ہو گیا ہے!");
-      } else {
-        alert("فائل کی فارمیٹ درست نہیں ہے۔");
-      }
-    } catch (err) {
-      alert("بیک اپ فائل ریڈ کرنے میں غلطی ہوئی۔");
-    }
-  };
-  reader.readAsText(file);
-}
-
-function syncWithGoogleDrivePicker() {
-  if (window.google && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({
-      client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      login_hint: "drmuhammedjaved@gmail.com",
-      callback: (response) => {
-        alert("گوگل اکاؤنٹ (drmuhammedjaved@gmail.com) منتخب ہو گیا ہے۔ بیک اپ محفوظ کیا جا رہا ہے۔");
-        exportDataBackup();
-      }
-    });
-    google.accounts.id.prompt();
-  } else {
-    alert("drmuhammedjaved@gmail.com کے لیے بیک اپ فائل ڈاؤن لوڈ کی جا رہی ہے۔");
-    exportDataBackup();
-  }
-}
+      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border
