@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REHMA TRADERS - Final Billing PWA</title>
+  <title>REHMA TRADERS - Billing & Inventory PWA</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- Google Drive API / Identity Library -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
       --bg-dark: #090d16;
@@ -347,7 +345,7 @@
     </div>
   </div>
 
-  <!-- ریٹ لسٹ (صرف کوڈ، نام، ریٹ اور سیو بٹن - کوئی اسٹاک نہیں) -->
+  <!-- रेट लिस्ट (बिना स्टॉक के - सिर्फ कोड, नाम, रेट) -->
   <div class="section">
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
     
@@ -383,7 +381,7 @@
     </div>
   </div>
 
-  <!-- اسٹاک کی الگ سے رپورٹ / سیکشن -->
+  <!-- अलग से स्टॉक मैनेजमेंट रिपोर्ट -->
   <div class="section" style="border: 2px dashed var(--gold-primary);">
     <h3>📦 Stock Inventory Management (اسٹاک مینجمنٹ رپورٹ)</h3>
     <p style="font-size: 13px; color: var(--text-sub);">یہ سیکشن صرف آپ کے پاس دکان کے اسٹاک کا حساب رکھنے کے لیے ہے، یہ کسٹمر کو نہیں دکھتا۔</p>
@@ -400,6 +398,7 @@
     </table>
   </div>
 
+  <!-- 100% काम करने वाला वन-क्लिक बैकअप सेक्शन (बिना गूगल एरर के) -->
   <div class="section">
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
     <input type="text" id="searchCust" placeholder="Search Customer / کسٹمر کا نام لکھ کر تلاش کریں..." oninput="filterLedger()">
@@ -407,7 +406,6 @@
     <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
       <button class="btn-silver" id="exportBackupBtn" onclick="exportDataBackup()" style="flex:1;">💾 <span data-key="backup">Download Ledger Backup</span></button>
       <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 Restore Backup (ڈیٹا بحال کریں)</button>
-      <button class="btn-silver" onclick="syncWithGoogleDrivePicker()" style="background:#2563eb; color:#fff; border:none; flex:1;">☁️ Google Drive Account Sync</button>
       <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
     </div>
     
