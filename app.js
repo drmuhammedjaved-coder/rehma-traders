@@ -307,7 +307,6 @@ function addSelectedMultipleItems() {
   calculateBillTotals();
 }
 
-// --- ریٹ لسٹ (صرف کوڈ، نام، ریٹ اور سیو بٹن) ---
 function renderRateListTable() {
   const tbody = document.querySelector('#rateListTable tbody');
   if (!tbody) return;
@@ -334,7 +333,6 @@ function renderRateListTable() {
   });
 }
 
-// --- اسٹاک کی الگ رپورٹ رینڈر کرنے کا فنکشن ---
 function renderStockReportTable() {
   const tbody = document.querySelector('#stockReportTable tbody');
   if (!tbody) return;
@@ -753,12 +751,20 @@ function showAllBills() {
   renderLedger(dbBills);
 }
 
+// 100% پکا اور آف لائن بیک اپ فنکشن (بلا گوگل لاگ ان ایرر)
 function exportDataBackup() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dbBills));
+  const fullBackupData = {
+    bills: dbBills,
+    items: itemsList,
+    exportDate: new Date().toISOString()
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackupData, null, 2));
   const dlAnchorElem = document.createElement('a');
   dlAnchorElem.setAttribute("href", dataStr);
-  dlAnchorElem.setAttribute("download", "RehmaTraders_MasterBackup.json");
+  dlAnchorElem.setAttribute("download", `RehmaTraders_FullBackup_${new Date().toLocaleDateString('en-GB').replace(/\//g, '-')}.json`);
+  document.body.appendChild(dlAnchorElem);
   dlAnchorElem.click();
+  dlAnchorElem.remove();
 }
 
 function importDataBackup(event) {
@@ -768,37 +774,30 @@ function importDataBackup(event) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const importedBills = JSON.parse(e.target.result);
-      if (Array.isArray(importedBills)) {
-        dbBills = importedBills;
+      const importedData = JSON.parse(e.target.result);
+      if (importedData && (importedData.bills || Array.isArray(importedData))) {
+        if (Array.isArray(importedData)) {
+          dbBills = importedData;
+        } else {
+          dbBills = importedData.bills || dbBills;
+          if (importedData.items) itemsList = importedData.items;
+        }
         localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
+        localStorage.setItem('rehma_items', JSON.stringify(itemsList));
+        
+        renderMultiItemBox();
+        renderRateListTable();
+        renderStockReportTable();
         updateDashboard();
         renderLedger(dbBills);
         updateNextBillNo();
-        alert("آپ کا تمام بیک اپ ڈیٹا کامیابی سے بحال ہو گیا ہے!");
+        alert("آپ کا تمام بیک اپ ڈیٹا (بلز + ریٹس + اسٹاک) کامیابی سے بحال ہو گیا ہے!");
       } else {
         alert("فائل کی فارمیٹ درست نہیں ہے۔");
       }
     } catch (err) {
-      alert("بیک اپ فائل ریڈ کرنے میں غلطی ہوئی۔");
+      alert("بیک اپ فائل پڑھنے میں غلطی ہوئی۔");
     }
   };
   reader.readAsText(file);
-}
-
-function syncWithGoogleDrivePicker() {
-  if (window.google && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({
-      client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      login_hint: "drmuhammedjaved@gmail.com",
-      callback: (response) => {
-        alert("گوگل اکاؤنٹ (drmuhammedjaved@gmail.com) منتخب ہو گیا ہے۔ بیک اپ محفوظ کیا جا رہا ہے۔");
-        exportDataBackup();
-      }
-    });
-    google.accounts.id.prompt();
-  } else {
-    alert("drmuhammedjaved@gmail.com کے لیے بیک اپ فائل ڈاؤن لوڈ کی جا رہی ہے۔");
-    exportDataBackup();
-  }
 }
