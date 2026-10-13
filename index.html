@@ -279,7 +279,7 @@
       <button class="btn-silver" onclick="triggerGlobalRedo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">🔄 Redo</button>
     </div>
     <div>
-      <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:11px;" title="ریسٹور کرنے پر کسٹمر ڈیٹا محفوظ رہے گا">🛠️ Safe Code Restore</button>
+      <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:11px;">🛠️ Safe Code Restore</button>
     </div>
   </div>
 
@@ -347,12 +347,13 @@
     </div>
   </div>
 
+  <!-- ریٹ لسٹ (صرف کوڈ، نام، ریٹ اور سیو بٹن - کوئی اسٹاک نہیں) -->
   <div class="section">
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
     
     <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
       <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:12px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
-      <button class="btn-gold" onclick="savePermanentRatesList()" style="flex:1; padding:12px;">💾 Save Permanent Rates (مستقل محفوظ کریں)</button>
+      <button class="btn-gold" onclick="savePermanentRatesList()" style="flex:1; padding:12px;">💾 Save Permanent Rates</button>
     </div>
 
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -360,7 +361,6 @@
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
       <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
       <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
-      <input type="number" id="newItemStock" placeholder="Stock Qty" style="flex:1;">
       <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">Add Item</span></button>
     </div>
 
@@ -375,14 +375,29 @@
             <th style="border:1px solid #000; color:#000;" data-key="code">Code</th>
             <th style="border:1px solid #000; color:#000;" data-key="item">Item Description</th>
             <th style="border:1px solid #000; color:#000;" data-key="rate">Rate (PKR)</th>
-            <!-- اسٹاک کا کالم جسے تصویر میں چھپایا جائے گا -->
-            <th class="stock-col" style="border:1px solid #000; color:#000;">Stock Qty</th>
             <th class="no-print-col" style="border:1px solid #000; color:#000;">Action</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- اسٹاک کی الگ سے رپورٹ / سیکشن -->
+  <div class="section" style="border: 2px dashed var(--gold-primary);">
+    <h3>📦 Stock Inventory Management (اسٹاک مینجمنٹ رپورٹ)</h3>
+    <p style="font-size: 13px; color: var(--text-sub);">یہ سیکشن صرف آپ کے پاس دکان کے اسٹاک کا حساب رکھنے کے لیے ہے، یہ کسٹمر کو نہیں دکھتا۔</p>
+    <table id="stockReportTable" style="color:var(--text-bright);">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Item Name</th>
+          <th>Available Stock Qty</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <div class="section">
