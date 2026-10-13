@@ -1,780 +1,468 @@
-let currentLang = 'en';
-let newWorkerWaiting = null;
-
-const dict = {
-  en: {
-    proprietor: "Proprietor:",
-    totalSales: "Total Sales",
-    todaySales: "Daily Sales",
-    weeklySales: "Weekly Sales",
-    monthlySales: "Monthly Sales",
-    balance: "Total Balance",
-    createNewBill: "Create New Bill",
-    pickContact: "📱 Contacts",
-    add: "Add Item",
-    srNo: "Sr #",
-    code: "Code",
-    item: "Item Description",
-    qty: "Qty",
-    rate: "Rate",
-    total: "Total",
-    action: "Action",
-    netTotal: "Net Total:",
-    previewBtn: "Print Preview & Confirm",
-    rateListHeader: "Rate List & Items Management",
-    shareRateList: "Share Rate List as HD Image (JPG)",
-    addItem: "Add Item",
-    ledgerHeader: "Customer Ledger & History",
-    billNoHeader: "Bill #",
-    custHeader: "Customer",
-    dateHeader: "Date & Time",
-    amountHeader: "Total Amount",
-    backup: "Download Ledger Backup"
-  },
-  ur: {
-    proprietor: "پروپرائٹر:",
-    totalSales: "کل سیل",
-    todaySales: "آج کی سیل",
-    weeklySales: "ہفتہ وار سیل",
-    monthlySales: "ماہانہ سیل",
-    balance: "کل ادھار",
-    createNewBill: "نیا بل بنائیں",
-    pickContact: "📱 فون بک",
-    add: "آئٹم شامل کریں",
-    srNo: "نمبر شمار",
-    code: "کوڈ",
-    item: "تفصیل سامان",
-    qty: "تعداد",
-    rate: "ریٹ",
-    total: "کل رقم",
-    action: "ایکشن",
-    netTotal: "صافی رقم / کل بل:",
-    previewBtn: "بل پریویو اور پرنٹ کریں",
-    rateListHeader: "ریٹ لسٹ و آئٹم مینجمنٹ",
-    shareRateList: "ریٹ لسٹ تصویری شکل (JPG) میں شیئر کریں",
-    addItem: "آئٹم شامل کریں",
-    ledgerHeader: "کسٹمر لیجر و بل ہسٹری",
-    billNoHeader: "بل نمبر",
-    custHeader: "کسٹمر",
-    dateHeader: "تاریخ و وقت",
-    amountHeader: "کل رقم",
-    backup: "بیک اپ ڈاؤن لوڈ کریں"
-  }
-};
-
-let defaultItems = [
-  { nameEn: '3 Pcs Chab', nameUr: 'تھری پیس چاپ', code: '2017594941000', rate: 300, stock: 50 },
-  { nameEn: 'Single Chab', nameUr: 'سنگل چاپ', code: '2011476521000', rate: 190, stock: 40 },
-  { nameEn: 'Naan Chab', nameUr: 'نآن چاپ', code: '2011476521000', rate: 200, stock: 35 },
-  { nameEn: 'Small Box Round', nameUr: 'چھوٹا باکس گول', code: '2017598841000', rate: 220, stock: 20 },
-  { nameEn: 'Medium Box Round', nameUr: 'میڈیم باکس گول', code: '2019580141000', rate: 280, stock: 15 },
-  { nameEn: 'Large Box Round', nameUr: 'بڑا باکس گول', code: '2013147621000', rate: 380, stock: 10 },
-  { nameEn: 'Square Small', nameUr: 'چورس چھوٹا', code: '2019580141000', rate: 280, stock: 25 },
-  { nameEn: 'Square Large', nameUr: 'چورس بڑا', code: '2013147621000', rate: 380, stock: 12 },
-  { nameEn: 'Gloves Pair', nameUr: 'دستانے جوڑی', code: '2011476821000', rate: 155, stock: 60 },
-  { nameEn: 'Fridge Handle Cover', nameUr: 'فرج ہینڈل کور', code: '2017447641000', rate: 90, stock: 30 },
-  { nameEn: 'Port Holder', nameUr: 'پورٹ ہولڈر', code: '', rate: 70, stock: 100 },
-  { nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی چھوٹا', code: '', rate: 220, stock: 18 },
-  { nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بڑا', code: '', rate: 250, stock: 14 },
-  { nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', code: '', rate: 430, stock: 22 },
-  { nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', code: '1036001001585', rate: 450, stock: 25 }
-];
-
-let itemsList = [];
-let dbBills = [];
-let currentBillItems = [];
-let currentPendingBillObj = null;
-
-let globalUndoStack = [];
-let globalRedoStack = [];
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      reg.addEventListener('updatefound', () => {
-        const installingWorker = reg.installing;
-        installingWorker.addEventListener('statechange', () => {
-          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            newWorkerWaiting = installingWorker;
-            showUpdateBanner();
-          }
-        });
-      });
-    }).catch(() => {});
-  });
-}
-
-function showUpdateBanner() {
-  const banner = document.getElementById('updateBanner');
-  if (banner) banner.style.display = 'block';
-}
-
-function applyAppUpdate() {
-  if (newWorkerWaiting) {
-    newWorkerWaiting.postMessage({ action: 'skipWaiting' });
-  }
-  window.location.reload();
-}
-
-function safeRestoreAppCode() {
-  if (confirm("کیا آپ ایپ کا کوڈ ڈیفالٹ حالت پر بحال کرنا چاہتے ہیں؟\n\nواضح رہے کہ آپ کے کسٹمرز کا ڈیٹا اور بل ہسٹری محفوظ رہے گی اور ڈیلیٹ نہیں ہوگی۔")) {
-    if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => caches.delete(name));
-      });
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REHMA TRADERS - Final Billing PWA</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Google Drive API / Identity Library -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --panel-bg: #111827;
+      --card-bg: #1f2937;
+      --gold-primary: #d4af37;
+      --text-bright: #f9fafb;
+      --text-sub: #9ca3af;
+      --border-dark: #374151;
     }
-    navigator.serviceWorker?.getRegistrations().then(regs => {
-      regs.forEach(r => r.unregister());
-    });
-    alert("ایپ کا کوڈ ری سیٹ ہو گیا ہے۔ صفحہ دوبارہ لوڈ ہو رہا ہے۔");
-    window.location.reload(true);
-  }
-}
-
-function captureGlobalState() {
-  return JSON.stringify({
-    itemsList: itemsList,
-    dbBills: dbBills,
-    currentBillItems: currentBillItems,
-    custName: document.getElementById('custName')?.value || '',
-    custPhone: document.getElementById('custPhone')?.value || '',
-    prevBalance: document.getElementById('prevBalanceInput')?.value || '',
-    discount: document.getElementById('discountInput')?.value || ''
-  });
-}
-
-function registerGlobalChange() {
-  globalUndoStack.push(captureGlobalState());
-  if (globalUndoStack.length > 30) globalUndoStack.shift();
-  globalRedoStack = [];
-}
-
-function applyGlobalState(stateStr) {
-  if (!stateStr) return;
-  const state = JSON.parse(stateStr);
-  itemsList = state.itemsList || [];
-  dbBills = state.dbBills || [];
-  currentBillItems = state.currentBillItems || [];
-
-  if (document.getElementById('custName')) document.getElementById('custName').value = state.custName;
-  if (document.getElementById('custPhone')) document.getElementById('custPhone').value = state.custPhone;
-  if (document.getElementById('prevBalanceInput')) document.getElementById('prevBalanceInput').value = state.prevBalance;
-  if (document.getElementById('discountInput')) document.getElementById('discountInput').value = state.discount;
-
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
-  localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
-
-  renderMultiItemBox();
-  renderRateListTable();
-  renderCurrentBillTable();
-  calculateBillTotals();
-  updateDashboard();
-  renderLedger(dbBills);
-}
-
-function triggerGlobalUndo() {
-  if (globalUndoStack.length === 0) {
-    alert("مزید پیچھے (Undo) نہیں جایا جا سکتا۔");
-    return;
-  }
-  globalRedoStack.push(captureGlobalState());
-  const prevState = globalUndoStack.pop();
-  applyGlobalState(prevState);
-}
-
-function triggerGlobalRedo() {
-  if (globalRedoStack.length === 0) {
-    alert("مزید آگے (Redo) نہیں جایا جا سکتا۔");
-    return;
-  }
-  globalUndoStack.push(captureGlobalState());
-  const nextState = globalRedoStack.pop();
-  applyGlobalState(nextState);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    itemsList = JSON.parse(localStorage.getItem('rehma_items')) || defaultItems;
-    dbBills = JSON.parse(localStorage.getItem('rehma_bills')) || [];
-  } catch (e) {
-    itemsList = defaultItems;
-    dbBills = [];
-  }
-
-  renderMultiItemBox();
-  renderRateListTable();
-  updateDashboard();
-  renderLedger(dbBills);
-  updateNextBillNo();
-});
-
-function toggleLanguage() {
-  registerGlobalChange();
-  currentLang = currentLang === 'en' ? 'ur' : 'en';
-  document.body.className = currentLang === 'en' ? 'lang-en' : 'lang-ur';
-  const btn = document.getElementById('langToggleBtn');
-  if (btn) btn.innerText = currentLang === 'en' ? '🌐 Switch to اردو' : '🌐 Switch to English';
-
-  document.querySelectorAll('[data-key]').forEach(el => {
-    const key = el.getAttribute('data-key');
-    if (dict[currentLang] && dict[currentLang][key]) {
-      el.innerText = dict[currentLang][key];
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-bright);
+      margin: 0;
+      padding: 16px;
     }
-  });
+    body.lang-ur { direction: rtl; }
+    body.lang-en { direction: ltr; }
 
-  renderMultiItemBox();
-  renderRateListTable();
-  renderCurrentBillTable();
-}
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+    .lang-btn {
+      background: #1f2937;
+      color: var(--gold-primary);
+      border: 1px solid var(--gold-primary);
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+    }
 
-async function pickContact() {
-  if ('contacts' in navigator && 'ContactsManager' in window) {
-    try {
-      const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
-      if (contacts && contacts.length > 0) {
-        registerGlobalChange();
-        if (contacts[0].name && contacts[0].name[0]) document.getElementById('custName').value = contacts[0].name[0];
-        if (contacts[0].tel && contacts[0].tel[0]) document.getElementById('custPhone').value = contacts[0].tel[0];
-      }
-    } catch (err) {}
-  } else {
-    alert("موبائل کنٹیکٹ پکر سپورٹ نہیں ہے، نام خود ٹائپ کریں۔");
-  }
-}
+    #updateBanner {
+      display: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    #updateBanner button {
+      background: #f59e0b;
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
 
-function updateNextBillNo() {
-  const el = document.getElementById('nextBillNo');
-  if (el) el.innerText = 'INV-' + (dbBills.length + 1001);
-}
+    .global-toolbar {
+      position: sticky;
+      top: 10px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      background: rgba(17, 24, 39, 0.95);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--gold-primary);
+    }
 
-function renderMultiItemBox() {
-  const box = document.getElementById('multiItemBox');
-  if (!box) return;
-  box.innerHTML = '';
-
-  itemsList.forEach((item, idx) => {
-    let displayName = currentLang === 'ur' ? item.nameUr : item.nameEn;
-    let codeStr = item.code ? ` (${item.code})` : '';
-    let currStock = (item.stock !== undefined) ? item.stock : 0;
+    .header-card {
+      background: #111827;
+      border: 2px solid var(--gold-primary);
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header-card img.main-logo { max-height: 95px; margin-bottom: 12px; }
+    .header-card h1 { color: var(--gold-primary); margin: 0 0 6px 0; font-size: 28px; font-weight: 800; }
+    .header-card p { margin: 4px 0; font-size: 13.5px; color: var(--text-sub); }
     
-    let isOutOfStock = currStock <= 0;
-    let stockBadge = isOutOfStock 
-      ? `<span style="color:#ef4444; font-weight:bold; margin-left:8px;">⚠️ (مال ختم ہے)</span>` 
-      : `<span style="color:#34d399; margin-left:8px;">[Stock: ${currStock}]</span>`;
-
-    box.innerHTML += `
-      <div class="multi-item-row" style="${isOutOfStock ? 'opacity:0.6;' : ''}">
-        <label style="font-size:12px; cursor:pointer;">
-          <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:6px;">
-          ${displayName}${codeStr} ${stockBadge}
-        </label>
-        <span style="font-size:12px; color:var(--gold-primary); font-weight:bold;">Rs. ${item.rate}</span>
-      </div>
-    `;
-  });
-}
-
-function addSelectedMultipleItems() {
-  const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-  if (checkboxes.length === 0) {
-    alert("براہ کرم کم از کم ایک آئٹم چنیں۔");
-    return;
-  }
-
-  registerGlobalChange();
-
-  checkboxes.forEach(cb => {
-    let idx = cb.value;
-    let item = itemsList[idx];
-    if (item) {
-      currentBillItems.push({
-        itemIndex: idx,
-        nameEn: item.nameEn,
-        nameUr: item.nameUr,
-        code: item.code || '---',
-        qty: 1,
-        rate: item.rate,
-        total: item.rate * 1
-      });
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
     }
-    cb.checked = false;
-  });
-
-  renderCurrentBillTable();
-  calculateBillTotals();
-}
-
-// --- ریٹ لسٹ ٹیبل جس میں ہر آئٹم کے ساتھ واضح 💾 Save کا بٹن موجود ہے ---
-function renderRateListTable() {
-  const tbody = document.querySelector('#rateListTable tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-
-  let isUr = currentLang === 'ur';
-  const titleEl = document.getElementById('rlTitle');
-  const subEl = document.getElementById('rlSub');
-  if (titleEl) titleEl.innerText = isUr ? 'رحمہ ٹریڈرز - سرکاری ریٹ لسٹ' : 'REHMA TRADERS - OFFICIAL RATE LIST';
-  if (subEl) subEl.innerText = isUr ? 'پروپرائٹر: محمد جاوید | 📱 0307-4015100' : 'Proprietor: Muhammad Javed | 📱 0307-4015100';
-
-  itemsList.forEach((item, idx) => {
-    let itemName = isUr ? item.nameUr : item.nameEn;
-    let currStock = (item.stock !== undefined) ? item.stock : 0;
-    let stockWarningStyle = currStock <= 0 ? 'background:#fca5a5; color:#7f1d1d; font-weight:bold;' : '';
-
-    tbody.innerHTML += `<tr>
-      <td style="border:1px solid #000; padding:4px;"><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
-      <td style="border:1px solid #000; padding:4px;"><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
-      <td style="border:1px solid #000; padding:4px;"><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:4px; margin:0; width:70px; border:1px solid #ccc; background:#fff; color:#000;"></td>
-      <td style="border:1px solid #000; padding:4px;"><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:4px; margin:0; width:60px; border:1px solid #ccc; background:#fff; color:#000; ${stockWarningStyle}"></td>
-      <td class="no-print-col" style="border:1px solid #000; padding:4px; white-space:nowrap;">
-        <button type="button" onclick="saveSingleItemRateDirectly(${idx})" style="background:#2563eb; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold; margin-right:4px; font-size:12px;">💾 Save</button>
-        <button type="button" onclick="deleteRateListItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px;">❌</button>
-      </td>
-    </tr>`;
-  });
-}
-
-function updateItemCode(idx, val) { registerGlobalChange(); itemsList[idx].code = val.trim(); }
-function updateItemName(idx, val) { 
-  registerGlobalChange();
-  if (currentLang === 'ur') itemsList[idx].nameUr = val.trim(); 
-  else itemsList[idx].nameEn = val.trim(); 
-}
-function updateItemRate(idx, val) { registerGlobalChange(); itemsList[idx].rate = parseFloat(val) || 0; }
-function updateItemStock(idx, val) { registerGlobalChange(); itemsList[idx].stock = parseInt(val) || 0; }
-
-function saveSingleItemRateDirectly(idx) {
-  registerGlobalChange();
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
-  renderMultiItemBox();
-  renderRateListTable();
-  alert(currentLang === 'ur' ? "آئٹم کا نیا ریٹ ہمیشہ کے لیے سیو ہو گیا ہے!" : "Item rate saved permanently!");
-}
-
-function deleteRateListItem(idx) { 
-  registerGlobalChange(); 
-  itemsList.splice(idx, 1); 
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
-  renderMultiItemBox();
-  renderRateListTable(); 
-}
-
-function savePermanentRatesList() {
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
-  renderMultiItemBox();
-  renderRateListTable();
-  alert(currentLang === 'ur' ? "تمام ریٹس مستقل محفوظ ہو گئے ہیں!" : "All rates saved permanently!");
-}
-
-function exportRateListJpg() {
-  const area = document.getElementById('rateListCaptureArea');
-  if (!area) return;
-
-  document.querySelectorAll('.no-print-col').forEach(el => el.style.display = 'none');
-
-  html2canvas(area, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
-    document.querySelectorAll('.no-print-col').forEach(el => el.style.display = '');
-
-    canvas.toBlob(blob => {
-      const file = new File([blob], `RehmaTraders_RateList_${currentLang}.jpg`, { type: 'image/jpeg' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          files: [file],
-          title: 'REHMA TRADERS Rate List',
-          text: 'Official Rate List'
-        });
-      } else {
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/jpeg');
-        a.download = `RehmaTraders_RateList_${currentLang}.jpg`;
-        a.click();
-      }
-    });
-  });
-}
-
-function addNewItem() {
-  const nameEn = document.getElementById('newItemNameEn').value.trim();
-  const nameUr = document.getElementById('newItemNameUr').value.trim();
-  const code = document.getElementById('newItemCode').value.trim();
-  const rate = parseFloat(document.getElementById('newItemRate').value);
-  const stock = parseInt(document.getElementById('newItemStock').value) || 0;
-
-  if ((nameEn || nameUr) && !isNaN(rate)) {
-    registerGlobalChange();
-    itemsList.push({ nameEn: nameEn || nameUr, nameUr: nameUr || nameEn, code, rate, stock });
-    savePermanentRatesList();
-    document.getElementById('newItemNameEn').value = '';
-    document.getElementById('newItemNameUr').value = '';
-    document.getElementById('newItemCode').value = '';
-    document.getElementById('newItemRate').value = '';
-    document.getElementById('newItemStock').value = '';
-  }
-}
-
-function removeBillItem(index) {
-  registerGlobalChange();
-  currentBillItems.splice(index, 1);
-  renderCurrentBillTable();
-  calculateBillTotals();
-}
-
-function renderCurrentBillTable() {
-  const tbody = document.querySelector('#billItemsTable tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  currentBillItems.forEach((i, idx) => {
-    let nameShow = currentLang === 'ur' ? i.nameUr : i.nameEn;
-    tbody.innerHTML += `<tr>
-      <td>${idx + 1}</td>
-      <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:80px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td>${nameShow}</td>
-      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td>Rs. ${i.total}</td>
-      <td><button type="button" onclick="removeBillItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">❌</button></td>
-    </tr>`;
-  });
-}
-
-function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); }
-function updateBillItemQty(idx, val) {
-  registerGlobalChange();
-  let newQty = parseInt(val) || 1;
-  currentBillItems[idx].qty = newQty;
-  currentBillItems[idx].total = newQty * currentBillItems[idx].rate;
-  calculateBillTotals();
-}
-
-function updateBillItemRate(idx, val) {
-  registerGlobalChange();
-  let newRate = parseFloat(val) || 0;
-  currentBillItems[idx].rate = newRate;
-  currentBillItems[idx].total = currentBillItems[idx].qty * newRate;
-  calculateBillTotals();
-}
-
-function calculateBillTotals() {
-  let subtotal = currentBillItems.reduce((sum, i) => sum + i.total, 0);
-  let discount = parseFloat(document.getElementById('discountInput').value) || 0;
-  let prevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-
-  let netTotal = (subtotal - discount) + prevBalance;
-  document.getElementById('grandTotalTxt').innerText = 'Rs. ' + netTotal;
-}
-
-function openBillPreview() {
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-  const manualPrevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-
-  if (!name || currentBillItems.length === 0) {
-    alert("براہ کرم کسٹمر کا نام اور کم از کم ایک آئٹم شامل کریں۔");
-    return;
-  }
-
-  let subtotal = currentBillItems.reduce((sum, i) => sum + i.total, 0);
-  let netBillAmount = (subtotal - discount) + manualPrevBalance;
-
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  currentPendingBillObj = {
-    id: 'INV-' + (dbBills.length + 1001),
-    customer: name,
-    phone: phone,
-    date: dateStr,
-    timestamp: now.getTime(),
-    items: [...currentBillItems],
-    subtotal: subtotal,
-    discount: discount,
-    netAmount: netBillAmount,
-    prevBalance: manualPrevBalance
-  };
-
-  renderBillToPrintArea(currentPendingBillObj);
-  document.getElementById('previewModal').style.display = 'block';
-}
-
-function closeBillPreview() {
-  document.getElementById('previewModal').style.display = 'none';
-}
-
-function changePaperSize(val) {
-  const container = document.getElementById('printableBillContainer');
-  if (container) container.className = val;
-}
-
-function executeFinalPrint() {
-  if (!currentPendingBillObj) return;
-
-  registerGlobalChange();
-
-  currentPendingBillObj.items.forEach(bItem => {
-    if (bItem.itemIndex !== undefined && itemsList[bItem.itemIndex]) {
-      let currentStk = itemsList[bItem.itemIndex].stock || 0;
-      let newStk = currentStk - bItem.qty;
-      itemsList[bItem.itemIndex].stock = newStk < 0 ? 0 : newStk;
+    .dash-card {
+      background: #1f2937;
+      border: 1px solid var(--border-dark);
+      border-top: 3px solid var(--gold-primary);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
     }
-  });
+    .dash-card h4 { margin: 0; font-size: 10px; color: var(--text-sub); }
+    .dash-card h2 { margin: 6px 0 0 0; color: var(--gold-primary); font-size: 16px; }
 
-  localStorage.setItem('rehma_items', JSON.stringify(itemsList));
+    .section {
+      background: var(--panel-bg);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-dark);
+    }
+    h3 { color: var(--gold-primary); border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-top: 0; font-size: 17px; }
 
-  dbBills.push(currentPendingBillObj);
-  localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 1px solid var(--border-dark);
+      background: #0b0f19;
+      color: var(--text-bright);
+      box-sizing: border-box;
+    }
 
-  window.print();
+    button.btn-gold {
+      background: linear-gradient(135deg, #d4af37, #aa7c11);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+    }
+    button.btn-silver {
+      background: #1f2937;
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    button.btn-danger {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-  document.getElementById('previewModal').style.display = 'none';
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid var(--border-dark); padding: 11px; text-align: center; font-size: 13px; }
+    th { background: #1f2937; color: var(--gold-primary); }
 
-  currentBillItems = [];
-  renderCurrentBillTable();
-  document.getElementById('custName').value = '';
-  document.getElementById('custPhone').value = '';
-  document.getElementById('discountInput').value = '';
-  document.getElementById('prevBalanceInput').value = '';
-  document.getElementById('grandTotalTxt').innerText = 'Rs. 0';
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      overflow-y: auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-box {
+      background: #fff;
+      color: #000;
+      max-width: 600px;
+      margin: 10px auto;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
 
-  updateDashboard();
-  renderLedger(dbBills);
-  renderRateListTable();
-  updateNextBillNo();
-  currentPendingBillObj = null;
-}
+    .paper-a4 { width: 100%; max-width: 100%; }
+    .paper-80mm { width: 300px; margin: 0 auto; font-size: 11px; }
+    .paper-50mm { width: 200px; margin: 0 auto; font-size: 9px; }
 
-function exportBillJpgAndShare() {
-  const container = document.getElementById('printableBillContainer');
-  if (!container) return;
+    #printableBillContainer, #rateListCaptureArea {
+      background: #ffffff;
+      color: #000000;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .watermark-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.08;
+      max-width: 65%;
+      height: auto;
+      pointer-events: none;
+    }
+    .bill-content-layer { position: relative; z-index: 1; }
 
-  html2canvas(container, { 
-    scale: 2, 
-    useCORS: true, 
-    allowTaint: true,
-    logging: false
-  }).then(canvas => {
-    canvas.toBlob(blob => {
-      const file = new File([blob], `${currentPendingBillObj ? currentPendingBillObj.id : 'Bill'}.jpg`, { type: 'image/jpeg' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          files: [file],
-          title: 'REHMA TRADERS Invoice',
-          text: `Bill for ${currentPendingBillObj ? currentPendingBillObj.customer : ''}`
-        });
-      } else {
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/jpeg');
-        a.download = `${currentPendingBillObj ? currentPendingBillObj.id : 'Bill'}.jpg`;
-        a.click();
-      }
-    });
-  });
-}
+    .bill-header-layout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 12px;
+    }
+    .bill-header-layout img { max-height: 70px; width: auto; }
 
-function previewHistoryBill(index) {
-  const bill = dbBills[index];
-  if (!bill) return;
-  currentPendingBillObj = bill;
-  renderBillToPrintArea(bill);
-  document.getElementById('previewModal').style.display = 'block';
-}
+    .bill-footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 25px;
+      padding-top: 10px;
+    }
 
-function cloneAndRepeatBill(index) {
-  const bill = dbBills[index];
-  if (!bill) return;
+    .signature-box {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 24px;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding: 0 8px 2px 8px;
+      display: inline-block;
+      margin-top: 5px;
+    }
 
-  registerGlobalChange();
+    .multi-item-container {
+      max-height: 180px;
+      overflow-y: auto;
+      background: #0b0f19;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      padding: 8px;
+      margin: 8px 0;
+    }
+    .multi-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 4px;
+      border-bottom: 1px solid #1f2937;
+    }
+    .multi-item-row:last-child { border-bottom: none; }
 
-  document.getElementById('custName').value = bill.customer || '';
-  document.getElementById('custPhone').value = bill.phone || '';
-  document.getElementById('prevBalanceInput').value = '';
-  currentBillItems = bill.items.map(i => ({ ...i }));
+    @media print {
+      @page { size: auto; margin: 5mm; }
+      body * { visibility: hidden !important; }
+      #previewModal, #previewModal * { visibility: visible !important; }
+      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: none !important; overflow: visible !important; padding: 0 !important; }
+      .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #fff !important; }
+      .no-print { display: none !important; }
+      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; padding: 5mm !important; }
+    }
+  </style>
+</head>
+<body class="lang-en">
 
-  renderCurrentBillTable();
-  calculateBillTotals();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  <div id="updateBanner">
+    🔔 <span>New Update Available! (نئی اپ ڈیٹ دستیاب ہے)</span>
+    <button onclick="applyAppUpdate()">🔄 Update Now (ابھی اپ ڈیٹ کریں)</button>
+  </div>
 
-function renderBillToPrintArea(b) {
-  let isUr = currentLang === 'ur';
+  <div class="top-bar">
+    <div style="color: var(--gold-primary); font-weight: 800; font-size: 16px;">REHMA TRADERS</div>
+    <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">🌐 Switch to اردو</button>
+  </div>
 
-  document.getElementById('billHeaderTitle').innerText = isUr ? 'رحمہ ٹریڈرز' : 'REHMA TRADERS';
-  document.getElementById('billPropLabel').innerText = isUr ? 'پروپرائٹر:' : 'Proprietor:';
-
-  let headersHtml = isUr ? `
-    <th style="border:1px solid #000; padding:4px;">نمبر شمار</th>
-    <th style="border:1px solid #000; padding:4px;">تفصیل سامان</th>
-    <th style="border:1px solid #000; padding:4px;">آئٹم کوڈ</th>
-    <th style="border:1px solid #000; padding:4px;">تعداد</th>
-    <th style="border:1px solid #000; padding:4px;">ریٹ</th>
-    <th style="border:1px solid #000; padding:4px;">کل رقم</th>
-  ` : `
-    <th style="border:1px solid #000; padding:4px;">Sr #</th>
-    <th style="border:1px solid #000; padding:4px;">Item Description</th>
-    <th style="border:1px solid #000; padding:4px;">Item Code</th>
-    <th style="border:1px solid #000; padding:4px;">Qty</th>
-    <th style="border:1px solid #000; padding:4px;">Rate</th>
-    <th style="border:1px solid #000; padding:4px;">Total</th>
-  `;
-
-  let itemsRows = b.items.map((it, idx) => {
-    let itemTitle = isUr ? it.nameUr : it.nameEn;
-    return `<tr>
-      <td style="border:1px solid #000; padding:4px;">${idx + 1}</td>
-      <td style="border:1px solid #000; padding:4px;">${itemTitle}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.code}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.qty}</td>
-      <td style="border:1px solid #000; padding:4px;">${it.rate}</td>
-      <td style="border:1px solid #000; padding:4px;">Rs. ${it.total}</td>
-    </tr>`;
-  }).join('');
-
-  let labels = isUr ? {
-    billNo: 'بل نمبر:',
-    cust: 'مشتری/کسٹمر:',
-    date: 'تاریخ و وقت:',
-    subtotal: 'موجودہ بل کل رقم:',
-    disc: 'ڈسکاؤنٹ:',
-    net: 'صافی رقم / کل بل:',
-    prev: 'سابقہ ادھار:'
-  } : {
-    billNo: 'Bill #:',
-    cust: 'Customer:',
-    date: 'Date & Time:',
-    subtotal: 'Subtotal:',
-    disc: 'Discount:',
-    net: 'Net Total:',
-    prev: 'Previous Balance:'
-  };
-
-  let prevBalHtml = b.prevBalance > 0 ? `<p style="margin:2px 0; color:#555;">${labels.prev} Rs. ${b.prevBalance}</p>` : '';
-
-  document.getElementById('billPrintContent').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px;">
-      <div><strong>${labels.billNo}</strong> ${b.id}<br><strong>${labels.cust}</strong> ${b.customer} (${b.phone || 'N/A'})</div>
-      <div style="text-align:right;"><strong>${labels.date}</strong> ${b.date}</div>
+  <div class="global-toolbar">
+    <div>
+      <button class="btn-silver" onclick="triggerGlobalUndo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">↩️ Undo</button>
+      <button class="btn-silver" onclick="triggerGlobalRedo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">🔄 Redo</button>
     </div>
+    <div>
+      <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:11px;" title="ریسٹور کرنے پر کسٹمر ڈیٹا محفوظ رہے گا">🛠️ Safe Code Restore</button>
+    </div>
+  </div>
+
+  <div class="header-card">
+    <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
+    <h1>REHMA TRADERS</h1>
+    <p><strong data-key="proprietor">Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
+    <p>📱 0307-4015100 | 📱 0339-1020030</p>
+    <p>💬 WhatsApp: 0333-5255117</p>
+    <p>📧 rehmatraders786@gmail.com</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dash-card">
+      <h4 data-key="todaySales">Daily Sales</h4>
+      <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
+    </div>
+    <div class="dash-card">
+      <h4 data-key="weeklySales">Weekly Sales</h4>
+      <h2 id="dashWeeklySales" style="color: #60a5fa;">Rs. 0</h2>
+    </div>
+    <div class="dash-card">
+      <h4 data-key="monthlySales">Monthly Sales</h4>
+      <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
+    </div>
+    <div class="dash-card" id="showAllBillsBtn" onclick="showAllBills()" style="cursor:pointer;">
+      <h4 data-key="totalSales">Total Sales</h4>
+      <h2 id="dashSales">Rs. 0</h2>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--gold-primary);">INV-1001</span>)</h3>
     
-    <table style="width:100%; border-collapse:collapse; margin:8px 0; text-align:center; font-size:11px;">
-      <thead><tr style="background:#f2f2f2;">${headersHtml}</tr></thead>
-      <tbody>${itemsRows}</tbody>
+    <div style="display:flex; gap:8px;">
+      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="registerGlobalChange()">
+      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:140px; font-size:12px; font-weight:bold;"><span data-key="pickContact">📱 Contacts</span></button>
+    </div>
+    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="registerGlobalChange()">
+    
+    <label style="font-size:13px; color:var(--gold-primary); font-weight:bold;">📦 Select Multiple Items (ایک سے زیادہ آئٹم چنیں):</label>
+    <div class="multi-item-container" id="multiItemBox"></div>
+    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0; font-size:14px;">➕ Add Selected Items to Bill</button>
+
+    <table id="billItemsTable">
+      <thead>
+        <tr><th data-key="srNo">Sr #</th><th data-key="code">Code</th><th data-key="item">Item</th><th data-key="qty">Qty</th><th data-key="rate">Rate</th><th data-key="total">Total</th><th data-key="action">Action</th></tr>
+      </thead>
+      <tbody></tbody>
     </table>
 
-    <div style="width:230px; margin-left:auto; text-align:right; font-size:11px; margin-top:8px;">
-      <p style="margin:2px 0;">${labels.subtotal} Rs. ${b.subtotal}</p>
-      <p style="margin:2px 0;">${labels.disc} Rs. ${b.discount}</p>
-      ${prevBalHtml}
-      <hr style="border:0.5px solid #000; margin:4px 0;">
-      <p style="margin:2px 0; font-size:13px; font-weight:bold; color:#d4af37;">${labels.net} Rs. ${b.netAmount}</p>
+    <div style="margin-top:14px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:140px;">
+        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:140px;">
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:#0b0f19; border-radius:8px; border:1px solid var(--border-dark);">
+        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--gold-primary); font-weight: 800; font-size: 18px;">Rs. 0</span></div>
+      </div>
+      
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button class="btn-gold" id="previewBillBtn" onclick="openBillPreview()" style="flex:1;">👁️ <span data-key="previewBtn">Print Preview & Confirm</span></button>
+      </div>
     </div>
-  `;
-}
+  </div>
 
-function updateDashboard() {
-  let totalSales = dbBills.reduce((s, b) => s + (b.netAmount || 0), 0);
+  <div class="section">
+    <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
+    
+    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:12px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
+      <button class="btn-gold" onclick="savePermanentRatesList()" style="flex:1; padding:12px;">💾 Save Permanent Rates (مستقل محفوظ کریں)</button>
+    </div>
 
-  const now = new Date();
-  const todayStr = now.toLocaleDateString('en-GB');
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
+      <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
+      <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
+      <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
+      <input type="number" id="newItemStock" placeholder="Stock Qty" style="flex:1;">
+      <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">Add Item</span></button>
+    </div>
 
-  let todaySales = dbBills.filter(b => b.date && b.date.startsWith(todayStr)).reduce((s, b) => s + (b.netAmount || 0), 0);
+    <div id="rateListCaptureArea" style="margin-top:16px; border-radius:8px; border:1px solid #374151;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:10px;">
+        <h2 style="margin:2px 0; color:#000; font-size:22px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
+        <p style="margin:2px 0; color:#333; font-size:12px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+      </div>
+      <table id="rateListTable" style="color:#000;">
+        <thead>
+          <tr style="background:#f2f2f2;">
+            <th style="border:1px solid #000; color:#000;" data-key="code">Code</th>
+            <th style="border:1px solid #000; color:#000;" data-key="item">Item Description</th>
+            <th style="border:1px solid #000; color:#000;" data-key="rate">Rate (PKR)</th>
+            <!-- اسٹاک کا کالم جسے تصویر میں چھپایا جائے گا -->
+            <th class="stock-col" style="border:1px solid #000; color:#000;">Stock Qty</th>
+            <th class="no-print-col" style="border:1px solid #000; color:#000;">Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
-  const oneWeekAgo = now.getTime() - (7 * 24 * 60 * 60 * 1000);
-  let weeklySales = dbBills.filter(b => b.timestamp && b.timestamp >= oneWeekAgo).reduce((s, b) => s + (b.netAmount || 0), 0);
+  <div class="section">
+    <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
+    <input type="text" id="searchCust" placeholder="Search Customer / کسٹمر کا نام لکھ کر تلاش کریں..." oninput="filterLedger()">
+    
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+      <button class="btn-silver" id="exportBackupBtn" onclick="exportDataBackup()" style="flex:1;">💾 <span data-key="backup">Download Ledger Backup</span></button>
+      <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 Restore Backup (ڈیٹا بحال کریں)</button>
+      <button class="btn-silver" onclick="syncWithGoogleDrivePicker()" style="background:#2563eb; color:#fff; border:none; flex:1;">☁️ Google Drive Account Sync</button>
+      <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+    </div>
+    
+    <table id="ledgerTable">
+      <thead>
+        <tr>
+          <th data-key="billNoHeader">Bill #</th>
+          <th data-key="custHeader">Customer</th>
+          <th data-key="dateHeader">Date & Time</th>
+          <th data-key="amountHeader">Total Amount</th>
+          <th data-key="action">Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-  let monthlySales = dbBills.filter(b => {
-    if (!b.timestamp) return false;
-    let d = new Date(b.timestamp);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  }).reduce((s, b) => s + (b.netAmount || 0), 0);
+  <div id="previewModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px;">
+        <label><strong>🖨️ Paper Size:</strong></label>
+        <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:6px; margin:0; background:#f3f4f6; color:#000;">
+          <option value="paper-a4">A4 / Standard Page</option>
+          <option value="paper-80mm">Thermal 80mm</option>
+          <option value="paper-50mm">Thermal 50mm / 58mm</option>
+        </select>
+      </div>
 
-  if (document.getElementById('dashSales')) document.getElementById('dashSales').innerText = 'Rs. ' + totalSales;
-  if (document.getElementById('dashTodaySales')) document.getElementById('dashTodaySales').innerText = 'Rs. ' + todaySales;
-  if (document.getElementById('dashWeeklySales')) document.getElementById('dashWeeklySales').innerText = 'Rs. ' + weeklySales;
-  if (document.getElementById('dashMonthlySales')) document.getElementById('dashMonthlySales').innerText = 'Rs. ' + monthlySales;
-}
+      <div id="printableBillContainer" class="paper-a4">
+        <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
+        <div class="bill-content-layer">
+          <div class="bill-header-layout">
+            <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
+            <div style="text-align:center;">
+              <h2 style="margin:2px 0; color:#000000; font-size:24px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+              <p style="margin:2px 0; font-size:12px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
+              <p style="margin:2px 0; font-size:11px;">💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
+            </div>
+          </div>
 
-function renderLedger(data) {
-  const tbody = document.querySelector('#ledgerTable tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-  data.forEach((b, idx) => {
-    tbody.innerHTML += `<tr>
-      <td>${b.id}</td>
-      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--gold-primary);">${b.customer}</strong></td>
-      <td>${b.date}</td>
-      <td style="color:var(--gold-primary); font-weight:bold;">Rs. ${b.netAmount}</td>
-      <td>
-        <button type="button" class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
-        <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
-      </td>
-    </tr>`;
-  });
-}
+          <div id="billPrintContent" style="margin:12px 0; font-size:12px;"></div>
 
-function filterLedger() {
-  const query = document.getElementById('searchCust').value.toLowerCase();
-  const filtered = dbBills.filter(b => b.customer && b.customer.toLowerCase().includes(query));
-  renderLedger(filtered);
-}
+          <div style="text-align:center; margin-top:12px; border-top:1px dashed #000000; padding-top:8px;">
+            <p style="margin:2px 0; font-size:11px; font-weight:bold;">نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+          </div>
 
-function filterByCustomer(custName) {
-  document.getElementById('searchCust').value = custName;
-  filterLedger();
-}
+          <div class="bill-footer-grid">
+            <div style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:#f9f9f9;">
+              <span style="font-size:10px; font-weight:bold; display:block; color:#000; text-decoration:underline;">آن لائن ادائیگی کے لیے:</span>
+              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:2px;">جاز کیش اکاؤنٹ: 03074015100</span>
+              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">الائیڈ بینک (ABL): 07550010140074540011</span>
+              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">اکاؤنٹ نیم: محمد جاوید</span>
+            </div>
 
-function showAllBills() {
-  document.getElementById('searchCust').value = '';
-  renderLedger(dbBills);
-}
+            <div style="text-align:right;">
+              <span style="font-size:11px; font-weight:bold; display:block;">Owner Signature</span>
+              <span class="signature-box">Muhammad Javed</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-function exportDataBackup() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dbBills));
-  const dlAnchorElem = document.createElement('a');
-  dlAnchorElem.setAttribute("href", dataStr);
-  dlAnchorElem.setAttribute("download", "RehmaTraders_MasterBackup.json");
-  dlAnchorElem.click();
-}
+      <div class="no-print" style="display:flex; gap:8px; margin-top:16px; border-top:1px solid #ddd; padding-top:12px;">
+        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ Back / Close</button>
+        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖼️ Share HD JPG</button>
+        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Confirm & Print</button>
+      </div>
+    </div>
+  </div>
 
-function importDataBackup(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const importedBills = JSON.parse(e.target.result);
-      if (Array.isArray(importedBills)) {
-        dbBills = importedBills;
-        localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
-        updateDashboard();
-        renderLedger(dbBills);
-        updateNextBillNo();
-        alert("آپ کا تمام بیک اپ ڈیٹا کامیابی سے بحال ہو گیا ہے!");
-      } else {
-        alert("فائل کی فارمیٹ درست نہیں ہے۔");
-      }
-    } catch (err) {
-      alert("بیک اپ فائل ریڈ کرنے میں غلطی ہوئی۔");
-    }
-  };
-  reader.readAsText(file);
-}
-
-function syncWithGoogleDrivePicker() {
-  if (window.google && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({
-      client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      login_hint: "drmuhammedjaved@gmail.com",
-      callback: (response) => {
-        alert("گوگل اکاؤنٹ (drmuhammedjaved@gmail.com) منتخب ہو گیا ہے۔ بیک اپ محفوظ کیا جا رہا ہے۔");
-        exportDataBackup();
-      }
-    });
-    google.accounts.id.prompt();
-  } else {
-    alert("drmuhammedjaved@gmail.com کے لیے بیک اپ فائل ڈاؤن لوڈ کی جا रही ہے۔");
-    exportDataBackup();
-  }
-}
+  <script src="app.js"></script>
+</body>
+</html>
