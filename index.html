@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
-      --bg-dark: #090d16;
+      --bg-dark: #0b0f19;
       --panel-bg: #111827;
       --card-bg: #1f2937;
       --gold-primary: #d4af37;
@@ -17,11 +17,11 @@
       --border-dark: #374151;
     }
     body {
-      font-family: 'Segoe UI', Roboto, Tahoma, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-bright);
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       direction: rtl;
     }
 
@@ -29,146 +29,145 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border-dark);
     }
 
-    #updateBanner {
-      display: none;
-      background: #2563eb;
-      color: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-    #updateBanner button { background: #f59e0b; color: #000; border: none; padding: 4px 10px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-left: 8px; }
-
     .header-card {
-      background: #111827;
-      border: 2px solid var(--gold-primary);
-      border-radius: 14px;
-      padding: 18px;
+      background: var(--panel-bg);
+      border: 1px solid var(--gold-primary);
+      border-radius: 10px;
+      padding: 12px;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-    .header-card img.main-logo { max-height: 80px; margin-bottom: 8px; }
-    .header-card h1 { color: var(--gold-primary); margin: 0 0 4px 0; font-size: 24px; font-weight: 800; }
-    .header-card p { margin: 3px 0; font-size: 13px; color: var(--text-sub); }
+    .header-card img.main-logo { max-height: 50px; margin-bottom: 4px; }
+    .header-card h1 { color: var(--gold-primary); margin: 0 0 2px 0; font-size: 20px; font-weight: 700; }
+    .header-card p { margin: 2px 0; font-size: 12px; color: var(--text-sub); }
 
+    /* پروفیشنل سیلز سمری */
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    @media(max-width: 600px) {
+      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
     }
     .dash-card {
-      background: #1f2937;
+      background: var(--card-bg);
       border: 1px solid var(--border-dark);
-      border-top: 3px solid var(--gold-primary);
-      border-radius: 10px;
-      padding: 10px;
+      border-right: 3px solid var(--gold-primary);
+      border-radius: 8px;
+      padding: 8px;
       text-align: center;
     }
-    .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); }
-    .dash-card h2 { margin: 4px 0 0 0; color: var(--gold-primary); font-size: 15px; }
+    .dash-card h4 { margin: 0; font-size: 10.5px; color: var(--text-sub); }
+    .dash-card h2 { margin: 3px 0 0 0; color: var(--gold-primary); font-size: 14px; }
 
+    /* پروفیشنل کمپیکٹ مینو بٹنز */
     .menu-nav-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .menu-nav-btn {
-      background: linear-gradient(135deg, #1f2937, #111827);
-      border: 2px solid var(--gold-primary);
-      border-radius: 12px;
-      padding: 18px 12px;
-      text-align: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: right;
       cursor: pointer;
       color: var(--text-bright);
-      font-weight: bold;
-      transition: 0.2s;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.15s ease;
     }
-    .menu-nav-btn:hover { background: #2d3748; transform: translateY(-2px); }
-    .menu-nav-btn span { display: block; font-size: 24px; margin-bottom: 6px; }
+    .menu-nav-btn:hover { border-color: var(--gold-primary); background: #252f3f; }
+    .menu-nav-btn span.icon { font-size: 18px; }
 
     .section {
       background: var(--panel-bg);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 20px;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
       border: 1px solid var(--border-dark);
     }
-    .hidden-section { display: none; }
+    .hidden-section { display: none !important; }
 
     .back-nav-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
       border-bottom: 1px solid var(--border-dark);
     }
     .back-btn {
-      background: #374151;
+      background: var(--card-bg);
       color: var(--text-bright);
       border: 1px solid var(--gold-primary);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
-    }
-    .undo-redo-tools {
-      display: flex;
-      gap: 6px;
-    }
-    .tool-btn {
-      background: #1f2937;
-      color: var(--gold-primary);
-      border: 1px solid var(--gold-primary);
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 12px;
     }
+    .undo-redo-tools { display: flex; gap: 4px; }
+    .tool-btn {
+      background: var(--card-bg);
+      color: var(--gold-primary);
+      border: 1px solid var(--gold-primary);
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+    }
 
-    h3 { color: var(--gold-primary); border-bottom: 1px solid var(--border-dark); padding-bottom: 10px; margin-top: 0; font-size: 16px; }
+    h3 { color: var(--gold-primary); border-bottom: 1px solid var(--border-dark); padding-bottom: 8px; margin-top: 0; font-size: 15px; }
 
     input, select {
       width: 100%;
-      padding: 11px 12px;
-      margin: 6px 0;
-      border-radius: 8px;
+      padding: 9px 10px;
+      margin: 5px 0;
+      border-radius: 6px;
       border: 1px solid var(--border-dark);
-      background: #0b0f19;
+      background: #090d16;
       color: var(--text-bright);
       box-sizing: border-box;
+      font-size: 13px;
     }
 
     button.btn-gold {
       background: linear-gradient(135deg, #d4af37, #aa7c11);
       color: #000;
-      font-weight: 800;
+      font-weight: 700;
       border: none;
-      border-radius: 8px;
-      padding: 11px;
-      cursor: pointer;
-    }
-    button.btn-silver {
-      background: #1f2937;
-      color: var(--text-bright);
-      border: 1px solid var(--border-dark);
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 10px;
       cursor: pointer;
+      font-size: 13px;
+    }
+    button.btn-silver {
+      background: var(--card-bg);
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      padding: 9px;
+      cursor: pointer;
+      font-size: 12px;
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    th, td { border: 1px solid var(--border-dark); padding: 10px; text-align: center; font-size: 12.5px; }
-    th { background: #1f2937; color: var(--gold-primary); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid var(--border-dark); padding: 8px; text-align: center; font-size: 12px; }
+    th { background: var(--card-bg); color: var(--gold-primary); }
 
     .modal-overlay {
       display: none;
@@ -177,7 +176,7 @@
       background: rgba(0, 0, 0, 0.85);
       z-index: 9999;
       overflow-y: auto;
-      padding: 20px;
+      padding: 15px;
       box-sizing: border-box;
     }
     .modal-box {
@@ -185,53 +184,46 @@
       color: #000;
       max-width: 600px;
       margin: 10px auto;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      border-radius: 10px;
+      padding: 15px;
     }
 
     .paper-a4 { width: 100%; max-width: 100%; }
-    .paper-80mm { width: 300px; margin: 0 auto; font-size: 11px; }
-    .paper-50mm { width: 200px; margin: 0 auto; font-size: 9px; }
+    .paper-80mm { width: 280px; margin: 0 auto; font-size: 11px; }
+    .paper-50mm { width: 190px; margin: 0 auto; font-size: 9px; }
 
     #printableBillContainer, #rateListCaptureArea {
       background: #ffffff;
       color: #000000;
-      padding: 20px;
+      padding: 15px;
       box-sizing: border-box;
       position: relative;
     }
     .watermark-img {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      opacity: 0.08; max-width: 65%; height: auto; pointer-events: none;
+      opacity: 0.08; max-width: 60%; height: auto; pointer-events: none;
     }
     .bill-content-layer { position: relative; z-index: 1; }
-    .bill-header-layout { display: flex; align-items: center; justify-content: center; gap: 15px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-    .bill-header-layout img { max-height: 65px; width: auto; }
-    .signature-box { font-family: 'Brush Script MT', cursive, sans-serif; font-size: 22px; color: #000; border-bottom: 2px solid #000; padding: 0 8px; display: inline-block; }
+    .bill-header-layout { display: flex; align-items: center; justify-content: center; gap: 12px; border-bottom: 2px solid #000; padding-bottom: 8px; }
+    .bill-header-layout img { max-height: 55px; width: auto; }
+    .signature-box { font-family: 'Brush Script MT', cursive, sans-serif; font-size: 20px; color: #000; border-bottom: 2px solid #000; padding: 0 6px; display: inline-block; }
 
     .multi-item-container {
-      max-height: 160px; overflow-y: auto; background: #0b0f19; border: 1px solid var(--border-dark); border-radius: 8px; padding: 8px; margin: 6px 0;
+      max-height: 150px; overflow-y: auto; background: #090d16; border: 1px solid var(--border-dark); border-radius: 6px; padding: 6px; margin: 5px 0;
     }
-    .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 4px; border-bottom: 1px solid #1f2937; }
+    .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 4px; border-bottom: 1px solid #1f2937; }
   </style>
 </head>
 <body>
 
-  <div id="updateBanner">
-    🔔 <span>نیو اپ ڈیٹ دستیاب ہے!</span>
-    <button onclick="applyAppUpdate()">🔄 اپ ڈیٹ کریں</button>
-  </div>
-
   <div class="top-bar">
-    <div style="color: var(--gold-primary); font-weight: 800; font-size: 16px;">رہما ٹریڈرز - Rehma Traders</div>
+    <div style="color: var(--gold-primary); font-weight: 700; font-size: 14px;">رہما ٹریڈرز (Rehma Traders)</div>
   </div>
 
   <div class="header-card">
     <img src="logo.png" id="mainHeaderLogo" alt="Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
-    <h1>رہما ٹریڈرز (REHMA TRADERS)</h1>
-    <p><strong>پروپرائٹر:</strong> محمد جاوید (Muhammad Javed)</p>
-    <p>📱 0307-4015100 | 📱 0339-1020030</p>
+    <h1>رہما ٹریڈرز</h1>
+    <p><strong>پروپرائٹر:</strong> محمد جاوید | 📱 0307-4015100</p>
   </div>
 
   <!-- سیلز ہسٹری سمری -->
@@ -241,38 +233,38 @@
       <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4>ہفتہ وار سیل</h4>
+      <h4>ہفتہ وار</h4>
       <h2 id="dashWeeklySales" style="color: #60a5fa;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4>ماہانہ سیل</h4>
+      <h4>ماہانہ</h4>
       <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4>کل مجموعی سیل</h4>
+      <h4>کل سیل</h4>
       <h2 id="dashSales">Rs. 0</h2>
     </div>
   </div>
 
-  <!-- مین ڈیش بورڈ مینو -->
+  <!-- مین پروفیشنل مینو ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
-    <h3 style="text-align:center; border:none; margin-bottom:14px;">🎛️ مین ڈیش بورڈ مینو</h3>
+    <h3 style="border:none; margin-bottom:10px; font-size:14px;">🎛️ مین مینو (Main Menu)</h3>
     <div class="menu-nav-grid">
       <div class="menu-nav-btn" onclick="switchView('sectionBill')">
-        <span>📝</span>
+        <span class="icon">📝</span>
         <span>نیا بل بنائیں</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionRateList')">
-        <span>⚙️</span>
-        <span>ریٹ لسٹ اور آئٹمز</span>
+        <span class="icon">⚙️</span>
+        <span>ریٹ لسٹ</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionStock')">
-        <span>📦</span>
+        <span class="icon">📦</span>
         <span>اسٹاک مینجمنٹ</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionLedger')">
-        <span>🔍</span>
-        <span>کسٹمر لیجر و بیک اپ</span>
+        <span class="icon">🔍</span>
+        <span>لیجر اور بیک اپ</span>
       </div>
     </div>
   </div>
@@ -280,34 +272,34 @@
   <!-- 1. نیا بل سیکشن -->
   <div id="sectionBill" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
     </div>
     <h3>📝 نیا بل بنائیں (<span id="nextBillNo" style="color: var(--gold-primary);">INV-1001</span>)</h3>
     
-    <div style="display:flex; gap:8px;">
+    <div style="display:flex; gap:6px;">
       <input type="text" id="custName" placeholder="کسٹمر کا نام">
-      <button class="btn-silver" onclick="pickContact()" style="width:130px; font-size:12px; font-weight:bold;">📱 فون نمبر چنیں</button>
+      <button class="btn-silver" onclick="pickContact()" style="width:110px; font-weight:600;">📱 کانٹیکٹ</button>
     </div>
     <input type="text" id="custPhone" placeholder="موبائل نمبر">
     
-    <label style="font-size:13px; color:var(--gold-primary); font-weight:bold;">📦 آئٹمز منتخب کریں:</label>
+    <label style="font-size:12px; color:var(--gold-primary); font-weight:600;">📦 آئٹمز منتخب کریں:</label>
     <div class="multi-item-container" id="multiItemBox"></div>
-    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ منتخب آئٹمز بل میں شامل کریں</button>
+    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:5px 0;">➕ منتخب آئٹمز بل میں شامل کریں</button>
 
     <table id="billItemsTable">
       <thead>
-        <tr><th>نمبر</th><th>کوڈ</th><th>تفصیل</th><th>تعداد</th><th>ریٹ</th><th>کل قیمت</th><th>ایکشن</th></tr>
+        <tr><th>#</th><th>کوڈ</th><th>تفصیل</th><th>تعداد</th><th>ریٹ</th><th>کل</th><th>ایکشن</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <div style="margin-top:14px;">
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <input type="number" id="prevBalanceInput" placeholder="سابقہ بقایا (Previous Balance)" oninput="calculateBillTotals()" style="flex:1;">
-        <input type="number" id="discountInput" placeholder="رعایت / ڈسکاؤنٹ (Rs.)" oninput="calculateBillTotals()" style="flex:1;">
+    <div style="margin-top:10px;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <input type="number" id="prevBalanceInput" placeholder="سابقہ بقایا" oninput="calculateBillTotals()" style="flex:1;">
+        <input type="number" id="discountInput" placeholder="ڈسکاؤنٹ (Rs.)" oninput="calculateBillTotals()" style="flex:1;">
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:#0b0f19; border-radius:8px;">
-        <div><strong>صافی ٹوٹل:</strong> <span id="grandTotalTxt" style="color: var(--gold-primary); font-size: 18px;">Rs. 0</span></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin:10px 0; padding:10px; background:#090d16; border-radius:6px;">
+        <div><strong>صافی ٹوٹل:</strong> <span id="grandTotalTxt" style="color: var(--gold-primary); font-size: 16px; font-weight:700;">Rs. 0</span></div>
       </div>
       <button class="btn-gold" onclick="openBillPreview()" style="width:100%;">👁️ بل کا جائزہ اور پرنٹ کریں</button>
     </div>
@@ -316,90 +308,88 @@
   <!-- 2. ریٹ لسٹ سیکشن -->
   <div id="sectionRateList" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
       <div class="undo-redo-tools">
         <button class="tool-btn" onclick="undoAction()">↩️ Undo</button>
         <button class="tool-btn" onclick="redoAction()">↪️ Redo</button>
       </div>
     </div>
-    <h3>⚙️ ریٹ لسٹ اور آئٹمز مینجمنٹ</h3>
+    <h3>⚙️ ریٹ لسٹ اور آئٹمز</h3>
     
-    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; font-weight:bold; flex:2;">🖼️ ریٹ لسٹ ایچ ڈی JPG ڈاؤنلوڈ کریں</button>
-    </div>
+    <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; font-weight:600; width:100%; margin-bottom:10px;">🖼️ ریٹ لسٹ ایچ ڈی JPG شیئر کریں</button>
 
-    <!-- نیا آئٹم فارم -->
-    <div style="background:#0b0f19; padding:10px; border-radius:8px; margin-bottom:12px; border:1px solid var(--border-dark);">
-      <h4 style="margin:0 0 6px 0; color:var(--gold-primary);">➕ نیا آئٹم شامل کریں</h4>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <div style="background:#090d16; padding:8px; border-radius:6px; margin-bottom:10px; border:1px solid var(--border-dark);">
+      <h4 style="margin:0 0 5px 0; color:var(--gold-primary); font-size:12px;">➕ نیا آئٹم شامل کریں</h4>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
-        <input type="text" id="newItemNameEn" placeholder="انگریزی نام" style="flex:2;">
         <input type="text" id="newItemCode" placeholder="کوڈ" style="flex:1;">
         <input type="number" id="newItemRate" placeholder="ریٹ" style="flex:1;">
-        <button class="btn-gold" onclick="addNewItem()" style="flex:1; font-weight:bold;">💾 Save New Item</button>
+        <button class="btn-gold" onclick="addNewItem()" style="flex:1; font-weight:600;">سیو</button>
       </div>
     </div>
 
-    <div id="rateListCaptureArea" style="margin-top:16px; border-radius:8px; border:1px solid #374151;">
-      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:10px;">
-        <h2 style="margin:2px 0; color:#000; font-size:22px;">رہما ٹریڈرز - آفیشل ریٹ لسٹ</h2>
-        <p style="margin:2px 0; color:#333; font-size:12px;">پروپرائٹر: محمد جاوید | 📱 0307-4015100</p>
+    <div id="rateListCaptureArea" style="margin-top:10px; border-radius:6px; border:1px solid #374151;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
+        <h2 style="margin:2px 0; color:#000; font-size:18px;">رہما ٹریڈرز - ریٹ لسٹ</h2>
+        <p style="margin:2px 0; color:#333; font-size:11px;">محمد جاوید | 0307-4015100</p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
           <tr style="background:#f2f2f2;">
             <th style="border:1px solid #000; color:#000;">کوڈ</th>
-            <th style="border:1px solid #000; color:#000;">تفصیل آئٹم</th>
-            <th style="border:1px solid #000; color:#000;">ریٹ (روپے)</th>
-            <th class="no-print-col" style="border:1px solid #000; color:#000;">ڈیلیٹ</th>
+            <th style="border:1px solid #000; color:#000;">تفصیل</th>
+            <th style="border:1px solid #000; color:#000;">ریٹ</th>
+            <th class="no-print-col" style="border:1px solid #000; color:#000;">حذف</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <!-- سنگل سیو بٹن -->
-    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Rates (تمام ریٹس محفوظ کریں)</button>
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:12px;">💾 تمام ریٹس محفوظ کریں (Save All Rates)</button>
   </div>
 
   <!-- 3. اسٹاک مینجمنٹ سیکشن -->
   <div id="sectionStock" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
       <div class="undo-redo-tools">
         <button class="tool-btn" onclick="undoAction()">↩️ Undo</button>
         <button class="tool-btn" onclick="redoAction()">↪️ Redo</button>
       </div>
     </div>
-    <h3>📦 اسٹاک مینجمنٹ (Stock Management)</h3>
+    <h3>📦 اسٹاک مینجمنٹ</h3>
     <table id="stockReportTable">
       <thead>
-        <tr><th>کوڈ</th><th>سامان کا نام</th><th>موجودہ اسٹاک تعداد</th></tr>
+        <tr><th>کوڈ</th><th>نام</th><th>موجودہ اسٹاک</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <!-- سنگل سیو بٹن -->
-    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Stock (تمام اسٹاک محفوظ کریں)</button>
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:12px;">💾 تمام اسٹاک محفوظ کریں (Save All Stock)</button>
   </div>
 
   <!-- 4. کسٹمر لیجر و بیک اپ سیکشن -->
   <div id="sectionLedger" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
     </div>
-    <h3>🔍 کسٹمر لیجر، بل ہسٹری و بیک اپ</h3>
-    <input type="text" id="searchCust" placeholder="کسٹمر تلاش کریں..." oninput="filterLedger()">
+    <h3>🔍 کسٹمر لیجر، ہسٹری و بیک اپ</h3>
     
-    <div style="display:flex; gap:8px; margin:12px 0; flex-wrap:wrap;">
-      <button class="btn-silver" onclick="exportDataBackup()" style="flex:1;">💾 تمام ڈیٹا بیک اپ ڈاؤنلوڈ کریں (Export Backup)</button>
-      <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 پرانا بیک اپ بحال کریں (Restore Backup)</button>
-      <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+    <div style="background: var(--card-bg); padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--gold-primary);">
+      <p style="margin: 0 0 6px 0; font-size: 12px; color: var(--gold-primary); font-weight: 600;">💾 ڈیٹا بیک اپ اور ریسٹور:</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-silver" onclick="exportDataBackup()" style="flex:1; background:#059669; color:#fff; font-weight:600;">💾 بیک اپ ڈاؤنلوڈ کریں</button>
+        <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 بیک اپ بحال کریں</button>
+        <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+      </div>
     </div>
+
+    <input type="text" id="searchCust" placeholder="کسٹمر تلاش کریں..." oninput="filterLedger()">
     
     <table id="ledgerTable">
       <thead>
-        <tr><th>بل #</th><th>کسٹمر</th><th>تاریخ و وقت</th><th>کل رقم</th><th>ایکشن</th></tr>
+        <tr><th>بل #</th><th>کسٹمر</th><th>تاریخ</th><th>رقم</th><th>ایکشن</th></tr>
       </thead>
       <tbody></tbody>
     </table>
@@ -408,12 +398,12 @@
   <!-- بل پرنٹ ماڈل -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
-      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px;">
+      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #ccc; padding-bottom:6px;">
         <label><strong>🖨️ پیپر سائز:</strong></label>
-        <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:6px; margin:0; background:#f3f4f6; color:#000;">
+        <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:5px; margin:0; background:#f3f4f6; color:#000;">
           <option value="paper-a4">A4 (بڑا صفحہ)</option>
           <option value="paper-80mm">Thermal 80mm</option>
-          <option value="paper-50mm">Thermal 50mm / 58mm</option>
+          <option value="paper-50mm">Thermal 50mm</option>
         </select>
       </div>
 
@@ -423,30 +413,30 @@
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:2px 0; color:#000; font-size:22px; font-weight:800;">رہما ٹریڈرز</h2>
-              <p style="margin:2px 0; font-size:11.5px;">پروپرائٹر: محمد جاوید | 📱 0307-4015100</p>
+              <h2 style="margin:2px 0; color:#000; font-size:18px; font-weight:700;">رہما ٹریڈرز</h2>
+              <p style="margin:2px 0; font-size:11px;">محمد جاوید | 📱 0307-4015100</p>
             </div>
           </div>
-          <div id="billPrintContent" style="margin:12px 0; font-size:12px;"></div>
-          <div style="text-align:center; margin-top:10px; border-top:1px dashed #000; padding-top:6px;">
-            <p style="margin:2px 0; font-size:10.5px; font-weight:bold;">نوٹ: خریدا ہوا مال تبدیل یا واپس ہو سکتا ہے۔</p>
+          <div id="billPrintContent" style="margin:10px 0; font-size:11px;"></div>
+          <div style="text-align:center; margin-top:8px; border-top:1px dashed #000; padding-top:4px;">
+            <p style="margin:2px 0; font-size:10px; font-weight:bold;">نوٹ: خریدا ہوا مال تبدیل یا واپس ہو سکتا ہے۔</p>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px;">
-            <div style="text-align:left; border:1px solid #000; padding:5px 8px; border-radius:4px; font-size:9.5px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:15px;">
+            <div style="text-align:left; border:1px solid #000; padding:4px 6px; border-radius:4px; font-size:9px;">
               <strong>JazzCash:</strong> 03074015100<br><strong>ABL:</strong> 07550010140074540011
             </div>
             <div style="text-align:right;">
-              <span style="font-size:10.5px; font-weight:bold; display:block;">Owner Signature</span>
+              <span style="font-size:10px; font-weight:bold; display:block;">Owner Signature</span>
               <span class="signature-box">Muhammad Javed</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="no-print" style="display:flex; gap:8px; margin-top:14px; border-top:1px solid #ddd; padding-top:10px;">
-        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ بند کریں</button>
-        <button onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖼️ Share JPG</button>
-        <button onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ پرنٹ کریں</button>
+      <div class="no-print" style="display:flex; gap:6px; margin-top:12px; border-top:1px solid #ddd; padding-top:8px;">
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:5px; font-weight:600; cursor:pointer;">بند کریں</button>
+        <button onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:5px; font-weight:600; cursor:pointer;">Share JPG</button>
+        <button onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:8px; border-radius:5px; font-weight:600; cursor:pointer;">پرنٹ</button>
       </div>
     </div>
   </div>
