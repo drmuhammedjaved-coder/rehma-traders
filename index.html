@@ -42,11 +42,9 @@
       text-align: center;
       margin-bottom: 12px;
     }
-    .header-card img.main-logo { max-height: 50px; margin-bottom: 4px; }
     .header-card h1 { color: var(--gold-primary); margin: 0 0 2px 0; font-size: 20px; font-weight: 700; }
     .header-card p { margin: 2px 0; font-size: 12px; color: var(--text-sub); }
 
-    /* پروفیشنل سیلز سمری */
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -67,7 +65,6 @@
     .dash-card h4 { margin: 0; font-size: 10.5px; color: var(--text-sub); }
     .dash-card h2 { margin: 3px 0 0 0; color: var(--gold-primary); font-size: 14px; }
 
-    /* پروفیشنل کمپیکٹ مینو بٹنز */
     .menu-nav-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -87,7 +84,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: 0.15s ease;
     }
     .menu-nav-btn:hover { border-color: var(--gold-primary); background: #252f3f; }
     .menu-nav-btn span.icon { font-size: 18px; }
@@ -98,8 +94,11 @@
       padding: 14px;
       margin-bottom: 14px;
       border: 1px solid var(--border-dark);
+      display: none; /* بائی ڈیفالٹ سب بند ہوں گے */
     }
-    .hidden-section { display: none !important; }
+    .section.active-section {
+      display: block !important; /* جو فعال ہوگا صرف وہی نظر آئے گا */
+    }
 
     .back-nav-bar {
       display: flex;
@@ -221,7 +220,6 @@
   </div>
 
   <div class="header-card">
-    <img src="logo.png" id="mainHeaderLogo" alt="Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
     <h1>رہما ٹریڈرز</h1>
     <p><strong>پروپرائٹر:</strong> محمد جاوید | 📱 0307-4015100</p>
   </div>
@@ -246,8 +244,8 @@
     </div>
   </div>
 
-  <!-- مین پروفیشنل مینو ڈیش بورڈ -->
-  <div id="mainDashboardMenu" class="section">
+  <!-- مین مینو ڈیش بورڈ -->
+  <div id="mainDashboardMenu" class="section active-section">
     <h3 style="border:none; margin-bottom:10px; font-size:14px;">🎛️ مین مینو (Main Menu)</h3>
     <div class="menu-nav-grid">
       <div class="menu-nav-btn" onclick="switchView('sectionBill')">
@@ -270,7 +268,7 @@
   </div>
 
   <!-- 1. نیا بل سیکشن -->
-  <div id="sectionBill" class="section hidden-section">
+  <div id="sectionBill" class="section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
     </div>
@@ -306,7 +304,7 @@
   </div>
 
   <!-- 2. ریٹ لسٹ سیکشن -->
-  <div id="sectionRateList" class="section hidden-section">
+  <div id="sectionRateList" class="section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
       <div class="undo-redo-tools">
@@ -350,7 +348,7 @@
   </div>
 
   <!-- 3. اسٹاک مینجمنٹ سیکشن -->
-  <div id="sectionStock" class="section hidden-section">
+  <div id="sectionStock" class="section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
       <div class="undo-redo-tools">
@@ -370,7 +368,7 @@
   </div>
 
   <!-- 4. کسٹمر لیجر و بیک اپ سیکشن -->
-  <div id="sectionLedger" class="section hidden-section">
+  <div id="sectionLedger" class="section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ واپس ڈیش بورڈ</button>
     </div>
@@ -408,10 +406,8 @@
       </div>
 
       <div id="printableBillContainer" class="paper-a4">
-        <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
         <div class="bill-content-layer">
           <div class="bill-header-layout">
-            <img id="printHeaderLogo" src="logo.png" alt="Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
               <h2 style="margin:2px 0; color:#000; font-size:18px; font-weight:700;">رہما ٹریڈرز</h2>
               <p style="margin:2px 0; font-size:11px;">محمد جاوید | 📱 0307-4015100</p>
