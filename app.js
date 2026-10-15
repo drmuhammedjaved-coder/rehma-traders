@@ -1,6 +1,3 @@
-let newWorkerWaiting = null;
-let isUnsavedChanges = false;
-
 let undoStack = [];
 let redoStack = [];
 
@@ -27,42 +24,19 @@ let dbBills = [];
 let currentBillItems = [];
 let currentPendingBillObj = null;
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      reg.addEventListener('updatefound', () => {
-        const installingWorker = reg.installing;
-        installingWorker.addEventListener('statechange', () => {
-          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            newWorkerWaiting = installingWorker;
-          }
-        });
-      });
-    }).catch(() => {});
-  });
-}
-
+// نہایت ہی آسان اور گارنٹیڈ پیج سوئچنگ فنکشن
 function switchView(targetId) {
-  const sections = ['mainDashboardMenu', 'sectionBill', 'sectionRateList', 'sectionStock', 'sectionLedger'];
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      if (id === targetId) {
-        el.classList.remove('hidden-section');
-      } else {
-        el.classList.add('hidden-section');
-      }
-    }
+  const allSections = document.querySelectorAll('.section');
+  allSections.forEach(sec => {
+    sec.classList.remove('active-section');
   });
+
+  const targetEl = document.getElementById(targetId);
+  if (targetEl) {
+    targetEl.classList.add('active-section');
+  }
 
   if (targetId === 'mainDashboardMenu') {
-    try {
-      itemsList = JSON.parse(localStorage.getItem('rehma_items')) || defaultItems;
-      dbBills = JSON.parse(localStorage.getItem('rehma_bills')) || [];
-    } catch(e){}
-    renderMultiItemBox();
-    renderRateListTable();
-    renderStockReportTable();
     updateDashboard();
     renderLedger(dbBills);
   }
@@ -120,7 +94,7 @@ async function pickContact() {
       }
     } catch (err) {}
   } else {
-    alert("موبائل کانٹیکٹ سپورٹ نہیں ہے۔");
+    alert("موبائل کنٹیکٹ سپورٹ دستیاب نہیں ہے۔");
   }
 }
 
