@@ -1,11 +1,9 @@
-let currentLang = 'en';
 let newWorkerWaiting = null;
 let isUnsavedChanges = false;
 
-const dict = {
-  en: { proprietor: "Proprietor:", totalSales: "Total Sales", todaySales: "Daily Sales", weeklySales: "Weekly Sales", monthlySales: "Monthly Sales", createNewBill: "Create New Bill" },
-  ur: { proprietor: "پروپرائٹر:", totalSales: "کل سیل", todaySales: "آج کی سیل", weeklySales: "ہفتہ وار سیل", monthlySales: "ماہانہ سیل", createNewBill: "نیا بل بنائیں" }
-};
+// Undo / Redo History Stack
+let undoStack = [];
+let redoStack = [];
 
 let defaultItems = [
   { nameEn: '3 Pcs Chab', nameUr: 'تھری پیس چاپ', code: '2017594941000', rate: 300, stock: 50 },
@@ -51,6 +49,32 @@ function applyAppUpdate() {
   window.location.reload();
 }
 
+function pushStateToUndo() {
+  undoStack.push(JSON.stringify(itemsList));
+  redoStack = []; // Clear redo stack on new action
+  if (undoStack.length > 30) undoStack.shift(); // Max 30 undo steps
+}
+
+function undoAction() {
+  if (undoStack.length === 0) { alert("واپس جانے کے لیے کوئی ہسٹری نہیں ہے۔ (Nothing to Undo)"); return; }
+  redoStack.push(JSON.stringify(itemsList));
+  itemsList = JSON.parse(undoStack.pop());
+  renderMultiItemBox();
+  renderRateListTable();
+  renderStockReportTable();
+  isUnsavedChanges = true;
+}
+
+function redoAction() {
+  if (redoStack.length === 0) { alert("آگے جانے کے لیے کوئی ڈیٹا نہیں ہے۔ (Nothing to Redo)"); return; }
+  undoStack.push(JSON.stringify(itemsList));
+  itemsList = JSON.parse(redoStack.pop());
+  renderMultiItemBox();
+  renderRateListTable();
+  renderStockReportTable();
+  isUnsavedChanges = true;
+}
+
 function switchView(targetId) {
   if (targetId === 'mainDashboardMenu' && isUnsavedChanges) {
     let confirmLeave = confirm("⚠️ آپ نے تبدیلیاں سیو نہیں کیں۔ کیا آپ بغیر سیو کیے ڈیش بورڈ پر واپس جانا چاہتے ہیں؟");
@@ -61,10 +85,13 @@ function switchView(targetId) {
     isUnsavedChanges = false;
     try {
       itemsList = JSON.parse(localStorage.getItem('rehma_items')) || defaultItems;
+      dbBills = JSON.parse(localStorage.getItem('rehma_bills')) || [];
     } catch(e){}
     renderMultiItemBox();
     renderRateListTable();
     renderStockReportTable();
+    updateDashboard();
+    renderLedger(dbBills);
   }
 
   const sections = ['mainDashboardMenu', 'sectionBill', 'sectionRateList', 'sectionStock', 'sectionLedger'];
@@ -94,15 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateNextBillNo();
 });
 
-function toggleLanguage() {
-  currentLang = currentLang === 'en' ? 'ur' : 'en';
-  document.body.className = currentLang === 'en' ? 'lang-en' : 'lang-ur';
-  document.getElementById('langToggleBtn').innerText = currentLang === 'en' ? '🌐 اردو' : '🌐 English';
-  renderMultiItemBox();
-  renderRateListTable();
-  renderStockReportTable();
-}
-
 async function pickContact() {
   if ('contacts' in navigator && 'ContactsManager' in window) {
     try {
@@ -127,7 +145,7 @@ function renderMultiItemBox() {
   if (!box) return;
   box.innerHTML = '';
   itemsList.forEach((item, idx) => {
-    let displayName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+    let displayName = item.nameUr || item.nameEn;
     let currStock = (item.stock !== undefined) ? item.stock : 0;
     let isOutOfStock = currStock <= 0;
     let stockBadge = isOutOfStock ? `<span style="color:#ef4444; font-weight:bold;">⚠️ (ختم)</span>` : `<span style="color:#34d399;">[${currStock}]</span>`;
@@ -135,7 +153,7 @@ function renderMultiItemBox() {
     box.innerHTML += `
       <div class="multi-item-row" style="${isOutOfStock ? 'opacity:0.6;' : ''}">
         <label style="font-size:12px; cursor:pointer;">
-          <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:4px;">
+          <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-left:6px;">
           ${displayName} ${stockBadge}
         </label>
         <span style="font-size:12px; color:var(--gold-primary); font-weight:bold;">Rs. ${item.rate}</span>
@@ -167,7 +185,7 @@ function renderRateListTable() {
   if (!tbody) return;
   tbody.innerHTML = '';
   itemsList.forEach((item, idx) => {
-    let itemName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+    let itemName = item.nameUr || item.nameEn;
     tbody.innerHTML += `<tr>
       <td><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; width:100%;"></td>
       <td><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:4px; width:100%;"></td>
@@ -182,7 +200,7 @@ function renderStockReportTable() {
   if (!tbody) return;
   tbody.innerHTML = '';
   itemsList.forEach((item, idx) => {
-    let itemName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+    let itemName = item.nameUr || item.nameEn;
     let currStock = (item.stock !== undefined) ? item.stock : 0;
     tbody.innerHTML += `<tr>
       <td>${item.code || '---'}</td>
@@ -192,10 +210,10 @@ function renderStockReportTable() {
   });
 }
 
-function updateItemCode(idx, val) { itemsList[idx].code = val.trim(); isUnsavedChanges = true; }
-function updateItemName(idx, val) { if (currentLang === 'ur') itemsList[idx].nameUr = val.trim(); else itemsList[idx].nameEn = val.trim(); isUnsavedChanges = true; }
-function updateItemRate(idx, val) { itemsList[idx].rate = parseFloat(val) || 0; isUnsavedChanges = true; }
-function updateItemStock(idx, val) { itemsList[idx].stock = parseInt(val) || 0; isUnsavedChanges = true; }
+function updateItemCode(idx, val) { pushStateToUndo(); itemsList[idx].code = val.trim(); isUnsavedChanges = true; }
+function updateItemName(idx, val) { pushStateToUndo(); itemsList[idx].nameUr = val.trim(); itemsList[idx].nameEn = val.trim(); isUnsavedChanges = true; }
+function updateItemRate(idx, val) { pushStateToUndo(); itemsList[idx].rate = parseFloat(val) || 0; isUnsavedChanges = true; }
+function updateItemStock(idx, val) { pushStateToUndo(); itemsList[idx].stock = parseInt(val) || 0; isUnsavedChanges = true; }
 
 function savePermanentRatesList() {
   localStorage.setItem('rehma_items', JSON.stringify(itemsList));
@@ -207,20 +225,22 @@ function savePermanentRatesList() {
 }
 
 function deleteRateListItem(idx) {
+  pushStateToUndo();
   itemsList.splice(idx, 1);
   savePermanentRatesList();
 }
 
 function addNewItem() {
-  const nameEn = document.getElementById('newItemNameEn').value.trim();
   const nameUr = document.getElementById('newItemNameUr').value.trim();
+  const nameEn = document.getElementById('newItemNameEn').value.trim();
   const code = document.getElementById('newItemCode').value.trim();
   const rate = parseFloat(document.getElementById('newItemRate').value);
-  if ((nameEn || nameUr) && !isNaN(rate)) {
+  if ((nameUr || nameEn) && !isNaN(rate)) {
+    pushStateToUndo();
     itemsList.push({ nameEn: nameEn || nameUr, nameUr: nameUr || nameEn, code, rate, stock: 10 });
     savePermanentRatesList();
-    document.getElementById('newItemNameEn').value = '';
     document.getElementById('newItemNameUr').value = '';
+    document.getElementById('newItemNameEn').value = '';
     document.getElementById('newItemCode').value = '';
     document.getElementById('newItemRate').value = '';
   }
@@ -231,7 +251,7 @@ function renderCurrentBillTable() {
   if (!tbody) return;
   tbody.innerHTML = '';
   currentBillItems.forEach((i, idx) => {
-    let nameShow = currentLang === 'ur' ? i.nameUr : i.nameEn;
+    let nameShow = i.nameUr || i.nameEn;
     tbody.innerHTML += `<tr>
       <td>${idx + 1}</td>
       <td><input type="text" value="${i.code}" oninput="currentBillItems[${idx}].code=this.value" style="width:70px; padding:3px;"></td>
@@ -358,16 +378,16 @@ function renderBillToPrintArea(b) {
 
   document.getElementById('billPrintContent').innerHTML = `
     <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
-      <div><strong>Bill #:</strong> ${b.id}<br><strong>Customer:</strong> ${b.customer}</div>
-      <div><strong>Date:</strong> ${b.date}</div>
+      <div><strong>بل #:</strong> ${b.id}<br><strong>کسٹمر:</strong> ${b.customer}</div>
+      <div><strong>تاریخ:</strong> ${b.date}</div>
     </div>
     <table style="width:100%; border-collapse:collapse; text-align:center; font-size:10.5px;">
-      <thead><tr style="background:#eee;"><th>#</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead>
+      <thead><tr style="background:#eee;"><th>#</th><th>تفصیل</th><th>کوڈ</th><th>تعداد</th><th>ریٹ</th><th>کل قیمت</th></tr></thead>
       <tbody>${itemsRows}</tbody>
     </table>
     <div style="text-align:right; font-size:11px; margin-top:6px;">
-      <p style="margin:2px 0;">Subtotal: Rs. ${b.subtotal}</p>
-      <p style="margin:2px 0; font-weight:bold; color:#d4af37;">Net Total: Rs. ${b.netAmount}</p>
+      <p style="margin:2px 0;">ٹوٹل رقم: Rs. ${b.subtotal}</p>
+      <p style="margin:2px 0; font-weight:bold; color:#d4af37;">صافی رقم: Rs. ${b.netAmount}</p>
     </div>
   `;
 }
@@ -388,7 +408,7 @@ function renderLedger(data) {
   data.forEach((b, idx) => {
     tbody.innerHTML += `<tr>
       <td>${b.id}</td><td>${b.customer}</td><td>${b.date}</td><td>Rs. ${b.netAmount}</td>
-      <td><button onclick="previewHistoryBill(${idx})" style="padding:3px 6px; font-size:11px;">👁️</button></td>
+      <td><button onclick="previewHistoryBill(${idx})" style="padding:3px 6px; font-size:11px;">👁️ بل دیکھیں</button></td>
     </tr>`;
   });
 }
