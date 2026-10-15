@@ -88,6 +88,23 @@ let currentPendingBillObj = null;
 let globalUndoStack = [];
 let globalRedoStack = [];
 
+const appThemes = ['blue', 'emerald', 'gold', 'light'];
+let currentThemeIndex = 0;
+
+function changeAppTheme(themeName) {
+  document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+  if (themeName !== 'blue') {
+    document.body.classList.add(`theme-${themeName}`);
+  }
+  localStorage.setItem('rehma_theme', themeName);
+}
+
+function toggleAppTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % appThemes.length;
+  const newTheme = appThemes[currentThemeIndex];
+  changeAppTheme(newTheme);
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(reg => {
@@ -229,6 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dbBills = [];
   }
 
+  const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
+  currentThemeIndex = appThemes.indexOf(savedTheme);
+  if (currentThemeIndex === -1) currentThemeIndex = 0;
+  changeAppTheme(savedTheme);
+
   switchView('mainDashboardMenu');
   renderMultiItemBox();
   renderRateListTable();
@@ -241,7 +263,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleLanguage() {
   registerGlobalChange();
   currentLang = currentLang === 'en' ? 'ur' : 'en';
-  document.body.className = currentLang === 'en' ? 'lang-en' : 'lang-ur';
+  document.body.className = document.body.className.replace(/lang-\w+/g, '').trim();
+  document.body.classList.add(currentLang === 'en' ? 'lang-en' : 'lang-ur');
+  
   const btn = document.getElementById('langToggleBtn');
   if (btn) btn.innerText = currentLang === 'en' ? '🌐 Switch to اردو' : '🌐 Switch to English';
 
@@ -299,7 +323,7 @@ function renderMultiItemBox() {
           <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:6px;">
           ${displayName}${codeStr} ${stockBadge}
         </label>
-        <span style="font-size:12px; color:var(--gold-primary); font-weight:bold;">Rs. ${item.rate}</span>
+        <span style="font-size:12px; color:var(--accent-blue); font-weight:bold;">Rs. ${item.rate}</span>
       </div>
     `;
   });
@@ -373,7 +397,7 @@ function renderStockReportTable() {
     tbody.innerHTML += `<tr>
       <td>${item.code || '---'}</td>
       <td>${itemName}</td>
-      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:6px; width:80px; text-align:center; background:#0b0f19; color:var(--text-bright); border:1px solid var(--border-dark); border-radius:4px; ${stockWarningStyle}"></td>
+      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:6px; width:80px; text-align:center; background:var(--bg-dark); color:var(--text-bright); border:1px solid var(--border-dark); border-radius:4px; ${stockWarningStyle}"></td>
     </tr>`;
   });
 }
@@ -463,10 +487,10 @@ function renderCurrentBillTable() {
     let nameShow = currentLang === 'ur' ? i.nameUr : i.nameEn;
     tbody.innerHTML += `<tr>
       <td>${idx + 1}</td>
-      <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:80px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:80px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
       <td>${nameShow}</td>
-      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
       <td>Rs. ${i.total}</td>
       <td><button type="button" onclick="removeBillItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">❌</button></td>
     </tr>`;
@@ -740,9 +764,9 @@ function renderLedger(data) {
   data.forEach((b, idx) => {
     tbody.innerHTML += `<tr>
       <td>${b.id}</td>
-      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--gold-primary);">${b.customer}</strong></td>
+      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--accent-blue);">${b.customer}</strong></td>
       <td>${b.date}</td>
-      <td style="color:var(--gold-primary); font-weight:bold;">Rs. ${b.netAmount}</td>
+      <td style="color:var(--accent-blue); font-weight:bold;">Rs. ${b.netAmount}</td>
       <td>
         <button type="button" class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
         <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
