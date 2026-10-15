@@ -1,23 +1,21 @@
-const CACHE_NAME = 'rehma-traders-v2';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'rehma-traders-v3';
+const assetsToCache = [
   './',
   './index.html',
   './app.js',
   './manifest.json',
-  './logo.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+  './logo.png'
 ];
 
-// انسٹالیشن کے وقت تمام فائلیں کیش میں سیو کریں
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+      return cache.addAll(assetsToCache);
+    })
   );
 });
 
-// پرانے کیشے کو صاف کرنا
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -32,25 +30,10 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// آف لائن موڈ: اگر انٹرنیٹ نہ ہو تو کیش سے فائلیں لوڈ کریں
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return response;
-      });
-    }).catch(() => {
-      return caches.match('./index.html');
+      return cachedResponse || fetch(event.request);
     })
   );
 });
