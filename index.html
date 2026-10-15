@@ -7,7 +7,6 @@
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* CSS Variables & Dynamic Themes Engine */
     :root {
       --bg-dark: #0b132b;
       --panel-bg: #1c2541;
@@ -21,73 +20,61 @@
       --btn-shadow: rgba(2, 132, 199, 0.4);
     }
 
-    /* Theme 1: Royal Blue (Default) */
     body.theme-blue {
       --bg-dark: #0b132b;
       --panel-bg: #1c2541;
       --card-bg: #3a506b;
       --accent-main: #38bdf8;
-      --accent-hover: #0284c7;
       --border-dark: #334155;
       --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
       --btn-shadow: rgba(2, 132, 199, 0.4);
     }
 
-    /* Theme 2: Emerald Night */
     body.theme-emerald {
       --bg-dark: #062c22;
       --panel-bg: #0a4033;
       --card-bg: #115e4c;
       --accent-main: #34d399;
-      --accent-hover: #10b981;
       --border-dark: #064e3b;
       --btn-grad: linear-gradient(135deg, #059669, #047857);
       --btn-shadow: rgba(5, 150, 105, 0.4);
     }
 
-    /* Theme 3: Gold & Charcoal */
     body.theme-gold {
       --bg-dark: #121212;
       --panel-bg: #1e1e1e;
       --card-bg: #2d2d2d;
       --accent-main: #fbbf24;
-      --accent-hover: #f59e0b;
       --border-dark: #3f3f46;
       --btn-grad: linear-gradient(135deg, #d4af37, #aa7c11);
       --btn-shadow: rgba(212, 175, 55, 0.4);
     }
 
-    /* Theme 4: Deep Purple */
     body.theme-purple {
       --bg-dark: #130327;
       --panel-bg: #210936;
       --card-bg: #3c1361;
       --accent-main: #c084fc;
-      --accent-hover: #a855f7;
       --border-dark: #4c1d95;
       --btn-grad: linear-gradient(135deg, #7e22ce, #6b21a8);
       --btn-shadow: rgba(126, 34, 206, 0.4);
     }
 
-    /* Theme 5: Ruby Dark */
     body.theme-ruby {
       --bg-dark: #2b0910;
       --panel-bg: #401018;
       --card-bg: #5c1823;
       --accent-main: #f87171;
-      --accent-hover: #ef4444;
       --border-dark: #7f1d1d;
       --btn-grad: linear-gradient(135deg, #dc2626, #991b1b);
       --btn-shadow: rgba(220, 38, 38, 0.4);
     }
 
-    /* Theme 6: Clean Light Mode */
     body.theme-light {
       --bg-dark: #f8fafc;
       --panel-bg: #ffffff;
       --card-bg: #e2e8f0;
       --accent-main: #0284c7;
-      --accent-hover: #0369a1;
       --text-bright: #0f172a;
       --text-sub: #475569;
       --border-dark: #cbd5e1;
@@ -106,7 +93,6 @@
     body.lang-ur { direction: rtl; }
     body.lang-en { direction: ltr; }
 
-    /* Top Bar Header Area */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -124,7 +110,6 @@
       gap: 10px;
     }
 
-    /* پرومیننٹ تھیم سلیکٹر ڈراپ ڈاؤن */
     .theme-select-box {
       background: var(--panel-bg);
       color: var(--text-bright);
@@ -138,10 +123,6 @@
       box-shadow: 0 2px 8px var(--btn-shadow);
       transition: all 0.2s ease;
     }
-    .theme-select-box:hover {
-      background: var(--accent-main);
-      color: #000;
-    }
 
     .lang-btn {
       background: var(--panel-bg);
@@ -152,10 +133,6 @@
       border-radius: 30px;
       cursor: pointer;
       font-size: 13px;
-      transition: all 0.2s ease;
-    }
-    .lang-btn:hover {
-      border-color: var(--accent-main);
     }
 
     #updateBanner {
@@ -200,7 +177,6 @@
       padding: 24px;
       text-align: center;
       margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .header-card img.main-logo { max-height: 95px; margin-bottom: 12px; }
     .header-card h1 { color: var(--text-bright); margin: 0 0 6px 0; font-size: 28px; font-weight: 800; }
@@ -223,7 +199,6 @@
     .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); text-transform: uppercase; }
     .dash-card h2 { margin: 6px 0 0 0; color: var(--text-bright); font-size: 17px; font-weight: 700; }
 
-    /* 🌟 شاندار کپسول اور گول مینو بٹنز (Pill-Shaped Iconic Buttons) */
     .menu-nav-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -249,7 +224,6 @@
     }
     .menu-nav-btn:hover {
       transform: translateY(-5px) scale(1.03);
-      box-shadow: 0 12px 25px var(--btn-shadow);
       filter: brightness(1.15);
     }
     .menu-nav-btn span.icon { 
@@ -288,9 +262,7 @@
       border-radius: 25px;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s ease;
     }
-    .back-btn:hover { opacity: 0.9; transform: translateX(-3px); }
 
     h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-top: 0; font-size: 18px; font-weight: 700; }
 
@@ -306,9 +278,6 @@
       font-size: 14px;
       outline: none;
     }
-    input:focus, select:focus {
-      border-color: var(--accent-main);
-    }
 
     button.btn-gold {
       background: var(--btn-grad);
@@ -319,9 +288,7 @@
       padding: 12px 20px;
       cursor: pointer;
       box-shadow: 0 4px 12px var(--btn-shadow);
-      transition: all 0.2s ease;
     }
-    button.btn-gold:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
     button.btn-silver {
       background: var(--card-bg);
@@ -373,15 +340,25 @@
     .paper-50mm { width: 200px; margin: 0 auto; font-size: 9px; }
 
     #printableBillContainer, #rateListCaptureArea {
-      background: #ffffff;
-      color: #000000;
+      background: #ffffff !important;
+      color: #000000 !important;
       padding: 20px;
       box-sizing: border-box;
       position: relative;
     }
+
+    /* 🖼️ واٹر مارک کا پکا ڈیزائن */
     .watermark-img {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      opacity: 0.08; max-width: 65%; height: auto; pointer-events: none;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      opacity: 0.12 !important;
+      max-width: 70% !important;
+      height: auto !important;
+      pointer-events: none !important;
+      z-index: 0 !important;
+      display: block !important;
     }
     .bill-content-layer { position: relative; z-index: 1; }
 
@@ -406,14 +383,57 @@
     }
     .multi-item-row:last-child { border-bottom: none; }
 
+    /* 🖨️ پرنٹنگ کے لیے 100% پرفیکٹ CSS Fix (خالی صفحہ ختم) */
     @media print {
-      @page { size: auto; margin: 5mm; }
-      body * { visibility: hidden !important; }
-      #previewModal, #previewModal * { visibility: visible !important; }
-      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: none !important; padding: 0 !important; }
-      .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #fff !important; }
-      .no-print { display: none !important; }
-      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; padding: 5mm !important; }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      body * {
+        visibility: hidden !important;
+      }
+      #previewModal, #previewModal * {
+        visibility: visible !important;
+      }
+      .modal-overlay {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+      }
+      .modal-box {
+        box-shadow: none !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        border: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #printableBillContainer {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        padding: 0mm !important;
+        margin: 0 !important;
+      }
+      .watermark-img {
+        display: block !important;
+        opacity: 0.15 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
     }
   </style>
 </head>
@@ -427,7 +447,6 @@
   <div class="top-bar">
     <div style="color: var(--accent-main); font-weight: 800; font-size: 16px;">REHMA TRADERS</div>
     <div class="top-controls">
-      <!-- 🎨 6 تھیمز والا ڈراپ ڈاؤن بٹن -->
       <select id="themeSelector" class="theme-select-box" onchange="changeAppTheme(this.value)">
         <option value="blue">🎨 Royal Blue</option>
         <option value="emerald">🎨 Emerald Night</option>
@@ -478,7 +497,6 @@
     </div>
   </div>
 
-  <!-- 🎛️ کپسول مینو بٹنز -->
   <div id="mainDashboardMenu" class="section">
     <h3 style="text-align:center; border:none; margin-bottom:16px;">🎛️ Main Menu / مین مینو</h3>
     <div class="menu-nav-grid">
@@ -550,7 +568,6 @@
       <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:12px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
     </div>
 
-    <!-- آئٹم شامل کرنے والی اوریجنل آپشنز -->
     <div style="display:flex; gap:8px; flex-wrap:wrap; background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--border-dark); margin-bottom:12px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
@@ -639,6 +656,7 @@
       </div>
 
       <div id="printableBillContainer" class="paper-a4">
+        <!-- 🖼️ بیک گراؤنڈ واٹر مارک کا پکا امیج -->
         <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
         <div class="bill-content-layer">
           <div class="bill-header-layout">
