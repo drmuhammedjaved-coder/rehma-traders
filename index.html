@@ -8,15 +8,45 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
-      --bg-dark: #0f172a;        /* کلاسک نیوی نائٹ بیک گراؤنڈ */
-      --panel-bg: #1e293b;      /* شاندار سلیٹ بلیو پینل */
-      --card-bg: #334155;       /* کارڈز کے لیے کلاسک بلیو */
-      --accent-blue: #2563eb;    /* شاہی روائل بلیو */
-      --accent-hover: #1d4ed8;   /* گہرا روائل بلیو */
-      --text-bright: #ffffff;   /* صاف شفاف وائٹ ٹیکسٹ */
-      --text-sub: #94a3b8;      /* کلاسک سلیٹ ٹیکسٹ */
-      --border-dark: #475569;    /* باریک کلاسک بارڈر */
-      --gold-primary: #f59e0b;  /* خوبصورت گولڈن ہائی لائٹ */
+      --bg-dark: #0f172a;
+      --panel-bg: #1e293b;
+      --card-bg: #334155;
+      --accent-blue: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text-bright: #ffffff;
+      --text-sub: #94a3b8;
+      --border-dark: #475569;
+      --gold-primary: #f59e0b;
+    }
+
+    body.theme-emerald {
+      --bg-dark: #064e3b;
+      --panel-bg: #065f46;
+      --card-bg: #047857;
+      --accent-blue: #10b981;
+      --accent-hover: #059669;
+      --border-dark: #047857;
+    }
+
+    body.theme-gold {
+      --bg-dark: #121212;
+      --panel-bg: #1e1e1e;
+      --card-bg: #2d2d2d;
+      --accent-blue: #d4af37;
+      --accent-hover: #aa7c11;
+      --border-dark: #444444;
+      --gold-primary: #d4af37;
+    }
+
+    body.theme-light {
+      --bg-dark: #f1f5f9;
+      --panel-bg: #ffffff;
+      --card-bg: #e2e8f0;
+      --accent-blue: #0284c7;
+      --accent-hover: #0369a1;
+      --text-bright: #0f172a;
+      --text-sub: #64748b;
+      --border-dark: #cbd5e1;
     }
 
     body {
@@ -25,6 +55,7 @@
       color: var(--text-bright);
       margin: 0;
       padding: 16px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
     body.lang-ur { direction: rtl; }
     body.lang-en { direction: ltr; }
@@ -42,15 +73,10 @@
       color: #ffffff;
       border: none;
       font-weight: 600;
-      padding: 8px 20px;
+      padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-      transition: all 0.2s ease;
-    }
-    .lang-btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     #updateBanner {
@@ -61,7 +87,6 @@
       border-radius: 10px;
       margin-bottom: 16px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
     #updateBanner button {
       background: #f59e0b;
@@ -82,31 +107,22 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(8px);
+      background: var(--panel-bg);
       padding: 10px 16px;
       border-radius: 12px;
       border: 1px solid var(--border-dark);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
     .header-card {
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid #3b82f6;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-dark);
       border-radius: 16px;
       padding: 24px;
       text-align: center;
       margin-bottom: 20px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
     }
     .header-card img.main-logo { max-height: 95px; margin-bottom: 12px; }
-    .header-card h1 { 
-      color: #ffffff; 
-      margin: 0 0 6px 0; 
-      font-size: 28px; 
-      font-weight: 800; 
-      letter-spacing: 0.5px;
-    }
+    .header-card h1 { color: var(--text-bright); margin: 0 0 6px 0; font-size: 28px; font-weight: 800; }
     .header-card p { margin: 4px 0; font-size: 13.5px; color: var(--text-sub); }
     
     .dashboard-grid {
@@ -118,39 +134,52 @@
     .dash-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
-      border-top: 3px solid var(--accent-blue);
+      border-top: 4px solid var(--accent-blue);
       border-radius: 12px;
       padding: 14px;
       text-align: center;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
     }
-    .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
-    .dash-card h2 { margin: 6px 0 0 0; color: #ffffff; font-size: 17px; font-weight: 700; }
+    .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); text-transform: uppercase; }
+    .dash-card h2 { margin: 6px 0 0 0; color: var(--text-bright); font-size: 17px; font-weight: 700; }
 
     .menu-nav-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
       margin-bottom: 10px;
     }
     .menu-nav-btn {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border: 1px solid #60a5fa;
-      border-radius: 12px;
-      padding: 18px 14px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-hover));
+      border: none;
+      border-radius: 20px;
+      padding: 22px 16px;
       text-align: center;
       cursor: pointer;
       color: #ffffff;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-      transition: all 0.2s ease;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     .menu-nav-btn:hover {
-      background: linear-gradient(135deg, #1d4ed8, #1e40af);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+      transform: translateY(-4px);
+      filter: brightness(1.1);
     }
-    .menu-nav-btn span { display: block; font-size: 26px; margin-bottom: 6px; }
+    .menu-nav-btn span.icon { 
+      font-size: 32px; 
+      background: rgba(255, 255, 255, 0.15);
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
 
     .section {
       background: var(--panel-bg);
@@ -158,7 +187,6 @@
       padding: 22px;
       margin-bottom: 20px;
       border: 1px solid var(--border-dark);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     }
     .hidden-section { display: none !important; }
 
@@ -171,88 +199,69 @@
       border-bottom: 1px solid var(--border-dark);
     }
     .back-btn {
-      background: #334155;
-      color: #ffffff;
-      border: 1px solid #64748b;
+      background: var(--card-bg);
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
       padding: 8px 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s ease;
     }
-    .back-btn:hover { background: #475569; }
 
-    h3 { color: #ffffff; border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-top: 0; font-size: 18px; font-weight: 700; }
+    h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-top: 0; font-size: 18px; font-weight: 700; }
 
     input, select {
       width: 100%;
       padding: 12px 14px;
       margin: 6px 0;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid var(--border-dark);
-      background: #0f172a;
+      background: var(--bg-dark);
       color: var(--text-bright);
       box-sizing: border-box;
       font-size: 14px;
-      transition: border-color 0.2s ease;
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
     }
 
     button.btn-gold {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-hover));
       color: #ffffff;
       font-weight: 700;
-      border: 1px solid #60a5fa;
-      border-radius: 8px;
+      border: none;
+      border-radius: 10px;
       padding: 12px 18px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-      transition: all 0.2s ease;
-    }
-    button.btn-gold:hover {
-      background: linear-gradient(135deg, #1d4ed8, #1e40af);
-      transform: translateY(-1px);
     }
 
     button.btn-silver {
-      background: #334155;
-      color: #ffffff;
-      border: 1px solid #64748b;
-      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
       padding: 10px 16px;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s ease;
     }
-    button.btn-silver:hover { background: #475569; }
 
     button.btn-danger {
       background: #dc2626;
       color: #ffffff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 8px 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
-    button.btn-danger:hover { background: #b91c1c; }
 
     table { width: 100%; border-collapse: collapse; margin-top: 14px; }
     th, td { border: 1px solid var(--border-dark); padding: 12px; text-align: center; font-size: 13.5px; }
-    th { background: #0f172a; color: #ffffff; font-weight: 700; }
-    td { background: #1e293b; }
+    th { background: var(--bg-dark); color: var(--text-bright); font-weight: 700; }
+    td { background: var(--panel-bg); color: var(--text-bright); }
 
     .modal-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(4px);
       z-index: 9999;
       overflow-y: auto;
       padding: 20px;
@@ -265,7 +274,6 @@
       margin: 10px auto;
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
     .paper-a4 { width: 100%; max-width: 100%; }
@@ -280,60 +288,29 @@
       position: relative;
     }
     .watermark-img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.08;
-      max-width: 65%;
-      height: auto;
-      pointer-events: none;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      opacity: 0.08; max-width: 65%; height: auto; pointer-events: none;
     }
     .bill-content-layer { position: relative; z-index: 1; }
 
     .bill-header-layout {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      border-bottom: 2px solid #000000;
-      padding-bottom: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 15px; border-bottom: 2px solid #000; padding-bottom: 12px;
     }
     .bill-header-layout img { max-height: 70px; width: auto; }
 
     .bill-footer-grid {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-top: 25px;
-      padding-top: 10px;
+      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding-top: 10px;
     }
 
     .signature-box {
-      font-family: 'Brush Script MT', cursive, sans-serif;
-      font-size: 24px;
-      color: #000;
-      border-bottom: 2px solid #000;
-      padding: 0 8px 2px 8px;
-      display: inline-block;
-      margin-top: 5px;
+      font-family: 'Brush Script MT', cursive, sans-serif; font-size: 24px; color: #000; border-bottom: 2px solid #000; padding: 0 8px 2px 8px; display: inline-block;
     }
 
     .multi-item-container {
-      max-height: 180px;
-      overflow-y: auto;
-      background: #0f172a;
-      border: 1px solid var(--border-dark);
-      border-radius: 8px;
-      padding: 8px;
-      margin: 8px 0;
+      max-height: 180px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 10px; padding: 8px; margin: 8px 0;
     }
     .multi-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 6px;
-      border-bottom: 1px solid #334155;
+      display: flex; align-items: center; justify-content: space-between; padding: 6px 6px; border-bottom: 1px solid var(--border-dark);
     }
     .multi-item-row:last-child { border-bottom: none; }
 
@@ -341,7 +318,7 @@
       @page { size: auto; margin: 5mm; }
       body * { visibility: hidden !important; }
       #previewModal, #previewModal * { visibility: visible !important; }
-      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: none !important; overflow: visible !important; padding: 0 !important; }
+      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: none !important; padding: 0 !important; }
       .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #fff !important; }
       .no-print { display: none !important; }
       #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; padding: 5mm !important; }
@@ -356,7 +333,7 @@
   </div>
 
   <div class="top-bar">
-    <div style="color: #60a5fa; font-weight: 800; font-size: 16px;">REHMA TRADERS</div>
+    <div style="color: var(--accent-blue); font-weight: 800; font-size: 16px;">REHMA TRADERS</div>
     <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">🌐 Switch to اردو</button>
   </div>
 
@@ -365,6 +342,8 @@
       <button class="btn-silver" onclick="triggerGlobalUndo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">↩️ Undo</button>
       <button class="btn-silver" onclick="triggerGlobalRedo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">🔄 Redo</button>
     </div>
+    <!-- تھیم بدلنے کا واضح بٹن -->
+    <button class="btn-silver" onclick="toggleAppTheme()" style="font-weight:bold; font-size:12px; border:1px solid var(--accent-blue);">🎨 Change Theme (تھیم بدلیں)</button>
     <div>
       <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:11px;">🛠️ Safe Code Restore</button>
     </div>
@@ -386,7 +365,7 @@
     </div>
     <div class="dash-card">
       <h4 data-key="weeklySales">Weekly Sales</h4>
-      <h2 id="dashWeeklySales" style="color: #60a5fa;">Rs. 0</h2>
+      <h2 id="dashWeeklySales" style="color: var(--accent-blue);">Rs. 0</h2>
     </div>
     <div class="dash-card">
       <h4 data-key="monthlySales">Monthly Sales</h4>
@@ -402,19 +381,19 @@
     <h3 style="text-align:center; border:none; margin-bottom:14px;">🎛️ Main Menu / مین مینو</h3>
     <div class="menu-nav-grid">
       <div class="menu-nav-btn" onclick="switchView('sectionBill')">
-        <span>📝</span>
+        <span class="icon">📝</span>
         <span>Create New Bill</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionRateList')">
-        <span>⚙️</span>
+        <span class="icon">⚙️</span>
         <span>Rate List & Items</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionStock')">
-        <span>📦</span>
+        <span class="icon">📦</span>
         <span>Stock Management</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionLedger')">
-        <span>🔍</span>
+        <span class="icon">🔍</span>
         <span>Ledger & Backup</span>
       </div>
     </div>
@@ -424,7 +403,7 @@
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
     </div>
-    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: #60a5fa;">INV-1001</span>)</h3>
+    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-blue);">INV-1001</span>)</h3>
     
     <div style="display:flex; gap:8px;">
       <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="registerGlobalChange()">
@@ -432,7 +411,7 @@
     </div>
     <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="registerGlobalChange()">
     
-    <label style="font-size:13px; color:#60a5fa; font-weight:bold;">📦 Select Multiple Items (ایک سے زیادہ آئٹم چنیں):</label>
+    <label style="font-size:13px; color:var(--accent-blue); font-weight:bold;">📦 Select Multiple Items (ایک سے زیادہ آئٹم چنیں):</label>
     <div class="multi-item-container" id="multiItemBox"></div>
     <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0; font-size:14px;">➕ Add Selected Items to Bill</button>
 
@@ -449,8 +428,8 @@
         <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:140px;">
       </div>
       
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:#0f172a; border-radius:8px; border:1px solid var(--border-dark);">
-        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: #60a5fa; font-weight: 800; font-size: 18px;">Rs. 0</span></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:var(--bg-dark); border-radius:10px; border:1px solid var(--border-dark);">
+        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-blue); font-weight: 800; font-size: 18px;">Rs. 0</span></div>
       </div>
       
       <div style="display:flex; gap:8px; margin-top:14px;">
@@ -469,7 +448,7 @@
       <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:12px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
     </div>
 
-    <div style="display:flex; gap:8px; flex-wrap:wrap; background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:12px;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap; background:var(--bg-dark); padding:12px; border-radius:10px; border:1px solid var(--border-dark); margin-bottom:12px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
       <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
@@ -498,7 +477,7 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px; padding:14px;">💾 Save All Permanent Rates</button>
   </div>
 
-  <div id="sectionStock" class="section hidden-section" style="border: 2px dashed #3b82f6;">
+  <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-blue);">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
     </div>
@@ -593,7 +572,7 @@
       <div class="no-print" style="display:flex; gap:8px; margin-top:16px; border-top:1px solid #ddd; padding-top:12px;">
         <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ Back / Close</button>
         <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖼️ Share HD JPG</button>
-        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:#2563eb; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Confirm & Print</button>
+        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-blue); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Confirm & Print</button>
       </div>
     </div>
   </div>
