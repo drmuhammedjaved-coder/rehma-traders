@@ -1,6 +1,3 @@
-let undoStack = [];
-let redoStack = [];
-
 let defaultItems = [
   { nameEn: '3 Pcs Chab', nameUr: 'تھری پیس چاپ', code: '2017594941000', rate: 300, stock: 50 },
   { nameEn: 'Single Chab', nameUr: 'سنگل چاپ', code: '2011476521000', rate: 190, stock: 40 },
@@ -24,10 +21,9 @@ let dbBills = [];
 let currentBillItems = [];
 let currentPendingBillObj = null;
 
-// نہایت ہی آسان اور گارنٹیڈ پیج سوئچنگ فنکشن
 function switchView(targetId) {
-  const allSections = document.querySelectorAll('.section');
-  allSections.forEach(sec => {
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(sec => {
     sec.classList.remove('active-section');
   });
 
@@ -60,30 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateNextBillNo();
 });
 
-function pushStateToUndo() {
-  undoStack.push(JSON.stringify(itemsList));
-  redoStack = [];
-  if (undoStack.length > 30) undoStack.shift();
-}
-
-function undoAction() {
-  if (undoStack.length === 0) { alert("ہسٹری خالی ہے۔"); return; }
-  redoStack.push(JSON.stringify(itemsList));
-  itemsList = JSON.parse(undoStack.pop());
-  renderMultiItemBox();
-  renderRateListTable();
-  renderStockReportTable();
-}
-
-function redoAction() {
-  if (redoStack.length === 0) { alert("آگے جانے کے لیے ڈیٹا نہیں۔"); return; }
-  undoStack.push(JSON.stringify(itemsList));
-  itemsList = JSON.parse(redoStack.pop());
-  renderMultiItemBox();
-  renderRateListTable();
-  renderStockReportTable();
-}
-
 async function pickContact() {
   if ('contacts' in navigator && 'ContactsManager' in window) {
     try {
@@ -94,7 +66,7 @@ async function pickContact() {
       }
     } catch (err) {}
   } else {
-    alert("موبائل کنٹیکٹ سپورٹ دستیاب نہیں ہے۔");
+    alert("موبائل کانٹیکٹ سپورٹ دستیاب نہیں ہے۔");
   }
 }
 
@@ -150,10 +122,10 @@ function renderRateListTable() {
   itemsList.forEach((item, idx) => {
     let itemName = item.nameUr || item.nameEn;
     tbody.innerHTML += `<tr>
-      <td><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:3px; width:100%;"></td>
-      <td><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:3px; width:100%;"></td>
-      <td><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:3px; width:60px;"></td>
-      <td class="no-print-col"><button type="button" onclick="deleteRateListItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:3px 6px; border-radius:3px;">❌</button></td>
+      <td><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; width:100%;"></td>
+      <td><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:4px; width:100%;"></td>
+      <td><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:4px; width:70px;"></td>
+      <td class="no-print-col"><button type="button" onclick="deleteRateListItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px;">❌</button></td>
     </tr>`;
   });
 }
@@ -168,15 +140,15 @@ function renderStockReportTable() {
     tbody.innerHTML += `<tr>
       <td>${item.code || '---'}</td>
       <td>${itemName}</td>
-      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:3px; width:60px; text-align:center;"></td>
+      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:4px; width:70px; text-align:center;"></td>
     </tr>`;
   });
 }
 
-function updateItemCode(idx, val) { pushStateToUndo(); itemsList[idx].code = val.trim(); }
-function updateItemName(idx, val) { pushStateToUndo(); itemsList[idx].nameUr = val.trim(); itemsList[idx].nameEn = val.trim(); }
-function updateItemRate(idx, val) { pushStateToUndo(); itemsList[idx].rate = parseFloat(val) || 0; }
-function updateItemStock(idx, val) { pushStateToUndo(); itemsList[idx].stock = parseInt(val) || 0; }
+function updateItemCode(idx, val) { itemsList[idx].code = val.trim(); }
+function updateItemName(idx, val) { itemsList[idx].nameUr = val.trim(); itemsList[idx].nameEn = val.trim(); }
+function updateItemRate(idx, val) { itemsList[idx].rate = parseFloat(val) || 0; }
+function updateItemStock(idx, val) { itemsList[idx].stock = parseInt(val) || 0; }
 
 function savePermanentRatesList() {
   localStorage.setItem('rehma_items', JSON.stringify(itemsList));
@@ -187,20 +159,20 @@ function savePermanentRatesList() {
 }
 
 function deleteRateListItem(idx) {
-  pushStateToUndo();
   itemsList.splice(idx, 1);
   savePermanentRatesList();
 }
 
 function addNewItem() {
   const nameUr = document.getElementById('newItemNameUr').value.trim();
+  const nameEn = document.getElementById('newItemNameEn').value.trim();
   const code = document.getElementById('newItemCode').value.trim();
   const rate = parseFloat(document.getElementById('newItemRate').value);
-  if (nameUr && !isNaN(rate)) {
-    pushStateToUndo();
-    itemsList.push({ nameEn: nameUr, nameUr: nameUr, code, rate, stock: 10 });
+  if ((nameUr || nameEn) && !isNaN(rate)) {
+    itemsList.push({ nameEn: nameEn || nameUr, nameUr: nameUr || nameEn, code, rate, stock: 10 });
     savePermanentRatesList();
     document.getElementById('newItemNameUr').value = '';
+    document.getElementById('newItemNameEn').value = '';
     document.getElementById('newItemCode').value = '';
     document.getElementById('newItemRate').value = '';
   }
@@ -214,12 +186,12 @@ function renderCurrentBillTable() {
     let nameShow = i.nameUr || i.nameEn;
     tbody.innerHTML += `<tr>
       <td>${idx + 1}</td>
-      <td><input type="text" value="${i.code}" oninput="currentBillItems[${idx}].code=this.value" style="width:60px; padding:2px;"></td>
+      <td><input type="text" value="${i.code}" oninput="currentBillItems[${idx}].code=this.value" style="width:70px; padding:3px;"></td>
       <td>${nameShow}</td>
-      <td><input type="number" value="${i.qty}" min="1" oninput="updateQty(${idx}, this.value)" style="width:45px; padding:2px;"></td>
-      <td><input type="number" value="${i.rate}" oninput="updateRate(${idx}, this.value)" style="width:55px; padding:2px;"></td>
+      <td><input type="number" value="${i.qty}" min="1" oninput="updateQty(${idx}, this.value)" style="width:50px; padding:3px;"></td>
+      <td><input type="number" value="${i.rate}" oninput="updateRate(${idx}, this.value)" style="width:60px; padding:3px;"></td>
       <td>Rs. ${i.total}</td>
-      <td><button type="button" onclick="currentBillItems.splice(${idx},1); renderCurrentBillTable(); calculateBillTotals();" style="background:#ef4444; color:#fff; border:none; padding:2px 5px;">❌</button></td>
+      <td><button type="button" onclick="currentBillItems.splice(${idx},1); renderCurrentBillTable(); calculateBillTotals();" style="background:#ef4444; color:#fff; border:none; padding:2px 6px;">❌</button></td>
     </tr>`;
   });
 }
@@ -328,25 +300,25 @@ function exportBillJpgAndShare() {
 
 function renderBillToPrintArea(b) {
   let itemsRows = b.items.map((it, idx) => `<tr>
-    <td style="border:1px solid #000; padding:2px;">${idx + 1}</td>
-    <td style="border:1px solid #000; padding:2px;">${it.nameUr || it.nameEn}</td>
-    <td style="border:1px solid #000; padding:2px;">${it.code}</td>
-    <td style="border:1px solid #000; padding:2px;">${it.qty}</td>
-    <td style="border:1px solid #000; padding:2px;">${it.rate}</td>
-    <td style="border:1px solid #000; padding:2px;">Rs. ${it.total}</td>
+    <td style="border:1px solid #000; padding:3px;">${idx + 1}</td>
+    <td style="border:1px solid #000; padding:3px;">${it.nameUr || it.nameEn}</td>
+    <td style="border:1px solid #000; padding:3px;">${it.code}</td>
+    <td style="border:1px solid #000; padding:3px;">${it.qty}</td>
+    <td style="border:1px solid #000; padding:3px;">${it.rate}</td>
+    <td style="border:1px solid #000; padding:3px;">Rs. ${it.total}</td>
   </tr>`).join('');
 
   document.getElementById('billPrintContent').innerHTML = `
-    <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
       <div><strong>بل #:</strong> ${b.id}<br><strong>کسٹمر:</strong> ${b.customer}</div>
       <div><strong>تاریخ:</strong> ${b.date}</div>
     </div>
-    <table style="width:100%; border-collapse:collapse; text-align:center; font-size:10px;">
-      <thead><tr style="background:#eee;"><th>#</th><th>تفصیل</th><th>کوڈ</th><th>تعداد</th><th>ریٹ</th><th>کل</th></tr></thead>
+    <table style="width:100%; border-collapse:collapse; text-align:center; font-size:10.5px;">
+      <thead><tr style="background:#eee;"><th>#</th><th>تفصیل</th><th>کوڈ</th><th>تعداد</th><th>ریٹ</th><th>کل قیمت</th></tr></thead>
       <tbody>${itemsRows}</tbody>
     </table>
-    <div style="text-align:right; font-size:10px; margin-top:4px;">
-      <p style="margin:2px 0;">ٹوٹل: Rs. ${b.subtotal}</p>
+    <div style="text-align:right; font-size:11px; margin-top:6px;">
+      <p style="margin:2px 0;">ٹوٹل رقم: Rs. ${b.subtotal}</p>
       <p style="margin:2px 0; font-weight:bold; color:#d4af37;">صافی رقم: Rs. ${b.netAmount}</p>
     </div>
   `;
@@ -368,7 +340,7 @@ function renderLedger(data) {
   data.forEach((b, idx) => {
     tbody.innerHTML += `<tr>
       <td>${b.id}</td><td>${b.customer}</td><td>${b.date}</td><td>Rs. ${b.netAmount}</td>
-      <td><button onclick="previewHistoryBill(${idx})" style="padding:2px 5px; font-size:10px;">👁️</button></td>
+      <td><button onclick="previewHistoryBill(${idx})" style="padding:3px 6px; font-size:11px;">👁️ بل دیکھیں</button></td>
     </tr>`;
   });
 }
@@ -382,7 +354,7 @@ function previewHistoryBill(index) {
 }
 
 function filterLedger() {
-  const query = document.getElementById('searchCust').value.toLowerCase();
+  const query = document.getElementById('searchCust'].value.toLowerCase();
   renderLedger(dbBills.filter(b => b.customer.toLowerCase().includes(query)));
 }
 
