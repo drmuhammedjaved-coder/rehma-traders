@@ -88,21 +88,12 @@ let currentPendingBillObj = null;
 let globalUndoStack = [];
 let globalRedoStack = [];
 
-const appThemes = ['blue', 'emerald', 'gold', 'light'];
-let currentThemeIndex = 0;
-
 function changeAppTheme(themeName) {
   document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
   if (themeName !== 'blue') {
     document.body.classList.add(`theme-${themeName}`);
   }
   localStorage.setItem('rehma_theme', themeName);
-}
-
-function toggleAppTheme() {
-  currentThemeIndex = (currentThemeIndex + 1) % appThemes.length;
-  const newTheme = appThemes[currentThemeIndex];
-  changeAppTheme(newTheme);
 }
 
 if ('serviceWorker' in navigator) {
@@ -247,8 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
-  currentThemeIndex = appThemes.indexOf(savedTheme);
-  if (currentThemeIndex === -1) currentThemeIndex = 0;
+  const themeSelect = document.getElementById('themeSelector');
+  if (themeSelect) themeSelect.value = savedTheme;
   changeAppTheme(savedTheme);
 
   switchView('mainDashboardMenu');
@@ -323,7 +314,7 @@ function renderMultiItemBox() {
           <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:6px;">
           ${displayName}${codeStr} ${stockBadge}
         </label>
-        <span style="font-size:12px; color:var(--accent-blue); font-weight:bold;">Rs. ${item.rate}</span>
+        <span style="font-size:12px; color:var(--accent-main); font-weight:bold;">Rs. ${item.rate}</span>
       </div>
     `;
   });
@@ -764,9 +755,9 @@ function renderLedger(data) {
   data.forEach((b, idx) => {
     tbody.innerHTML += `<tr>
       <td>${b.id}</td>
-      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--accent-blue);">${b.customer}</strong></td>
+      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--accent-main);">${b.customer}</strong></td>
       <td>${b.date}</td>
-      <td style="color:var(--accent-blue); font-weight:bold;">Rs. ${b.netAmount}</td>
+      <td style="color:var(--accent-main); font-weight:bold;">Rs. ${b.netAmount}</td>
       <td>
         <button type="button" class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
         <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
