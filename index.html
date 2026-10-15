@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ur" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REHMA TRADERS - Dashboard & Billing PWA</title>
+  <title>رہما ٹریڈرز - Rehma Traders PWA</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -17,14 +17,13 @@
       --border-dark: #374151;
     }
     body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Segoe UI', Roboto, Tahoma, sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-bright);
       margin: 0;
       padding: 16px;
+      direction: rtl;
     }
-    body.lang-ur { direction: rtl; }
-    body.lang-en { direction: ltr; }
 
     .top-bar {
       display: flex;
@@ -33,15 +32,6 @@
       margin-bottom: 16px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border-dark);
-    }
-    .lang-btn {
-      background: #1f2937;
-      color: var(--gold-primary);
-      border: 1px solid var(--gold-primary);
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
     }
 
     #updateBanner {
@@ -65,8 +55,8 @@
     }
     .header-card img.main-logo { max-height: 80px; margin-bottom: 8px; }
     .header-card h1 { color: var(--gold-primary); margin: 0 0 4px 0; font-size: 24px; font-weight: 800; }
-    .header-card p { margin: 3px 0; font-size: 12.5px; color: var(--text-sub); }
-    
+    .header-card p { margin: 3px 0; font-size: 13px; color: var(--text-sub); }
+
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -81,10 +71,9 @@
       padding: 10px;
       text-align: center;
     }
-    .dash-card h4 { margin: 0; font-size: 10px; color: var(--text-sub); }
+    .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); }
     .dash-card h2 { margin: 4px 0 0 0; color: var(--gold-primary); font-size: 15px; }
 
-    /* مینو ہوم بٹنز */
     .menu-nav-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -116,6 +105,7 @@
 
     .back-nav-bar {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
       padding-bottom: 8px;
@@ -129,9 +119,20 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+    }
+    .undo-redo-tools {
       display: flex;
-      align-items: center;
       gap: 6px;
+    }
+    .tool-btn {
+      background: #1f2937;
+      color: var(--gold-primary);
+      border: 1px solid var(--gold-primary);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
     }
 
     h3 { color: var(--gold-primary); border-bottom: 1px solid var(--border-dark); padding-bottom: 10px; margin-top: 0; font-size: 16px; }
@@ -215,64 +216,63 @@
     .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 4px; border-bottom: 1px solid #1f2937; }
   </style>
 </head>
-<body class="lang-en">
+<body>
 
   <div id="updateBanner">
-    🔔 <span>New Update Available!</span>
-    <button onclick="applyAppUpdate()">🔄 Update Now</button>
+    🔔 <span>نیو اپ ڈیٹ دستیاب ہے!</span>
+    <button onclick="applyAppUpdate()">🔄 اپ ڈیٹ کریں</button>
   </div>
 
   <div class="top-bar">
-    <div style="color: var(--gold-primary); font-weight: 800; font-size: 15px;">REHMA TRADERS DASHBOARD</div>
-    <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو</button>
+    <div style="color: var(--gold-primary); font-weight: 800; font-size: 16px;">رہما ٹریڈرز - Rehma Traders</div>
   </div>
 
   <div class="header-card">
     <img src="logo.png" id="mainHeaderLogo" alt="Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
-    <h1>REHMA TRADERS</h1>
-    <p><strong>Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
+    <h1>رہما ٹریڈرز (REHMA TRADERS)</h1>
+    <p><strong>پروپرائٹر:</strong> محمد جاوید (Muhammad Javed)</p>
     <p>📱 0307-4015100 | 📱 0339-1020030</p>
   </div>
 
-  <!-- سیلز سمری کارڈز (ہسٹری سمری) -->
+  <!-- سیلز ہسٹری سمری -->
   <div class="dashboard-grid">
     <div class="dash-card">
-      <h4 data-key="todaySales">Daily Sales</h4>
+      <h4>آج کی سیل</h4>
       <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4 data-key="weeklySales">Weekly Sales</h4>
+      <h4>ہفتہ وار سیل</h4>
       <h2 id="dashWeeklySales" style="color: #60a5fa;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4 data-key="monthlySales">Monthly Sales</h4>
+      <h4>ماہانہ سیل</h4>
       <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
     </div>
     <div class="dash-card">
-      <h4 data-key="totalSales">Total Sales</h4>
+      <h4>کل مجموعی سیل</h4>
       <h2 id="dashSales">Rs. 0</h2>
     </div>
   </div>
 
-  <!-- الرئيسي مینو بٹنز (Main Dashboard Navigation) -->
+  <!-- مین ڈیش بورڈ مینو -->
   <div id="mainDashboardMenu" class="section">
-    <h3 style="text-align:center; border:none; margin-bottom:14px;">🎛️ Main Dashboard Menu</h3>
+    <h3 style="text-align:center; border:none; margin-bottom:14px;">🎛️ مین ڈیش بورڈ مینو</h3>
     <div class="menu-nav-grid">
       <div class="menu-nav-btn" onclick="switchView('sectionBill')">
         <span>📝</span>
-        <span>Create New Bill</span>
+        <span>نیا بل بنائیں</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionRateList')">
         <span>⚙️</span>
-        <span>Rate List & Items</span>
+        <span>ریٹ لسٹ اور آئٹمز</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionStock')">
         <span>📦</span>
-        <span>Stock Management</span>
+        <span>اسٹاک مینجمنٹ</span>
       </div>
       <div class="menu-nav-btn" onclick="switchView('sectionLedger')">
         <span>🔍</span>
-        <span>Customer Ledger & History</span>
+        <span>کسٹمر لیجر و بیک اپ</span>
       </div>
     </div>
   </div>
@@ -280,131 +280,138 @@
   <!-- 1. نیا بل سیکشن -->
   <div id="sectionBill" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
     </div>
-    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--gold-primary);">INV-1001</span>)</h3>
+    <h3>📝 نیا بل بنائیں (<span id="nextBillNo" style="color: var(--gold-primary);">INV-1001</span>)</h3>
     
     <div style="display:flex; gap:8px;">
-      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام">
-      <button class="btn-silver" onclick="pickContact()" style="width:130px; font-size:12px; font-weight:bold;">📱 Contacts</button>
+      <input type="text" id="custName" placeholder="کسٹمر کا نام">
+      <button class="btn-silver" onclick="pickContact()" style="width:130px; font-size:12px; font-weight:bold;">📱 فون نمبر چنیں</button>
     </div>
-    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر">
+    <input type="text" id="custPhone" placeholder="موبائل نمبر">
     
-    <label style="font-size:13px; color:var(--gold-primary); font-weight:bold;">📦 Select Multiple Items:</label>
+    <label style="font-size:13px; color:var(--gold-primary); font-weight:bold;">📦 آئٹمز منتخب کریں:</label>
     <div class="multi-item-container" id="multiItemBox"></div>
-    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ Add Selected Items</button>
+    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ منتخب آئٹمز بل میں شامل کریں</button>
 
     <table id="billItemsTable">
       <thead>
-        <tr><th>Sr #</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
+        <tr><th>نمبر</th><th>کوڈ</th><th>تفصیل</th><th>تعداد</th><th>ریٹ</th><th>کل قیمت</th><th>ایکشن</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
     <div style="margin-top:14px;">
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <input type="number" id="prevBalanceInput" placeholder="Previous Balance" oninput="calculateBillTotals()" style="flex:1;">
-        <input type="number" id="discountInput" placeholder="Discount (Rs.)" oninput="calculateBillTotals()" style="flex:1;">
+        <input type="number" id="prevBalanceInput" placeholder="سابقہ بقایا (Previous Balance)" oninput="calculateBillTotals()" style="flex:1;">
+        <input type="number" id="discountInput" placeholder="رعایت / ڈسکاؤنٹ (Rs.)" oninput="calculateBillTotals()" style="flex:1;">
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:#0b0f19; border-radius:8px;">
-        <div><strong>Net Total:</strong> <span id="grandTotalTxt" style="color: var(--gold-primary); font-size: 18px;">Rs. 0</span></div>
+        <div><strong>صافی ٹوٹل:</strong> <span id="grandTotalTxt" style="color: var(--gold-primary); font-size: 18px;">Rs. 0</span></div>
       </div>
-      <button class="btn-gold" onclick="openBillPreview()" style="width:100%;">👁️ Confirm & Print Preview</button>
+      <button class="btn-gold" onclick="openBillPreview()" style="width:100%;">👁️ بل کا جائزہ اور پرنٹ کریں</button>
     </div>
   </div>
 
   <!-- 2. ریٹ لسٹ سیکشن -->
   <div id="sectionRateList" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <div class="undo-redo-tools">
+        <button class="tool-btn" onclick="undoAction()">↩️ Undo</button>
+        <button class="tool-btn" onclick="redoAction()">↪️ Redo</button>
+      </div>
     </div>
-    <h3>⚙️ Rate List & Items Management</h3>
+    <h3>⚙️ ریٹ لسٹ اور آئٹمز مینجمنٹ</h3>
     
     <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; font-weight:bold; flex:2;">🖼️ Share Rate List as HD JPG</button>
+      <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; font-weight:bold; flex:2;">🖼️ ریٹ لسٹ ایچ ڈی JPG ڈاؤنلوڈ کریں</button>
     </div>
 
-    <!-- Add Item Area -->
+    <!-- نیا آئٹم فارم -->
     <div style="background:#0b0f19; padding:10px; border-radius:8px; margin-bottom:12px; border:1px solid var(--border-dark);">
-      <h4 style="margin:0 0 6px 0; color:var(--gold-primary);">➕ Add New Item (نیا آئٹم شامل کریں)</h4>
+      <h4 style="margin:0 0 6px 0; color:var(--gold-primary);">➕ نیا آئٹم شامل کریں</h4>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <input type="text" id="newItemNameEn" placeholder="English Name" style="flex:2;">
         <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
-        <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
-        <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
+        <input type="text" id="newItemNameEn" placeholder="انگریزی نام" style="flex:2;">
+        <input type="text" id="newItemCode" placeholder="کوڈ" style="flex:1;">
+        <input type="number" id="newItemRate" placeholder="ریٹ" style="flex:1;">
         <button class="btn-gold" onclick="addNewItem()" style="flex:1; font-weight:bold;">💾 Save New Item</button>
       </div>
     </div>
 
     <div id="rateListCaptureArea" style="margin-top:16px; border-radius:8px; border:1px solid #374151;">
       <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:10px;">
-        <h2 style="margin:2px 0; color:#000; font-size:22px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
-        <p style="margin:2px 0; color:#333; font-size:12px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+        <h2 style="margin:2px 0; color:#000; font-size:22px;">رہما ٹریڈرز - آفیشل ریٹ لسٹ</h2>
+        <p style="margin:2px 0; color:#333; font-size:12px;">پروپرائٹر: محمد جاوید | 📱 0307-4015100</p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
           <tr style="background:#f2f2f2;">
-            <th style="border:1px solid #000; color:#000;">Code</th>
-            <th style="border:1px solid #000; color:#000;">Item Description</th>
-            <th style="border:1px solid #000; color:#000;">Rate (PKR)</th>
-            <th class="no-print-col" style="border:1px solid #000; color:#000;">Action</th>
+            <th style="border:1px solid #000; color:#000;">کوڈ</th>
+            <th style="border:1px solid #000; color:#000;">تفصیل آئٹم</th>
+            <th style="border:1px solid #000; color:#000;">ریٹ (روپے)</th>
+            <th class="no-print-col" style="border:1px solid #000; color:#000;">ڈیلیٹ</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <!-- Single Bottom Save Button for Rate List -->
-    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Rates</button>
+    <!-- سنگل سیو بٹن -->
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Rates (تمام ریٹس محفوظ کریں)</button>
   </div>
 
   <!-- 3. اسٹاک مینجمنٹ سیکشن -->
   <div id="sectionStock" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
+      <div class="undo-redo-tools">
+        <button class="tool-btn" onclick="undoAction()">↩️ Undo</button>
+        <button class="tool-btn" onclick="redoAction()">↪️ Redo</button>
+      </div>
     </div>
-    <h3>📦 Stock Inventory Management (اسٹاک مینجمنٹ)</h3>
-    <p style="font-size: 12.5px; color: var(--text-sub);">یہ سیکشن دکان کے اسٹاک کے لیے ہے، یہ کسٹمر کو نظر نہیں آتا۔</p>
+    <h3>📦 اسٹاک مینجمنٹ (Stock Management)</h3>
     <table id="stockReportTable">
       <thead>
-        <tr><th>Code</th><th>Item Name</th><th>Available Stock Qty</th></tr>
+        <tr><th>کوڈ</th><th>سامان کا نام</th><th>موجودہ اسٹاک تعداد</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <!-- Single Bottom Save Button for Stock -->
-    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Stock</button>
+    <!-- سنگل سیو بٹن -->
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px;">💾 Save All Stock (تمام اسٹاک محفوظ کریں)</button>
   </div>
 
-  <!-- 4. کسٹمر لیجر اور بیک اپ سیکشن -->
+  <!-- 4. کسٹمر لیجر و بیک اپ سیکشن -->
   <div id="sectionLedger" class="section hidden-section">
     <div class="back-nav-bar">
-      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
+      <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ ڈیش بورڈ پر واپس جائیں</button>
     </div>
-    <h3>🔍 Customer Ledger & History & Backup</h3>
-    <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
+    <h3>🔍 کسٹمر لیجر، بل ہسٹری و بیک اپ</h3>
+    <input type="text" id="searchCust" placeholder="کسٹمر تلاش کریں..." oninput="filterLedger()">
     
     <div style="display:flex; gap:8px; margin:12px 0; flex-wrap:wrap;">
-      <button class="btn-silver" onclick="exportDataBackup()" style="flex:1;">💾 Download Ledger Backup</button>
-      <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 Restore Backup</button>
+      <button class="btn-silver" onclick="exportDataBackup()" style="flex:1;">💾 تمام ڈیٹا بیک اپ ڈاؤنلوڈ کریں (Export Backup)</button>
+      <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 پرانا بیک اپ بحال کریں (Restore Backup)</button>
       <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
     </div>
     
     <table id="ledgerTable">
       <thead>
-        <tr><th>Bill #</th><th>Customer</th><th>Date & Time</th><th>Total Amount</th><th>Actions</th></tr>
+        <tr><th>بل #</th><th>کسٹمر</th><th>تاریخ و وقت</th><th>کل رقم</th><th>ایکشن</th></tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
 
-  <!-- بل پرویو ماڈل -->
+  <!-- بل پرنٹ ماڈل -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px;">
-        <label><strong>🖨️ Paper Size:</strong></label>
+        <label><strong>🖨️ پیپر سائز:</strong></label>
         <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:6px; margin:0; background:#f3f4f6; color:#000;">
-          <option value="paper-a4">A4 / Standard Page</option>
+          <option value="paper-a4">A4 (بڑا صفحہ)</option>
           <option value="paper-80mm">Thermal 80mm</option>
           <option value="paper-50mm">Thermal 50mm / 58mm</option>
         </select>
@@ -416,8 +423,8 @@
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:2px 0; color:#000; font-size:22px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:2px 0; font-size:11.5px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100</p>
+              <h2 style="margin:2px 0; color:#000; font-size:22px; font-weight:800;">رہما ٹریڈرز</h2>
+              <p style="margin:2px 0; font-size:11.5px;">پروپرائٹر: محمد جاوید | 📱 0307-4015100</p>
             </div>
           </div>
           <div id="billPrintContent" style="margin:12px 0; font-size:12px;"></div>
@@ -437,9 +444,9 @@
       </div>
 
       <div class="no-print" style="display:flex; gap:8px; margin-top:14px; border-top:1px solid #ddd; padding-top:10px;">
-        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ Close</button>
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">✏️ بند کریں</button>
         <button onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖼️ Share JPG</button>
-        <button onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ Print</button>
+        <button onclick="executeFinalPrint()" style="flex:1; background:#d4af37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ پرنٹ کریں</button>
       </div>
     </div>
   </div>
