@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rehma-traders-v3';
+const CACHE_NAME = 'rehma-traders-v5';
 const assetsToCache = [
   './',
   './index.html',
