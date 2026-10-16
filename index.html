@@ -347,20 +347,35 @@
       position: relative;
     }
 
-    /* 🖼️ واٹر مارک کا پکا ڈیزائن */
+    /* 🖼️ پرنٹ فارمیٹ اور ٹیبل کے لیے لائیٹ واٹر مارک کا شفاف سیٹ اپ */
     .watermark-img {
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
-      opacity: 0.12 !important;
-      max-width: 70% !important;
+      opacity: 0.15 !important;
+      max-width: 75% !important;
       height: auto !important;
       pointer-events: none !important;
       z-index: 0 !important;
       display: block !important;
     }
-    .bill-content-layer { position: relative; z-index: 1; }
+    
+    .bill-content-layer {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* بل کے ٹیبل اور کالمز کو ٹرانسپیرنٹ کرنا تاکہ پیچھے واٹر مارک دکھے */
+    #printableBillContainer table {
+      background: transparent !important;
+    }
+    #printableBillContainer th, 
+    #printableBillContainer td, 
+    #printableBillContainer tr {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
 
     .bill-header-layout {
       display: flex; align-items: center; justify-content: center; gap: 15px; border-bottom: 2px solid #000; padding-bottom: 12px;
@@ -383,7 +398,6 @@
     }
     .multi-item-row:last-child { border-bottom: none; }
 
-    /* 🖨️ پرنٹنگ کے لیے 100% پرفیکٹ CSS Fix (خالی صفحہ ختم) */
     @media print {
       body {
         background: #ffffff !important;
@@ -427,10 +441,17 @@
         width: 100% !important;
         padding: 0mm !important;
         margin: 0 !important;
+        background: #ffffff !important;
+      }
+      #printableBillContainer th, 
+      #printableBillContainer td, 
+      #printableBillContainer tr {
+        background: transparent !important;
+        background-color: transparent !important;
       }
       .watermark-img {
         display: block !important;
-        opacity: 0.15 !important;
+        opacity: 0.16 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -656,7 +677,7 @@
       </div>
 
       <div id="printableBillContainer" class="paper-a4">
-        <!-- 🖼️ بیک گراؤنڈ واٹر مارک کا پکا امیج -->
+        <!-- 🖼️ واٹر مارک کا لوگو -->
         <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
         <div class="bill-content-layer">
           <div class="bill-header-layout">
@@ -675,7 +696,7 @@
           </div>
 
           <div class="bill-footer-grid">
-            <div style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:#f9f9f9;">
+            <div style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:transparent;">
               <span style="font-size:10px; font-weight:bold; display:block; color:#000; text-decoration:underline;">آن لائن ادائیگی کے لیے:</span>
               <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:2px;">جاز کیش اکاؤنٹ: 03074015100</span>
               <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">الائیڈ بینک (ABL): 07550010140074540011</span>
