@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (All Features & Correct Ledger Bill No)
+   REHMA TRADERS - Complete & Fixed app.js (Keyboard Navigation Fixed)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -84,7 +84,7 @@ function renderMultiItemSelector() {
           <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
         </label>
       </div>
-      <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:50px; padding:2px; text-align:center; font-size:11px;">
+      <input type="number" id="qty_item_${idx}" value="1" min="1" inputmode="numeric" style="width:50px; padding:2px; text-align:center; font-size:11px;" onkeydown="handleInputKeydown(event)">
     `;
     container.appendChild(div);
   });
@@ -129,14 +129,22 @@ function renderBillItemsTable() {
       <td>${index + 1}</td>
       <td>${item.name}</td>
       <td>${item.code || '-'}</td>
-      <td><input type="number" value="${item.qty}" min="1" oninput="updateBillItemQty(${index}, this.value)" style="width:50px; text-align:center; padding:2px;"></td>
-      <td><input type="number" value="${item.rate}" oninput="updateBillItemRate(${index}, this.value)" style="width:60px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${item.qty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:50px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${item.rate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:60px; text-align:center; padding:2px;"></td>
       <td>Rs. ${total}</td>
       <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 5px; font-size:10px;">❌</button></td>
     `;
     tbody.appendChild(tr);
   });
   calculateBillTotals();
+}
+
+/* ✨ کی بورڈ کی غیر ضروری شفٹنگ کو روکنے والا فنکشن */
+function handleInputKeydown(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    event.target.blur();
+  }
 }
 
 function updateBillItemQty(index, val) {
@@ -179,7 +187,7 @@ function renderRateList() {
     tr.innerHTML = `
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${name}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
-      <td style="border:1px solid #000; color:#000;"><input type="number" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
     tbody.appendChild(tr);
@@ -240,7 +248,7 @@ function renderStockTable() {
     tr.innerHTML = `
       <td>${name}</td>
       <td>${code}</td>
-      <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
+      <td><input type="number" inputmode="numeric" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
     tbody.appendChild(tr);
   });
@@ -301,8 +309,6 @@ function viewBillDetails(index) {
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
   const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
   const totalAmount = getBillTotal(bill);
-  
-  // ✨ یہاں اب بل کا اپنا اصل انوائس نمبر شو ہوگا
   const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
 
   let itemsHtml = `
