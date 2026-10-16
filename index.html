@@ -116,6 +116,7 @@
     .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 18px; font-weight: 800; }
     .header-card p { margin: 2px 0; font-size: 11px; color: var(--text-sub); }
 
+    /* 📊 ڈیش بورڈ سیلز کارڈز (اصلی اور درست حالت میں) */
     .dashboard-grid-vertical { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .dash-card-row {
       background: var(--panel-bg);
@@ -126,7 +127,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      cursor: pointer;
     }
     .dash-card-row h4 { margin: 0; font-size: 12px; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
     .dash-card-row h2 { margin: 0; color: var(--text-bright); font-size: 15px; font-weight: 800; }
@@ -231,7 +231,7 @@
     </div>
   </div>
 
-  <!-- 🏠 ڈیش بورڈ -->
+  <!-- 🏠 ڈیش بورڈ (ڈیلی، ویکلی، منتھلی اور ٹوٹل سیلز کے اصل کارڈز کے ساتھ) -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -240,21 +240,22 @@
       <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
     </div>
 
+    <!-- 📊 ورٹیکل سیلز کارڈز -->
     <div class="dashboard-grid-vertical">
-      <div class="dash-card-row" style="border-left-color: #34d399;" onclick="switchView('sectionBill')">
-        <h4>📝 Create New Bill</h4>
-        <h2>➔</h2>
+      <div class="dash-card-row" style="border-left-color: #34d399;">
+        <h4>Daily Sales</h4>
+        <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: var(--accent-main);" onclick="switchView('sectionRateList')">
-        <h4>⚙️ Rate List & Items</h4>
-        <h2>➔</h2>
+      <div class="dash-card-row" style="border-left-color: var(--accent-main);">
+        <h4>Weekly Sales</h4>
+        <h2 id="dashWeeklySales" style="color: var(--accent-main);">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: #fbbf24;" onclick="switchView('sectionStock')">
-        <h4>📦 Stock Inventory</h4>
-        <h2>➔</h2>
+      <div class="dash-card-row" style="border-left-color: #fbbf24;">
+        <h4>Monthly Sales</h4>
+        <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: #f87171;" onclick="switchView('sectionLedger')">
-        <h4>🔍 Customer Ledger</h4>
+      <div class="dash-card-row" onclick="switchView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
+        <h4>Total Sales</h4>
         <h2 id="dashSales">Rs. 0</h2>
       </div>
     </div>
