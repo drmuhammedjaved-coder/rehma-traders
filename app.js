@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Billing & Inventory PWA (Complete app.js)
+   REHMA TRADERS - Billing & Inventory PWA (Fixed app.js)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -99,7 +99,7 @@ function renderMultiItemSelector() {
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
         <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:16px; height:16px; accent-color:var(--accent-main); cursor:pointer;">
         <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
-          ${item.code ? item.code + ' - ' : ''}<strong>${currentLang === 'ur' ? item.nameUr : item.nameEn}</strong> 
+          ${item.code ? item.code + ' - ' : ''}<strong>${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}</strong> 
           <span style="color:var(--accent-main);">(Rate: ${item.rate} | Stock: ${stockQty})</span>
         </label>
       </div>
@@ -115,7 +115,7 @@ function addSelectedMultipleItems() {
     const qtyInput = document.getElementById(`qty_item_${idx}`);
     if (chk && chk.checked) {
       const qty = parseFloat(qtyInput.value) || 1;
-      const itemName = currentLang === 'ur' ? item.nameUr : item.nameEn;
+      const itemName = currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr);
       const existing = billItems.find(i => i.name === itemName);
       if (existing) {
         existing.qty += qty;
@@ -144,7 +144,7 @@ function renderBillItemsTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td>${item.code}</td>
+      <td>${item.code || '-'}</td>
       <td>${item.name}</td>
       <td><input type="number" value="${item.qty}" min="1" oninput="updateBillItemQty(${index}, this.value)" style="width:50px; text-align:center; padding:2px;"></td>
       <td><input type="number" value="${item.rate}" oninput="updateBillItemRate(${index}, this.value)" style="width:60px; text-align:center; padding:2px;"></td>
@@ -173,8 +173,10 @@ function removeBillItem(index) {
 
 function calculateBillTotals() {
   const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
-  const prevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-  const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+  const prevBalanceInput = document.getElementById('prevBalanceInput');
+  const discountInput = document.getElementById('discountInput');
+  const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
+  const discount = discountInput ? (parseFloat(discountInput.value) || 0) : 0;
   const netTotal = subTotal + prevBalance - discount;
 
   const grandTotalTxt = document.getElementById('grandTotalTxt');
@@ -192,8 +194,8 @@ function renderRateList() {
   rateList.forEach((item, index) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${item.code}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${currentLang === 'ur' ? item.nameUr : item.nameEn}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${item.code || ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="number" value="${item.rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
@@ -254,8 +256,8 @@ function renderStockTable() {
     const stockQty = item.stock !== undefined ? item.stock : 50;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${item.code}</td>
-      <td>${currentLang === 'ur' ? item.nameUr : item.nameEn}</td>
+      <td>${item.code || '-'}</td>
+      <td>${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}</td>
       <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
     tbody.appendChild(tr);
@@ -276,10 +278,10 @@ function renderLedger() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><input type="checkbox" class="bill-select-chk" data-index="${idx}"></td>
-      <td>${bill.billNo}</td>
-      <td>${bill.custName}</td>
-      <td>${bill.date}</td>
-      <td>Rs. ${bill.netTotal}</td>
+      <td>${bill.billNo || 'INV-' + (1001 + idx)}</td>
+      <td>${bill.custName || 'Cash Customer'}</td>
+      <td>${bill.date || '-'}</td>
+      <td>Rs. ${bill.netTotal || 0}</td>
       <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
     `;
     tbody.appendChild(tr);
@@ -291,13 +293,15 @@ function viewBillDetails(index) {
   if (!bill) return;
 
   const contentDiv = document.getElementById('billPrintContent');
+  if (!contentDiv) return;
+
   let itemsHtml = `
     <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px;">
-      <span><strong>Bill #:</strong> ${bill.billNo}</span>
-      <span><strong>Date:</strong> ${bill.date}</span>
+      <span><strong>Bill #:</strong> ${bill.billNo || 'INV-1001'}</span>
+      <span><strong>Date:</strong> ${bill.date || '-'}</span>
     </div>
     <div style="margin-bottom:4px;">
-      <span><strong>Customer:</strong> ${bill.custName} (${bill.custPhone || '-'})</span>
+      <span><strong>Customer:</strong> ${bill.custName || 'Cash Customer'} (${bill.custPhone || '-'})</span>
     </div>
     <table>
       <thead>
@@ -307,23 +311,26 @@ function viewBillDetails(index) {
   `;
 
   let subTotal = 0;
-  bill.items.forEach((item, idx) => {
-    const t = item.rate * item.qty;
-    subTotal += t;
-    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${t}</td></tr>`;
-  });
+  if (bill.items && Array.isArray(bill.items)) {
+    bill.items.forEach((item, idx) => {
+      const t = (item.rate || 0) * (item.qty || 0);
+      subTotal += t;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${item.name || '-'}</td><td>${item.qty || 0}</td><td>${item.rate || 0}</td><td>${t}</td></tr>`;
+    });
+  }
 
   itemsHtml += `
       </tbody>
     </table>
     <div style="margin-top:4px; text-align:right; font-size:8.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
-      <div><strong>Net Total: Rs. ${bill.netTotal}</strong></div>
+      <div><strong>Net Total: Rs. ${bill.netTotal || subTotal}</strong></div>
     </div>
   `;
 
   contentDiv.innerHTML = itemsHtml;
-  document.getElementById('previewModal').style.display = 'block';
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'block';
 }
 
 function filterLedger() {
@@ -359,7 +366,6 @@ function updateDashboardStats() {
   const dashSales = document.getElementById('dashSales');
   if (dashSales) dashSales.innerText = `Rs. ${total}`;
 
-  // حساب برائے ڈیلی، ویکلی اور منتھلی سیلز
   const todayStr = new Date().toLocaleDateString();
   const todaySales = billsHistory
     .filter(b => b.date === todayStr)
@@ -369,10 +375,10 @@ function updateDashboardStats() {
   if (dashToday) dashToday.innerText = `Rs. ${todaySales}`;
 
   const dashWeekly = document.getElementById('dashWeeklySales');
-  if (dashWeekly) dashWeekly.innerText = `Rs. ${total}`; // سادہ سمری
+  if (dashWeekly) dashWeekly.innerText = `Rs. ${total}`;
 
   const dashMonthly = document.getElementById('dashMonthlySales');
-  if (dashMonthly) dashMonthly.innerText = `Rs. ${total}`; // سادہ سمری
+  if (dashMonthly) dashMonthly.innerText = `Rs. ${total}`;
 }
 
 /* --------------------------------------------------------------------------
@@ -385,8 +391,10 @@ function openBillPreview() {
   }
   const custName = document.getElementById('custName').value || 'Cash Customer';
   const custPhone = document.getElementById('custPhone').value || '-';
-  const prevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
-  const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+  const prevBalanceInput = document.getElementById('prevBalanceInput');
+  const discountInput = document.getElementById('discountInput');
+  const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
+  const discount = discountInput ? (parseFloat(discountInput.value) || 0) : 0;
   const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
   const netTotal = subTotal + prevBalance - discount;
 
@@ -418,11 +426,12 @@ function openBillPreview() {
     </div>
   `;
 
-  contentDiv.innerHTML = itemsHtml;
-  document.getElementById('previewModal').style.display = 'block';
+  if (contentDiv) contentDiv.innerHTML = itemsHtml;
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'block';
 
   const billRecord = {
-    billNo: document.getElementById('nextBillNo').innerText,
+    billNo: document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001',
     custName,
     custPhone,
     date: new Date().toLocaleDateString(),
@@ -444,32 +453,37 @@ function openBillPreview() {
 }
 
 function closeBillPreview() {
-  document.getElementById('previewModal').style.display = 'none';
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'none';
 }
 
 function changePaperSize(sizeClass) {
   const container = document.getElementById('printableBillContainer');
-  container.className = sizeClass;
+  if (container) container.className = sizeClass;
 }
 
 function exportBillJpgAndShare() {
   const container = document.getElementById('printableBillContainer');
-  html2canvas(container, { scale: 2 }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'rehma-bill.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.9);
-    link.click();
-  });
+  if (window.html2canvas && container) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'rehma-bill.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+    });
+  }
 }
 
 function exportRateListJpg() {
   const container = document.getElementById('rateListCaptureArea');
-  html2canvas(container, { scale: 2 }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'rehma-ratelist.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.9);
-    link.click();
-  });
+  if (window.html2canvas && container) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'rehma-ratelist.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+    });
+  }
 }
 
 function executeFinalPrint() {
@@ -477,7 +491,7 @@ function executeFinalPrint() {
 }
 
 /* --------------------------------------------------------------------------
-   🌐 LANGUAGE, THEME & BACKUP RESTORE (FIXED)
+   🌐 LANGUAGE, THEME & BACKUP RESTORE (FIXED & SAFE)
    -------------------------------------------------------------------------- */
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'ur' : 'en';
@@ -510,34 +524,39 @@ function exportDataBackup() {
   link.click();
 }
 
-// 🔄 بیک اپ ریسٹور کرنے کا درست اور ری فريش کرنے والا فنکشن
+// 🔄 بیک اپ امپورٹ کا 100% ورکنگ اور محفوظ طریقہ
 function importDataBackup(event) {
   const file = event.target.files[0];
   if (!file) return;
+
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const data = JSON.parse(e.target.result);
-      if (data.ratelist) {
+
+      if (data.ratelist && Array.isArray(data.ratelist)) {
         rateList = data.ratelist;
         localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
       }
-      if (data.bills) {
+
+      if (data.bills && Array.isArray(data.bills)) {
         billsHistory = data.bills;
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+      } else if (Array.isArray(data)) {
+        // اگر بیک اپ صرف بلز کی لسٹ ہے
+        billsHistory = data;
+        localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       }
-      
-      // ڈیٹا لوڈ ہونے کے بعد پوری ایپ اور ڈیش بورڈ کو ری فريش کریں
+
       initApp();
-      
-      // مین مینو (ڈیش بورڈ) پر واپس لے آئیں تاکہ ڈیٹا صاف نظر آئے
+
       if (typeof switchView === 'function') {
         switchView('mainDashboardMenu');
       }
 
-      alert('Backup restored successfully! All data updated.');
+      alert('بیک اپ کامیابی کے ساتھ ریسٹور ہو گیا ہے!');
     } catch (err) {
-      alert('Invalid backup file format!');
+      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ براہ کرم درست JSON فائل منتخب کریں۔');
     }
   };
   reader.readAsText(file);
@@ -548,8 +567,8 @@ function pickContact() {
     navigator.contacts.select(['name', 'tel'], {multiple: false}).then(contacts => {
       if (contacts && contacts.length > 0) {
         const contact = contacts[0];
-        if (contact.name) document.getElementById('custName').value = contact.name[0];
-        if (contact.tel) document.getElementById('custPhone').value = contact.tel[0];
+        if (contact.name && document.getElementById('custName')) document.getElementById('custName').value = contact.name[0];
+        if (contact.tel && document.getElementById('custPhone')) document.getElementById('custPhone').value = contact.tel[0];
       }
     }).catch(err => alert('Contact selection failed or cancelled.'));
   } else {
