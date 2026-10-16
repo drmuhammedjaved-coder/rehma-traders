@@ -237,7 +237,13 @@
     .header-card h1 { color: var(--text-bright); margin: 0 0 4px 0; font-size: 21px; font-weight: 800; }
     .header-card p { margin: 3px 0; font-size: 12px; color: var(--text-sub); }
 
-    /* 📊 4. ورٹیکل سیلز کارڈز (گول اور کمپیکٹ) */
+    /* 📱 فون نمبر کو ٹوٹنے سے روکنے کے لیے کلاس */
+    .phone-no-break {
+      white-space: nowrap !important;
+      display: inline-block;
+    }
+
+    /* 📊 4. ورٹیکل سیلز ڈیش بورڈ کارڈز */
     .dashboard-grid-vertical {
       display: flex;
       flex-direction: column;
@@ -426,7 +432,7 @@
     .bill-header-layout {
       display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 2px solid #000; padding-bottom: 8px;
     }
-    .bill-header-layout img { max-height: 50px; width: auto; }
+    .bill-header-layout img { max-height: 55px; width: auto; }
 
     .bill-footer-grid {
       display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px; padding-top: 6px;
@@ -505,12 +511,16 @@
 
   <!-- 🏠 3. مرکزی ڈیش بورڈ اور برانڈنگ سیکشن -->
   <div id="mainDashboardMenu" class="section">
-    <!-- 🏢 بڑا لوگو اور کانٹیکٹ برانڈنگ -->
+    <!-- 🏢 بڑا لوگو اور کانٹیکٹ برانڈنگ (فون نمبرز نو-بریک کلاس کے ساتھ) -->
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
       <h1>REHMA TRADERS</h1>
       <p><strong data-key="proprietor">Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
-      <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
+      <p>
+        <span class="phone-no-break">📱 0307-4015100</span> | 
+        <span class="phone-no-break">📱 0339-1020030</span> | 
+        <span class="phone-no-break">💬 0333-5255117</span>
+      </p>
     </div>
 
     <!-- 📊 4. ورٹیکل سیلز ڈیش بورڈ کارڈز -->
@@ -598,7 +608,7 @@
     <div id="rateListCaptureArea" style="margin-top:10px; border-radius:8px; border:1px solid #374151;">
       <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
         <h2 style="margin:2px 0; color:#000; font-size:18px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
-        <p style="margin:1px 0; color:#333; font-size:11px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+        <p style="margin:1px 0; color:#333; font-size:11px;" id="rlSub">Proprietor: Muhammad Javed | <span class="phone-no-break">📱 0307-4015100</span></p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
@@ -678,6 +688,7 @@
         </div>
       </div>
 
+      <!-- 🧾 پرنٹ بل ہیڈر میں فون نمبرز کو بغیر ٹوٹے ڈسپلے کرنے کا طریقہ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -688,8 +699,13 @@
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
               <h2 style="margin:1px 0; color:#000000; font-size:20px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:1px 0; font-size:10px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
-              <p style="margin:1px 0; font-size:9.5px;">💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
+              <p style="margin:2px 0; font-size:10px; line-height: 1.4;">
+                <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
+                <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
+              </p>
+              <p style="margin:1px 0; font-size:9.5px; line-height: 1.4;">
+                <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
+              </p>
             </div>
           </div>
 
@@ -702,8 +718,8 @@
           <div class="bill-footer-grid">
             <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:4px 6px; border-radius:4px; background:transparent;">
               <span id="payTitle" style="font-size:9px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+              <span id="payJazz" class="phone-no-break" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
+              <span id="payAbl" class="phone-no-break" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
               <span id="payName" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
             </div>
 
