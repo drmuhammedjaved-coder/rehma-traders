@@ -102,15 +102,6 @@ function saveAppState() {
   historyIndex = appStateHistory.length - 1;
 }
 
-function switchView(viewId) {
-  document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
-  const target = document.getElementById(viewId);
-  if (target) target.classList.remove('hidden-section');
-  if (viewId === 'sectionRateList') renderRateList();
-  if (viewId === 'sectionStock') renderStockTable();
-  if (viewId === 'sectionLedger') renderLedger();
-}
-
 function generateNextBillNumber() {
   const nextNo = 'INV-' + (1001 + billsHistory.length);
   const el = document.getElementById('nextBillNo');
@@ -319,6 +310,47 @@ function renderLedger() {
   });
 }
 
+/* 📌 پرانے بل کا پریویو دکھانے والا فنکشن */
+function viewBillDetails(index) {
+  const bill = billsHistory[index];
+  if (!bill) return;
+
+  const contentDiv = document.getElementById('billPrintContent');
+  let itemsHtml = `
+    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px;">
+      <span><strong>Bill #:</strong> ${bill.billNo}</span>
+      <span><strong>Date:</strong> ${bill.date}</span>
+    </div>
+    <div style="margin-bottom:4px;">
+      <span><strong>Customer:</strong> ${bill.custName} (${bill.custPhone || '-'})</span>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+  `;
+
+  let subTotal = 0;
+  bill.items.forEach((item, idx) => {
+    const t = item.rate * item.qty;
+    subTotal += t;
+    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${t}</td></tr>`;
+  });
+
+  itemsHtml += `
+      </tbody>
+    </table>
+    <div style="margin-top:4px; text-align:right; font-size:8.5px; line-height:1.2;">
+      <div>SubTotal: Rs. ${subTotal}</div>
+      <div><strong>Net Total: Rs. ${bill.netTotal}</strong></div>
+    </div>
+  `;
+
+  contentDiv.innerHTML = itemsHtml;
+  document.getElementById('previewModal').style.display = 'block';
+}
+
 function filterLedger() {
   const query = document.getElementById('searchCust').value.toLowerCase();
   const rows = document.querySelectorAll('#ledgerTable tbody tr');
@@ -388,7 +420,7 @@ function openBillPreview() {
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
+    <div style="margin-top:4px; text-align:right; font-size:8.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
       ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
       ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
