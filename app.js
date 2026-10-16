@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Working Print & PDF Dialog)
+   REHMA TRADERS - Complete & Fixed app.js (WhatsApp Web Share & Save All)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -223,7 +223,7 @@ function savePermanentRatesList() {
   renderRateList();
   renderMultiItemSelector();
   renderStockTable();
-  alert('Rates and Items saved successfully!');
+  alert('All Rates and Stock successfully saved!');
 }
 
 function renderStockTable() {
@@ -282,6 +282,12 @@ function renderLedger() {
     `;
     tbody.appendChild(tr);
   });
+}
+
+/* 💾 لیجر اور بلز کے لیے Save All کا فنکشن */
+function saveAllLedgerData() {
+  localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+  alert('All Ledger bills successfully saved!');
 }
 
 function viewBillDetails(index) {
@@ -473,7 +479,6 @@ function changePaperSize(sizeClass) {
   if (container) container.className = sizeClass;
 }
 
-/* 📥 ڈائریکٹ پی ڈی ایف سیو/ڈاؤن لوڈ کرنے کا فنکشن */
 function downloadBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
@@ -492,7 +497,6 @@ function downloadBillPdf() {
   }
 }
 
-/* 🖨️ فکسڈ پرنٹ فنکشن (موبائل اور براؤزر کے لیے ڈائریکٹ پرنٹ پیج اوپن کرے گا) */
 function printBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
@@ -507,13 +511,11 @@ function printBillPdf() {
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       
-      // پرنٹ یا ప్రివ്യൂ کے لیے PDF کو براہ راست براؤزر میں کھولیں
       const pdfBlobUrl = pdf.output('bloburl');
       const printWindow = window.open(pdfBlobUrl, '_blank');
       if (printWindow) {
         printWindow.print();
       } else {
-        // اگر پاپ اپ بلاک ہو جائے تو فال بیک کے طور پر پرنٹ کمانڈ چلائیں
         window.print();
       }
     });
@@ -522,14 +524,27 @@ function printBillPdf() {
   }
 }
 
-function exportBillJpgAndShare() {
+/* 📤 واٹس ایپ اور سوشل میڈیا پر براہ راست شیر کرنے کا فکسڈ فنکشن */
+function shareBillJpgWhatsApp() {
   const container = document.getElementById('printableBillContainer');
   if (window.html2canvas && container) {
     html2canvas(container, { scale: 2 }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'rehma-bill.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.9);
-      link.click();
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'rehma-bill.jpg', { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            files: [file],
+            title: 'Rehma Traders Bill',
+            text: 'Here is your bill from Rehma Traders.'
+          }).catch(err => console.log('Sharing failed', err));
+        } else {
+          // فال بیک: اگر ویب شیر API سپورٹ نہ ہو تو ڈائریکٹ ڈاؤنلوڈ لنک بنائیں
+          const link = document.createElement('a');
+          link.download = 'rehma-bill.jpg';
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        }
+      }, 'image/jpeg', 0.9);
     });
   }
 }
@@ -538,10 +553,21 @@ function exportRateListJpg() {
   const container = document.getElementById('rateListCaptureArea');
   if (window.html2canvas && container) {
     html2canvas(container, { scale: 2 }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'rehma-ratelist.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.9);
-      link.click();
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'rehma-ratelist.jpg', { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            files: [file],
+            title: 'Rehma Traders Rate List',
+            text: 'Official Rate List'
+          }).catch(err => console.log('Sharing failed', err));
+        } else {
+          const link = document.createElement('a');
+          link.download = 'rehma-ratelist.jpg';
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        }
+      }, 'image/jpeg', 0.9);
     });
   }
 }
