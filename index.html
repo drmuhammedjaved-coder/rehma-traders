@@ -219,7 +219,7 @@
       margin-left: 8px;
     }
 
-    /* 🏢 3. برانڈنگ اور لوگو کا کارڈ (بڑا لوگو) */
+    /* 🏢 3. برانڈنگ اور لوگو کا کارڈ */
     .header-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
@@ -237,7 +237,6 @@
     .header-card h1 { color: var(--text-bright); margin: 0 0 4px 0; font-size: 21px; font-weight: 800; }
     .header-card p { margin: 3px 0; font-size: 12px; color: var(--text-sub); }
 
-    /* 📱 فون نمبر کو ٹوٹنے سے روکنے کے لیے کلاس */
     .phone-no-break {
       white-space: nowrap !important;
       display: inline-block;
@@ -283,16 +282,17 @@
     }
     .hidden-section { display: none !important; }
 
-    .btn-dashboard-fixed {
-      background: #059669 !important;
+    /* ⬅️ پچھلی اسکرین پر جانے کے لیے اسمارٹ بیک بٹن */
+    .btn-back-fixed {
+      background: #0284c7 !important;
       color: #ffffff !important;
-      border: 1px solid #047857 !important;
-      padding: 8px 18px;
+      border: 1px solid #0369a1 !important;
+      padding: 7px 16px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 700;
       font-size: 12px;
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -393,13 +393,29 @@
     #printableBillContainer, #rateListCaptureArea {
       background: #ffffff !important;
       color: #000000 !important;
-      padding: 14px;
+      padding: 10px;
       box-sizing: border-box;
       position: relative;
     }
 
     #printableBillContainer * {
       color: #000000 !important;
+    }
+
+    /* 📏 پرنٹ بل کے روز اور کالمز کی اونچائی کا سائز چھوٹا اور کمپیکٹ */
+    #printableBillContainer table { 
+      background: transparent !important; 
+      line-height: 1.15 !important;
+    }
+    #printableBillContainer th {
+      padding: 3px 2px !important;
+      font-size: 10.5px !important;
+      background: transparent !important;
+    }
+    #printableBillContainer td {
+      padding: 2.5px 2px !important;
+      font-size: 10px !important;
+      background: transparent !important;
     }
 
     .watermark-container {
@@ -419,29 +435,19 @@
     
     .bill-content-layer { position: relative; z-index: 1; }
 
-    #printableBillContainer table { background: transparent !important; }
-    #printableBillContainer th, 
-    #printableBillContainer td, 
-    #printableBillContainer tr {
-      background: transparent !important;
-      background-color: transparent !important;
-      color: #000000 !important;
-      border-color: #000000 !important;
-    }
-
     .bill-header-layout {
-      display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 2px solid #000; padding-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1.5px solid #000; padding-bottom: 4px;
     }
-    .bill-header-layout img { max-height: 55px; width: auto; }
+    .bill-header-layout img { max-height: 48px; width: auto; }
 
     .bill-footer-grid {
-      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px; padding-top: 6px;
+      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; padding-top: 4px;
     }
 
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
-      font-size: 24px; color: #000000; border-bottom: 2px solid #000000;
-      padding: 0 8px 1px 8px; display: inline-block; letter-spacing: 1px; transform: rotate(-3deg);
+      font-size: 20px; color: #000000; border-bottom: 1.5px solid #000000;
+      padding: 0 6px 1px 6px; display: inline-block; letter-spacing: 1px; transform: rotate(-3deg);
     }
 
     .multi-item-container {
@@ -511,7 +517,6 @@
 
   <!-- 🏠 3. مرکزی ڈیش بورڈ اور برانڈنگ سیکشن -->
   <div id="mainDashboardMenu" class="section">
-    <!-- 🏢 بڑا لوگو اور کانٹیکٹ برانڈنگ (فون نمبرز نو-بریک کلاس کے ساتھ) -->
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
       <h1>REHMA TRADERS</h1>
@@ -537,7 +542,7 @@
         <h4 data-key="monthlySales">Monthly Sales</h4>
         <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" id="showAllBillsBtn" onclick="switchView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
+      <div class="dash-card-row" id="showAllBillsBtn" onclick="navigateToView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
         <h4 data-key="totalSales">Total Sales</h4>
         <h2 id="dashSales">Rs. 0</h2>
       </div>
@@ -549,7 +554,7 @@
   <!-- 📝 نیا بل بنانے کا فارم -->
   <div id="sectionBill" class="section hidden-section">
     <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
     </div>
     <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
@@ -589,7 +594,7 @@
   <!-- ⚙️ ریٹ لسٹ سیکشن -->
   <div id="sectionRateList" class="section hidden-section">
     <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
     </div>
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
     
@@ -629,7 +634,7 @@
   <!-- 📦 اسٹاک سیکشن -->
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
     <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
     </div>
     <h3>📦 Stock Inventory Management</h3>
     <table id="stockReportTable" style="color:var(--text-bright);">
@@ -649,7 +654,7 @@
   <!-- 🔍 لیجر سیکشن -->
   <div id="sectionLedger" class="section hidden-section">
     <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
     </div>
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
     <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
@@ -684,11 +689,11 @@
             <option value="paper-80mm">Thermal 80mm</option>
             <option value="paper-50mm">Thermal 50mm</option>
           </select>
-          <button class="btn-dashboard-fixed" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="padding: 5px 12px; font-size: 11px;">🏠 Dashboard</button>
+          <button class="btn-back-fixed" onclick="closeBillPreview()" style="padding: 4px 10px; font-size: 11px;">⬅️ Back</button>
         </div>
       </div>
 
-      <!-- 🧾 پرنٹ بل ہیڈر میں فون نمبرز کو بغیر ٹوٹے ڈسپلے کرنے کا طریقہ -->
+      <!-- 🧾 پرنٹ بل ہیڈر اور روز (Rows) کا چھوٹا اور کمپیکٹ لے آؤٹ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -698,33 +703,33 @@
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:1px 0; color:#000000; font-size:20px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:2px 0; font-size:10px; line-height: 1.4;">
+              <h2 style="margin:1px 0; color:#000000; font-size:18px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+              <p style="margin:1px 0; font-size:9.5px; line-height: 1.3;">
                 <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
                 <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
               </p>
-              <p style="margin:1px 0; font-size:9.5px; line-height: 1.4;">
+              <p style="margin:1px 0; font-size:9px; line-height: 1.3;">
                 <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
               </p>
             </div>
           </div>
 
-          <div id="billPrintContent" style="margin:8px 0; font-size:10.5px;"></div>
+          <div id="billPrintContent" style="margin:6px 0; font-size:10px;"></div>
 
-          <div style="text-align:center; margin-top:8px; border-top:1px dashed #000000; padding-top:4px;">
-            <p id="billNoteTxt" style="margin:1px 0; font-size:9.5px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+          <div style="text-align:center; margin-top:6px; border-top:1px dashed #000000; padding-top:3px;">
+            <p id="billNoteTxt" style="margin:1px 0; font-size:9px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
           </div>
 
           <div class="bill-footer-grid">
-            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:4px 6px; border-radius:4px; background:transparent;">
-              <span id="payTitle" style="font-size:9px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" class="phone-no-break" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" class="phone-no-break" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-              <span id="payName" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
+            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:3px 5px; border-radius:4px; background:transparent;">
+              <span id="payTitle" style="font-size:8.5px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
+              <span id="payJazz" class="phone-no-break" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
+              <span id="payAbl" class="phone-no-break" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+              <span id="payName" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
             </div>
 
             <div style="text-align:right;">
-              <span id="ownerSigLabel" style="font-size:9.5px; font-weight:bold; display:block;">Owner Signature</span>
+              <span id="ownerSigLabel" style="font-size:9px; font-weight:bold; display:block;">Owner Signature</span>
               <span class="signature-box">M. Javed</span>
             </div>
           </div>
@@ -732,7 +737,7 @@
       </div>
 
       <div class="no-print" style="display:flex; gap:4px; margin-top:10px; border-top:1px solid #ddd; padding-top:8px; flex-wrap:wrap;">
-        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Back / Close</button>
+        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">⬅️ Back / Close</button>
         <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖼️ Share JPG</button>
         <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Confirm & Print</button>
       </div>
@@ -741,6 +746,43 @@
 
   <script src="app.js"></script>
   <script>
+    /* 🧭 اسمارٹ نیویگیشن ہسٹری مینیجر */
+    let navigationStack = ['mainDashboardMenu'];
+
+    function getCurrentView() {
+      return navigationStack[navigationStack.length - 1];
+    }
+
+    function navigateToView(targetViewId) {
+      const current = getCurrentView();
+      if (current !== targetViewId) {
+        navigationStack.push(targetViewId);
+      }
+      if (typeof switchView === 'function') {
+        switchView(targetViewId);
+      } else {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
+        const target = document.getElementById(targetViewId);
+        if (target) target.classList.remove('hidden-section');
+      }
+    }
+
+    function navigateBack() {
+      if (navigationStack.length > 1) {
+        navigationStack.pop();
+        const previousViewId = getCurrentView();
+        if (typeof switchView === 'function') {
+          switchView(previousViewId);
+        } else {
+          document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
+          const target = document.getElementById(previousViewId);
+          if (target) target.classList.remove('hidden-section');
+        }
+      } else {
+        if (typeof switchView === 'function') switchView('mainDashboardMenu');
+      }
+    }
+
     function handleTopMenuSelect(selectEl) {
       const val = selectEl.value;
       if (!val) return;
@@ -750,7 +792,7 @@
       } else if (val === 'importBackup') {
         document.getElementById('importBackupInput').click();
       } else {
-        switchView(val);
+        navigateToView(val);
       }
       selectEl.value = '';
     }
@@ -759,7 +801,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v2';
+          const CACHE_NAME = 'rehma-traders-v3';
           const urlsToCache = [
             './',
             './index.html',
