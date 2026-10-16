@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Billing & Inventory PWA (Fixed app.js)
+   REHMA TRADERS - Billing & Inventory PWA (Complete & Robust app.js)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -37,47 +37,6 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* --------------------------------------------------------------------------
-   ⌨️ ENTER KEY NAVIGATION
-   -------------------------------------------------------------------------- */
-window.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    const activeEl = document.activeElement;
-    if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
-      const currentTd = activeEl.closest('td');
-      const currentRow = activeEl.closest('tr');
-
-      if (currentTd && currentRow) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const cells = Array.from(currentRow.children);
-        const colIndex = cells.indexOf(currentTd);
-        const nextRow = currentRow.nextElementSibling;
-
-        if (nextRow) {
-          const targetCells = Array.from(nextRow.children);
-          const targetTd = targetCells[colIndex];
-          const targetInput = targetTd ? targetTd.querySelector('input, select') : null;
-          if (targetInput) {
-            targetInput.focus();
-            if (targetInput.select) targetInput.select();
-            return false;
-          }
-        }
-      } else {
-        e.preventDefault();
-        const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
-        const currentIndex = allInputs.indexOf(activeEl);
-        if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
-          allInputs[currentIndex + 1].focus();
-          if (allInputs[currentIndex + 1].select) allInputs[currentIndex + 1].select();
-        }
-      }
-    }
-  }
-}, true);
-
 function generateNextBillNumber() {
   const nextNo = 'INV-' + (1001 + billsHistory.length);
   const el = document.getElementById('nextBillNo');
@@ -85,7 +44,7 @@ function generateNextBillNumber() {
 }
 
 /* --------------------------------------------------------------------------
-   📦 RENDER MULTI ITEM SELECTOR WITH STOCK INFO
+   📦 RENDER MULTI ITEM SELECTOR
    -------------------------------------------------------------------------- */
 function renderMultiItemSelector() {
   const container = document.getElementById('multiItemBox');
@@ -95,11 +54,12 @@ function renderMultiItemSelector() {
     const div = document.createElement('div');
     div.className = 'multi-item-row';
     const stockQty = item.stock !== undefined ? item.stock : 50;
+    const name = currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr);
     div.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
-        <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:16px; height:16px; accent-color:var(--accent-main); cursor:pointer;">
+        <input type="checkbox" id="chk_item_${idx}" value="${item.code || ''}" style="width:16px; height:16px; accent-color:var(--accent-main);">
         <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
-          ${item.code ? item.code + ' - ' : ''}<strong>${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}</strong> 
+          ${item.code ? item.code + ' - ' : ''}<strong>${name}</strong> 
           <span style="color:var(--accent-main);">(Rate: ${item.rate} | Stock: ${stockQty})</span>
         </label>
       </div>
@@ -121,9 +81,9 @@ function addSelectedMultipleItems() {
         existing.qty += qty;
       } else {
         billItems.push({
-          code: item.code,
+          code: item.code || '',
           name: itemName,
-          rate: item.rate,
+          rate: item.rate || 0,
           qty: qty
         });
       }
@@ -276,18 +236,20 @@ function renderLedger() {
   
   billsHistory.forEach((bill, idx) => {
     const tr = document.createElement('tr');
+    const customer = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
     tr.innerHTML = `
       <td><input type="checkbox" class="bill-select-chk" data-index="${idx}"></td>
       <td>${bill.billNo || 'INV-' + (1001 + idx)}</td>
-      <td>${bill.custName || 'Cash Customer'}</td>
+      <td>${customer}</td>
       <td>${bill.date || '-'}</td>
-      <td>Rs. ${bill.netTotal || 0}</td>
+      <td>Rs. ${bill.netTotal || bill.total || 0}</td>
       <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
+/* 📌 کسٹمر نام اور بل ڈیٹا کا درست پریویو */
 function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
@@ -295,13 +257,16 @@ function viewBillDetails(index) {
   const contentDiv = document.getElementById('billPrintContent');
   if (!contentDiv) return;
 
+  const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
+  const phone = bill.custPhone || bill.phone || '-';
+
   let itemsHtml = `
-    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px;">
+    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
       <span><strong>Bill #:</strong> ${bill.billNo || 'INV-1001'}</span>
       <span><strong>Date:</strong> ${bill.date || '-'}</span>
     </div>
-    <div style="margin-bottom:4px;">
-      <span><strong>Customer:</strong> ${bill.custName || 'Cash Customer'} (${bill.custPhone || '-'})</span>
+    <div style="margin-bottom:4px; font-size:10px;">
+      <span><strong>Customer:</strong> ${customerName} (${phone})</span>
     </div>
     <table>
       <thead>
@@ -311,20 +276,23 @@ function viewBillDetails(index) {
   `;
 
   let subTotal = 0;
-  if (bill.items && Array.isArray(bill.items)) {
-    bill.items.forEach((item, idx) => {
-      const t = (item.rate || 0) * (item.qty || 0);
+  const itemsList = bill.items || bill.billItems || [];
+  if (Array.isArray(itemsList)) {
+    itemsList.forEach((item, idx) => {
+      const rate = item.rate || 0;
+      const qty = item.qty || item.quantity || 0;
+      const t = rate * qty;
       subTotal += t;
-      itemsHtml += `<tr><td>${idx+1}</td><td>${item.name || '-'}</td><td>${item.qty || 0}</td><td>${item.rate || 0}</td><td>${t}</td></tr>`;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${item.name || item.itemName || '-'}</td><td>${qty}</td><td>${rate}</td><td>${t}</td></tr>`;
     });
   }
 
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:8.5px; line-height:1.2;">
+    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
-      <div><strong>Net Total: Rs. ${bill.netTotal || subTotal}</strong></div>
+      <div><strong>Net Total: Rs. ${bill.netTotal || bill.total || subTotal}</strong></div>
     </div>
   `;
 
@@ -362,14 +330,14 @@ function deleteSelectedMarkedBills() {
 }
 
 function updateDashboardStats() {
-  const total = billsHistory.reduce((acc, b) => acc + (parseFloat(b.netTotal) || 0), 0);
+  const total = billsHistory.reduce((acc, b) => acc + (parseFloat(b.netTotal || b.total) || 0), 0);
   const dashSales = document.getElementById('dashSales');
   if (dashSales) dashSales.innerText = `Rs. ${total}`;
 
   const todayStr = new Date().toLocaleDateString();
   const todaySales = billsHistory
     .filter(b => b.date === todayStr)
-    .reduce((acc, b) => acc + (parseFloat(b.netTotal) || 0), 0);
+    .reduce((acc, b) => acc + (parseFloat(b.netTotal || b.total) || 0), 0);
   
   const dashToday = document.getElementById('dashTodaySales');
   if (dashToday) dashToday.innerText = `Rs. ${todaySales}`;
@@ -382,15 +350,19 @@ function updateDashboardStats() {
 }
 
 /* --------------------------------------------------------------------------
-   🖨️ PREVIEW, PRINT & EXPORT
+   🖨️ PREVIEW & PRINT
    -------------------------------------------------------------------------- */
 function openBillPreview() {
   if (billItems.length === 0) {
     alert('Please add items to bill first!');
     return;
   }
-  const custName = document.getElementById('custName').value || 'Cash Customer';
-  const custPhone = document.getElementById('custPhone').value || '-';
+  const custNameInput = document.getElementById('custName');
+  const custName = (custNameInput && custNameInput.value.trim() !== '') ? custNameInput.value.trim() : 'Cash Customer';
+  
+  const custPhoneInput = document.getElementById('custPhone');
+  const custPhone = custPhoneInput ? custPhoneInput.value : '-';
+
   const prevBalanceInput = document.getElementById('prevBalanceInput');
   const discountInput = document.getElementById('discountInput');
   const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
@@ -400,7 +372,7 @@ function openBillPreview() {
 
   const contentDiv = document.getElementById('billPrintContent');
   let itemsHtml = `
-    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px;">
+    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
       <span><strong>Customer:</strong> ${custName}</span>
       <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
     </div>
@@ -418,7 +390,7 @@ function openBillPreview() {
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:8.5px; line-height:1.2;">
+    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
       ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
       ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
@@ -432,10 +404,10 @@ function openBillPreview() {
 
   const billRecord = {
     billNo: document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001',
-    custName,
-    custPhone,
+    custName: custName,
+    custPhone: custPhone,
     date: new Date().toLocaleDateString(),
-    netTotal,
+    netTotal: netTotal,
     items: [...billItems]
   };
   billsHistory.push(billRecord);
@@ -491,7 +463,7 @@ function executeFinalPrint() {
 }
 
 /* --------------------------------------------------------------------------
-   🌐 LANGUAGE, THEME & BACKUP RESTORE (FIXED & SAFE)
+   🌐 BACKUP RESTORE (FIXED & SAFE)
    -------------------------------------------------------------------------- */
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'ur' : 'en';
@@ -524,7 +496,6 @@ function exportDataBackup() {
   link.click();
 }
 
-// 🔄 بیک اپ امپورٹ کا 100% ورکنگ اور محفوظ طریقہ
 function importDataBackup(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -543,7 +514,6 @@ function importDataBackup(event) {
         billsHistory = data.bills;
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       } else if (Array.isArray(data)) {
-        // اگر بیک اپ صرف بلز کی لسٹ ہے
         billsHistory = data;
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       }
@@ -554,9 +524,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('بیک اپ کامیابی کے ساتھ ریسٹور ہو گیا ہے!');
+      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
     } catch (err) {
-      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ براہ کرم درست JSON فائل منتخب کریں۔');
+      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
     }
   };
   reader.readAsText(file);
