@@ -393,7 +393,7 @@
     #printableBillContainer, #rateListCaptureArea {
       background: #ffffff !important;
       color: #000000 !important;
-      padding: 10px;
+      padding: 8px;
       box-sizing: border-box;
       position: relative;
     }
@@ -402,20 +402,30 @@
       color: #000000 !important;
     }
 
-    /* 📏 پرنٹ بل کے روز اور کالمز کی اونچائی کا سائز چھوٹا اور کمپیکٹ */
+    /* 📏 پرنٹ بل کے روز (Rows) کی اونچائی اور الفاظ انتہائی باریک اور کمپیکٹ */
     #printableBillContainer table { 
       background: transparent !important; 
-      line-height: 1.15 !important;
+      line-height: 1.05 !important;
+      border-collapse: collapse !important;
+      margin-top: 4px !important;
+    }
+    #printableBillContainer tr {
+      height: auto !important;
+      min-height: unset !important;
     }
     #printableBillContainer th {
-      padding: 3px 2px !important;
-      font-size: 10.5px !important;
+      padding: 2px 2px !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
       background: transparent !important;
+      border-width: 0.5px !important;
     }
     #printableBillContainer td {
-      padding: 2.5px 2px !important;
-      font-size: 10px !important;
+      padding: 1px 2px !important;
+      font-size: 8.5px !important;
+      font-weight: 400 !important;
       background: transparent !important;
+      border-width: 0.5px !important;
     }
 
     .watermark-container {
@@ -436,17 +446,17 @@
     .bill-content-layer { position: relative; z-index: 1; }
 
     .bill-header-layout {
-      display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1.5px solid #000; padding-bottom: 4px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #000; padding-bottom: 3px;
     }
-    .bill-header-layout img { max-height: 48px; width: auto; }
+    .bill-header-layout img { max-height: 42px; width: auto; }
 
     .bill-footer-grid {
-      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; padding-top: 4px;
+      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding-top: 3px;
     }
 
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
-      font-size: 20px; color: #000000; border-bottom: 1.5px solid #000000;
+      font-size: 18px; color: #000000; border-bottom: 1px solid #000000;
       padding: 0 6px 1px 6px; display: inline-block; letter-spacing: 1px; transform: rotate(-3deg);
     }
 
@@ -693,7 +703,7 @@
         </div>
       </div>
 
-      <!-- 🧾 پرنٹ بل ہیڈر اور روز (Rows) کا چھوٹا اور کمپیکٹ لے آؤٹ -->
+      <!-- 🧾 انتہائی باریک، پتلی روز (Rows) اور صاف سستے پرنٹ کا لے آؤٹ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -703,33 +713,33 @@
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:1px 0; color:#000000; font-size:18px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:1px 0; font-size:9.5px; line-height: 1.3;">
+              <h2 style="margin:1px 0; color:#000000; font-size:17px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+              <p style="margin:1px 0; font-size:9px; line-height: 1.25;">
                 <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
                 <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
               </p>
-              <p style="margin:1px 0; font-size:9px; line-height: 1.3;">
+              <p style="margin:1px 0; font-size:8.5px; line-height: 1.25;">
                 <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
               </p>
             </div>
           </div>
 
-          <div id="billPrintContent" style="margin:6px 0; font-size:10px;"></div>
+          <div id="billPrintContent" style="margin:4px 0; font-size:8.5px;"></div>
 
-          <div style="text-align:center; margin-top:6px; border-top:1px dashed #000000; padding-top:3px;">
-            <p id="billNoteTxt" style="margin:1px 0; font-size:9px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+          <div style="text-align:center; margin-top:5px; border-top:1px dashed #000000; padding-top:2px;">
+            <p id="billNoteTxt" style="margin:1px 0; font-size:8.5px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
           </div>
 
           <div class="bill-footer-grid">
-            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:3px 5px; border-radius:4px; background:transparent;">
-              <span id="payTitle" style="font-size:8.5px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" class="phone-no-break" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" class="phone-no-break" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-              <span id="payName" style="font-size:8.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
+            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:2px 4px; border-radius:3px; background:transparent;">
+              <span id="payTitle" style="font-size:8px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
+              <span id="payJazz" class="phone-no-break" style="font-size:8px; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
+              <span id="payAbl" class="phone-no-break" style="font-size:8px; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+              <span id="payName" style="font-size:8px; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
             </div>
 
             <div style="text-align:right;">
-              <span id="ownerSigLabel" style="font-size:9px; font-weight:bold; display:block;">Owner Signature</span>
+              <span id="ownerSigLabel" style="font-size:8.5px; font-weight:bold; display:block;">Owner Signature</span>
               <span class="signature-box">M. Javed</span>
             </div>
           </div>
@@ -801,7 +811,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v3';
+          const CACHE_NAME = 'rehma-traders-v4';
           const urlsToCache = [
             './',
             './index.html',
