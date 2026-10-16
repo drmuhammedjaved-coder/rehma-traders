@@ -3,21 +3,21 @@
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
-  { code: '2017594941000', nameEn: '3 Pcs Chab', nameUr: '3 پیس چھاب', rate: 300 },
-  { code: '2011476521000', nameEn: 'Single Chab', nameUr: 'سنگل چھاب', rate: 190 },
-  { code: '2011476521000', nameEn: 'Naan Chab', nameUr: 'نان چھاب', rate: 200 },
-  { code: '2017598841000', nameEn: 'Small Box Round', nameUr: 'سمال باکس راؤنڈ', rate: 220 },
-  { code: '2019580141000', nameEn: 'Medium Box Round', nameUr: 'میڈیم باکس راؤنڈ', rate: 280 },
-  { code: '2013147621000', nameEn: 'Large Box Round', nameUr: 'لارج باکس راؤنڈ', rate: 380 },
-  { code: '2019580141000', nameEn: 'Square Small', nameUr: 'اسکوائر سمال', rate: 280 },
-  { code: '2013147621000', nameEn: 'Square Large', nameUr: 'اسکوائر لارج', rate: 380 },
-  { code: '2011476821000', nameEn: 'Gloves Pair', nameUr: 'گلوز پیئر', rate: 155 },
-  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90 },
-  { code: '', nameEn: 'Port Holder', nameUr: 'پارف ہولڈر', rate: 70 },
-  { code: '', nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی سمال', rate: 220 },
-  { code: '', nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بگ', rate: 250 },
-  { code: '', nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', rate: 430 },
-  { code: '1036001001585', nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', rate: 450 }
+  { code: '2017594941000', nameEn: '3 Pcs Chab', nameUr: '3 پیس چھاب', rate: 300, stock: 50 },
+  { code: '2011476521000', nameEn: 'Single Chab', nameUr: 'سنگل چھاب', rate: 190, stock: 40 },
+  { code: '2011476521000', nameEn: 'Naan Chab', nameUr: 'نان چھاب', rate: 200, stock: 35 },
+  { code: '2017598841000', nameEn: 'Small Box Round', nameUr: 'سمال باکس راؤنڈ', rate: 220, stock: 25 },
+  { code: '2019580141000', nameEn: 'Medium Box Round', nameUr: 'میڈیم باکس راؤنڈ', rate: 280, stock: 30 },
+  { code: '2013147621000', nameEn: 'Large Box Round', nameUr: 'لارج باکس راؤنڈ', rate: 380, stock: 20 },
+  { code: '2019580141000', nameEn: 'Square Small', nameUr: 'اسکوائر سمال', rate: 280, stock: 25 },
+  { code: '2013147621000', nameEn: 'Square Large', nameUr: 'اسکوائر لارج', rate: 380, stock: 15 },
+  { code: '2011476821000', nameEn: 'Gloves Pair', nameUr: 'گلوز پیئر', rate: 155, stock: 60 },
+  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 },
+  { code: '', nameEn: 'Port Holder', nameUr: 'پارف ہولڈر', rate: 70, stock: 30 },
+  { code: '', nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی سمال', rate: 220, stock: 20 },
+  { code: '', nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بگ', rate: 250, stock: 18 },
+  { code: '', nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', rate: 430, stock: 12 },
+  { code: '1036001001585', nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', rate: 450, stock: 10 }
 ];
 
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
@@ -40,6 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function initApp() {
   renderRateList();
   renderMultiItemSelector();
+  renderStockTable();
   renderLedger();
   updateDashboardStats();
   generateNextBillNumber();
@@ -74,7 +75,6 @@ window.addEventListener('keydown', function(e) {
           }
         }
       } else {
-        // عام فارم فیلڈز کے لیے
         e.preventDefault();
         const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
         const currentIndex = allInputs.indexOf(activeEl);
@@ -102,57 +102,24 @@ function saveAppState() {
   historyIndex = appStateHistory.length - 1;
 }
 
-function triggerUndoAction() {
-  if (historyIndex > 0) {
-    historyIndex--;
-    restoreAppState(appStateHistory[historyIndex]);
-  }
-}
-
-function triggerRedoAction() {
-  if (historyIndex < appStateHistory.length - 1) {
-    historyIndex++;
-    restoreAppState(appStateHistory[historyIndex]);
-  }
-}
-
-function restoreAppState(state) {
-  if (!state) return;
-  isRestoring = true;
-  document.querySelectorAll('input, select').forEach((el, idx) => {
-    const key = el.id || ('field_' + idx);
-    if (state[key] !== undefined) {
-      el.value = state[key];
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  });
-  setTimeout(() => { isRestoring = false; }, 100);
-}
-
-/* --------------------------------------------------------------------------
-   ⚙️ VIEW SWITCHING & NAVIGATION
-   -------------------------------------------------------------------------- */
 function switchView(viewId) {
   document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
   const target = document.getElementById(viewId);
-  if (target) {
-    target.classList.remove('hidden-section');
-  }
+  if (target) target.classList.remove('hidden-section');
   if (viewId === 'sectionRateList') renderRateList();
   if (viewId === 'sectionStock') renderStockTable();
   if (viewId === 'sectionLedger') renderLedger();
 }
 
-/* --------------------------------------------------------------------------
-   📝 BILLING & ITEMS LOGIC
-   -------------------------------------------------------------------------- */
 function generateNextBillNumber() {
   const nextNo = 'INV-' + (1001 + billsHistory.length);
   const el = document.getElementById('nextBillNo');
   if (el) el.innerText = nextNo;
 }
 
+/* --------------------------------------------------------------------------
+   📦 RENDER MULTI ITEM SELECTOR WITH STOCK INFO
+   -------------------------------------------------------------------------- */
 function renderMultiItemSelector() {
   const container = document.getElementById('multiItemBox');
   if (!container) return;
@@ -160,12 +127,16 @@ function renderMultiItemSelector() {
   rateList.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'multi-item-row';
+    const stockQty = item.stock !== undefined ? item.stock : 50;
     div.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
-        <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:18px; height:18px; accent-color:var(--accent-main); cursor:pointer;">
-        <label for="chk_item_${idx}" style="font-size:11.5px; cursor:pointer;">${item.code ? item.code + ' - ' : ''}${currentLang === 'ur' ? item.nameUr : item.nameEn} (Rs. ${item.rate})</label>
+        <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:16px; height:16px; accent-color:var(--accent-main); cursor:pointer;">
+        <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
+          ${item.code ? item.code + ' - ' : ''}<strong>${currentLang === 'ur' ? item.nameUr : item.nameEn}</strong> 
+          <span style="color:var(--accent-main);">(Rate: ${item.rate} | Stock: ${stockQty})</span>
+        </label>
       </div>
-      <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:55px; padding:3px; text-align:center;">
+      <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:50px; padding:2px; text-align:center; font-size:11px;">
     `;
     container.appendChild(div);
   });
@@ -208,10 +179,10 @@ function renderBillItemsTable() {
       <td>${index + 1}</td>
       <td>${item.code}</td>
       <td>${item.name}</td>
-      <td><input type="number" value="${item.qty}" min="1" oninput="updateBillItemQty(${index}, this.value)" style="width:60px; text-align:center; padding:2px;"></td>
-      <td><input type="number" value="${item.rate}" oninput="updateBillItemRate(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${item.qty}" min="1" oninput="updateBillItemQty(${index}, this.value)" style="width:50px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${item.rate}" oninput="updateBillItemRate(${index}, this.value)" style="width:60px; text-align:center; padding:2px;"></td>
       <td>Rs. ${total}</td>
-      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 6px; font-size:10px;">❌</button></td>
+      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 5px; font-size:10px;">❌</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -220,12 +191,12 @@ function renderBillItemsTable() {
 
 function updateBillItemQty(index, val) {
   billItems[index].qty = parseFloat(val) || 0;
-  renderBillItemsTable();
+  calculateBillTotals();
 }
 
 function updateBillItemRate(index, val) {
   billItems[index].rate = parseFloat(val) || 0;
-  renderBillItemsTable();
+  calculateBillTotals();
 }
 
 function removeBillItem(index) {
@@ -283,7 +254,7 @@ function addNewItem() {
     return;
   }
 
-  rateList.push({ code, nameEn: nameEn || nameUr, nameUr: nameUr || nameEn, rate: rate || 0 });
+  rateList.push({ code, nameEn: nameEn || nameUr, nameUr: nameUr || nameEn, rate: rate || 0, stock: 50 });
   savePermanentRatesList();
   
   document.getElementById('newItemNameEn').value = '';
@@ -301,6 +272,7 @@ function savePermanentRatesList() {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   renderRateList();
   renderMultiItemSelector();
+  renderStockTable();
   alert('Rates and Items saved successfully!');
 }
 
@@ -311,11 +283,21 @@ function renderStockTable() {
   const tbody = document.querySelector('#stockReportTable tbody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  rateList.forEach(item => {
+  rateList.forEach((item, index) => {
+    const stockQty = item.stock !== undefined ? item.stock : 50;
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${item.code}</td><td>${currentLang === 'ur' ? item.nameUr : item.nameEn}</td><td>Unlimited / Available</td>`;
+    tr.innerHTML = `
+      <td>${item.code}</td>
+      <td>${currentLang === 'ur' ? item.nameUr : item.nameEn}</td>
+      <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
+    `;
     tbody.appendChild(tr);
   });
+}
+
+function updateStockQty(index, val) {
+  rateList[index].stock = parseFloat(val) || 0;
+  localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
 }
 
 function renderLedger() {
@@ -406,7 +388,7 @@ function openBillPreview() {
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:10px; line-height:1.2;">
+    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
       ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
       ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
@@ -417,7 +399,7 @@ function openBillPreview() {
   contentDiv.innerHTML = itemsHtml;
   document.getElementById('previewModal').style.display = 'block';
 
-  // Save to history automatically
+  // Save to history & reduce stock
   const billRecord = {
     billNo: document.getElementById('nextBillNo').innerText,
     custName,
@@ -428,6 +410,15 @@ function openBillPreview() {
   };
   billsHistory.push(billRecord);
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+  
+  // Update stock counts
+  billItems.forEach(bi => {
+    const match = rateList.find(r => (currentLang === 'ur' ? r.nameUr : r.nameEn) === bi.name);
+    if (match) {
+      match.stock = Math.max(0, (match.stock !== undefined ? match.stock : 50) - bi.qty);
+    }
+  });
+  localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   updateDashboardStats();
 }
 
@@ -490,10 +481,7 @@ function changeAppTheme(themeName) {
 }
 
 function exportDataBackup() {
-  const data = {
-    ratelist: rateList,
-    bills: billsHistory
-  };
+  const data = { ratelist: rateList, bills: billsHistory };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
