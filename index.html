@@ -406,7 +406,6 @@
       padding: 14px;
     }
 
-    /* 📄 پرنٹ پیپر لے آؤٹ */
     .paper-a4 { width: 100%; max-width: 100%; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; }
     .paper-80mm { width: 280px; margin: 0 auto; font-size: 10px; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; }
     .paper-50mm { width: 190px; margin: 0 auto; font-size: 8.5px; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; }
@@ -423,7 +422,6 @@
       color: #000000 !important;
     }
 
-    /* 📏 بل کے روز (Rows) کا باریک لے آؤٹ */
     #printableBillContainer table { 
       background: transparent !important; 
       line-height: 1.05 !important;
@@ -480,7 +478,6 @@
     }
     .bill-header-layout img { max-height: 40px; width: auto; }
 
-    /* 📌 صفحے کے بالکل نچلے حصے پر فوٹر */
     .bill-bottom-footer {
       margin-top: auto;
       padding-top: 4px;
@@ -491,7 +488,6 @@
       display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2px;
     }
 
-    /* 🖋️ باریک سگنیچر */
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
       font-size: 13px !important; 
@@ -503,7 +499,6 @@
       transform: rotate(-2deg);
     }
 
-    /* 💳 الٹرا کمپیکٹ پے منٹ باکس */
     #billPaymentBox {
       text-align: left; 
       border: 0.5px solid #000; 
@@ -524,7 +519,6 @@
       width: 100%;
     }
 
-    /* 🖨️ پرنٹ سیٹنگز */
     @media print {
       html, body {
         background: #ffffff !important;
@@ -851,7 +845,6 @@
             <div id="billPrintContent" style="margin:4px 0; font-size:8.5px;"></div>
           </div>
 
-          <!-- 📌 صفحے کے بالکل نچلے حصے پر باریک فوٹر -->
           <div class="bill-bottom-footer">
             <div class="bill-footer-grid">
               <div id="billPaymentBox">
@@ -923,25 +916,25 @@
       }
     }
 
-    /* ⌨️ 🎯 100% پکا فکس: انٹر دبانے پر صرف اور صرف نیچے والی رو (Next Row) کی فیلڈ میں نیویگیشن */
+    /* ⌨️ 🎯 100% پرفیکٹ فکس: انٹر دبانے پر صرف اور صرف اسی کالم کی نیچے والی رو (Same Column, Next Row) میں جانا */
     window.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const activeEl = document.activeElement;
         if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
-          // دوسرے تمام ٹکراؤ والے فنکشنز کو روکیں
-          e.preventDefault();
-          e.stopPropagation();
-
+          
           const currentTd = activeEl.closest('td');
           const currentRow = activeEl.closest('tr');
 
           if (currentTd && currentRow) {
-            // ٹیبل میں کالم کا انڈیکس تلاش کریں
-            const cellIndex = Array.from(currentRow.children).indexOf(currentTd);
+            e.preventDefault();
+            e.stopPropagation();
+
+            // اسی ٹیبل رو میں کالم (Cell) کا نمبر بتائیں
+            const colIndex = Array.from(currentRow.children).indexOf(currentTd);
             const nextRow = currentRow.nextElementSibling;
 
             if (nextRow) {
-              const targetTd = nextRow.children[cellIndex];
+              const targetTd = nextRow.children[colIndex];
               const targetInput = targetTd ? targetTd.querySelector('input, select') : null;
               if (targetInput) {
                 targetInput.focus();
@@ -949,21 +942,21 @@
                 return false;
               }
             }
+          } else {
+            // اگر عام فارم فیلڈز میں ہوں
+            e.preventDefault();
+            const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
+            const currentIndex = allInputs.indexOf(activeEl);
+            if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
+              allInputs[currentIndex + 1].focus();
+              if (allInputs[currentIndex + 1].select) allInputs[currentIndex + 1].select();
+            }
           }
-
-          // اگر ٹیبل کی نچلی رو ختم ہو جائے یا عام فارم ہو
-          const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
-          const currentIndex = allInputs.indexOf(activeEl);
-          if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
-            allInputs[currentIndex + 1].focus();
-            if (allInputs[currentIndex + 1].select) allInputs[currentIndex + 1].select();
-          }
-          return false;
         }
       }
-    }, true); // Use Capturing Phase to bypass any conflicting scripts
+    }, true);
 
-    /* ↩️ ↪️ 100% پکا فکس: انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر (Full State Record) */
+    /* ↩️ ↪️ انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر */
     let inputStateHistory = [];
     let historyStepIndex = -1;
     let isUndoRedoActive = false;
@@ -976,7 +969,6 @@
         state[key] = input.value;
       });
 
-      // اگر درمیان سے انڈو کر کے نئی اینٹری کی جائے
       if (historyStepIndex < inputStateHistory.length - 1) {
         inputStateHistory = inputStateHistory.slice(0, historyStepIndex + 1);
       }
@@ -1020,7 +1012,6 @@
         const key = input.id || (input.name ? input.name : 'inp_' + index);
         if (state[key] !== undefined) {
           input.value = state[key];
-          // تمام ایونٹس کو دوبارہ ٹریگر کریں تا کہ ٹوٹل خود بخود اپڈیٹ ہو جائے
           input.dispatchEvent(new Event('input', { bubbles: true }));
           input.dispatchEvent(new Event('change', { bubbles: true }));
         }
@@ -1047,11 +1038,11 @@
       selectEl.value = '';
     }
 
-    /* ⚡ PWA Service Worker (آف لائن سپورٹ) */
+    /* ⚡ PWA Service Worker */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v12';
+          const CACHE_NAME = 'rehma-traders-v13';
           const urlsToCache = [
             './',
             './index.html',
