@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Themes & Animation Supported)
+   REHMA TRADERS - Complete & Fixed app.js (All Features & Correct Ledger Bill No)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -21,7 +21,6 @@ let currentLang = 'en';
 
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
-  // لوکل اسٹورج سے سیو شدہ تھیم لوڈ کریں
   const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
   changeAppTheme(savedTheme, false);
 });
@@ -302,12 +301,15 @@ function viewBillDetails(index) {
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
   const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
   const totalAmount = getBillTotal(bill);
+  
+  // ✨ یہاں اب بل کا اپنا اصل انوائس نمبر شو ہوگا
+  const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
 
   let itemsHtml = `
     <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
       <div><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</div>
       <div style="display:flex; justify-content:space-between; margin-top:2px;">
-        <span><strong>Bill #:</strong> ${bill.billNo || 'INV-1001'}</span>
+        <span><strong>Bill #:</strong> ${exactBillNo}</span>
         <span><strong>Date:</strong> ${bill.date || '-'}</span>
       </div>
     </div>
@@ -414,12 +416,14 @@ function openBillPreview() {
   const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
   const netTotal = subTotal + prevBalance - discount;
 
+  const currentBillNo = document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001';
+
   const contentDiv = document.getElementById('billPrintContent');
   let itemsHtml = `
     <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
       <div><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</div>
       <div style="display:flex; justify-content:space-between; margin-top:2px;">
-        <span><strong>Bill #:</strong> ${document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001'}</span>
+        <span><strong>Bill #:</strong> ${currentBillNo}</span>
         <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
       </div>
     </div>
@@ -450,7 +454,7 @@ function openBillPreview() {
   if (modal) modal.style.display = 'block';
 
   const billRecord = {
-    billNo: document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001',
+    billNo: currentBillNo,
     custName: custName,
     custPhone: custPhone,
     date: new Date().toLocaleDateString(),
@@ -590,12 +594,9 @@ function toggleLanguage() {
   renderRateList();
 }
 
-/* 🎨 مکمل اور درست تھیم سوئچر فنکشن */
 function changeAppTheme(themeName, save = true) {
   const body = document.body;
-  // تمام پرانی تھیم کلاسیں ہٹا دیں
   body.classList.remove('theme-blue', 'theme-emerald', 'theme-gold', 'theme-purple', 'theme-ruby');
-  // نئی تھیم کلاس لگائیں
   body.classList.add('theme-' + themeName);
   
   if (save) {
