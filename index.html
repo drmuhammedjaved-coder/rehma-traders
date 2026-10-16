@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* ✨ تمام 5 خوبصورت اور مکمل تھیمز کی ڈیفینیشنز */
     body.theme-blue {
       --bg-dark: #0b132b; --panel-bg: #1c2541; --card-bg: #3a506b;
       --accent-main: #38bdf8; --text-bright: #ffffff; --text-sub: #94a3b8;
@@ -47,7 +46,6 @@
     .islamic-banner { text-align: center; margin-bottom: 6px; }
     .islamic-bismillah { margin: 0; font-size: 14px; color: var(--accent-main); font-weight: bold; }
     
-    /* ✨ ملٹی کلر ریبو گلوئنگ اینیمیشن (وَاللَّهُ خَيْرُ الرَّازِقِينَ) */
     .islamic-razzaq {
       margin: 0;
       font-family: 'Amiri', serif;
@@ -106,7 +104,6 @@
     .multi-item-container { max-height: 130px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 6px; padding: 4px; margin: 4px 0; }
     .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px; border-bottom: 1px solid var(--border-dark); font-size: 11px; }
 
-    /* 🖨️ ماڈل ونڈو */
     .modal-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(11, 19, 43, 0.9); z-index: 9999; overflow-y: auto; padding: 8px; box-sizing: border-box;
@@ -191,7 +188,6 @@
     </div>
   </div>
 
-  <!-- 🏠 ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
       <img src="logo.png" style="max-height:40px;" onerror="this.style.display='none'">
@@ -227,7 +223,6 @@
 
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
-  <!-- 📝 بل ونڈو -->
   <div id="sectionBill" class="section hidden-section">
     <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
     <h3>📝 Create New Bill (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
@@ -263,7 +258,6 @@
     </div>
   </div>
 
-  <!-- ⚙️ ریٹ لسٹ -->
   <div id="sectionRateList" class="section hidden-section">
     <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
     <h3>⚙️ Rate List & Items</h3>
@@ -294,7 +288,6 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save All / Save Rates</button>
   </div>
 
-  <!-- 📦 اسٹاک -->
   <div id="sectionStock" class="section hidden-section">
     <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
     <h3>📦 Stock Inventory Management</h3>
@@ -307,7 +300,6 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save All / Save Stock</button>
   </div>
 
-  <!-- 🔍 لیجر -->
   <div id="sectionLedger" class="section hidden-section">
     <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
     <h3>🔍 Customer Ledger & History</h3>
@@ -329,7 +321,6 @@
     </table>
   </div>
 
-  <!-- 🖨️ پرنٹ پریویو ماڈل -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:4px;">
@@ -341,7 +332,6 @@
         <button class="btn-back-step" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="margin:0;">🏠 Dashboard</button>
       </div>
 
-      <!-- 📄 بل کنٹینر -->
       <div id="printableBillContainer">
         <img src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
 
@@ -377,7 +367,6 @@
         </div>
       </div>
 
-      <!-- 🔘 ایکشن بٹنز -->
       <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px;">
         <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Close</button>
         <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">📥 Save PDF</button>
