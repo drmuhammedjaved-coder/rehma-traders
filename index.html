@@ -246,7 +246,6 @@
     }
     .hidden-section { display: none !important; }
 
-    /* 🟢 فکس سبز رنگ ڈیش بورڈ بٹن (ہر تھیم میں یکساں) */
     .btn-dashboard-fixed {
       background: #059669 !important;
       color: #ffffff !important;
@@ -264,7 +263,6 @@
       filter: brightness(1.1);
     }
 
-    /* ⚫ فکس سیاہ رنگ سیو بٹن (ہر تھیم میں یکساں، سفید لکھाई کے ساتھ) */
     .btn-save-fixed {
       background: #000000 !important;
       color: #ffffff !important;
@@ -419,8 +417,16 @@
       display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding-top: 10px;
     }
 
+    /* 🖋️ انتہائی خوبصورت اور سٹائلش سگنیچر فونٹ فیملی */
     .signature-box {
-      font-family: 'Brush Script MT', cursive, sans-serif; font-size: 24px; color: #000; border-bottom: 2px solid #000; padding: 0 8px 2px 8px; display: inline-block;
+      font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
+      font-size: 28px;
+      color: #000000;
+      border-bottom: 2px solid #000000;
+      padding: 0 12px 2px 12px;
+      display: inline-block;
+      letter-spacing: 1px;
+      transform: rotate(-3deg);
     }
 
     .multi-item-container {
@@ -585,7 +591,6 @@
 
   <div id="sectionBill" class="section hidden-section">
     <div class="back-nav-bar">
-      <!-- 🟢 فکس سبز بٹن -->
       <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
     </div>
     <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
@@ -625,7 +630,6 @@
 
   <div id="sectionRateList" class="section hidden-section">
     <div class="back-nav-bar">
-      <!-- 🟢 فکس سبز بٹن -->
       <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
     </div>
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
@@ -660,13 +664,11 @@
       </table>
     </div>
 
-    <!-- ⚫ فکس سیاہ رنگ کا سیو بٹن -->
     <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:14px;">💾 Save All Permanent Rates</button>
   </div>
 
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
     <div class="back-nav-bar">
-      <!-- 🟢 فکس سبز بٹن -->
       <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
     </div>
     <h3>📦 Stock Inventory Management (اسٹاک مینجمنٹ رپورٹ)</h3>
@@ -682,13 +684,11 @@
       <tbody></tbody>
     </table>
 
-    <!-- ⚫ فکس سیاہ رنگ کا سیو بٹن -->
     <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:14px;">💾 Save All Stock Inventory</button>
   </div>
 
   <div id="sectionLedger" class="section hidden-section">
     <div class="back-nav-bar">
-      <!-- 🟢 فکس سبز بٹن -->
       <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
     </div>
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
@@ -729,7 +729,6 @@
             <option value="paper-80mm">Thermal 80mm</option>
             <option value="paper-50mm">Thermal 50mm / 58mm</option>
           </select>
-          <!-- 🟢 فکس سبز ڈیش بورڈ بٹن -->
           <button class="btn-dashboard-fixed" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="padding: 6px 14px; font-size: 12px;">🏠 Dashboard</button>
         </div>
       </div>
@@ -752,20 +751,20 @@
           <div id="billPrintContent" style="margin:12px 0; font-size:12px;"></div>
 
           <div style="text-align:center; margin-top:12px; border-top:1px dashed #000000; padding-top:8px;">
-            <p style="margin:2px 0; font-size:11px; font-weight:bold;">نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+            <p id="billNoteTxt" style="margin:2px 0; font-size:11px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
           </div>
 
           <div class="bill-footer-grid">
-            <div style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:transparent;">
-              <span style="font-size:10px; font-weight:bold; display:block; color:#000; text-decoration:underline;">آن لائن ادائیگی کے لیے:</span>
-              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:2px;">جاز کیش اکاؤنٹ: 03074015100</span>
-              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">الائیڈ بینک (ABL): 07550010140074540011</span>
-              <span style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">اکاؤنٹ نیم: محمد جاوید</span>
+            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:transparent;">
+              <span id="payTitle" style="font-size:10px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
+              <span id="payJazz" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:2px;">JazzCash Account: 03074015100</span>
+              <span id="payAbl" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+              <span id="payName" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
             </div>
 
             <div style="text-align:right;">
-              <span style="font-size:11px; font-weight:bold; display:block;">Owner Signature</span>
-              <span class="signature-box">Muhammad Javed</span>
+              <span id="ownerSigLabel" style="font-size:11px; font-weight:bold; display:block;">Owner Signature</span>
+              <span class="signature-box">M. Javed</span>
             </div>
           </div>
         </div>
