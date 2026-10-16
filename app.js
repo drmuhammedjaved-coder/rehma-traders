@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (WhatsApp Web Share & Save All)
+   REHMA TRADERS - Complete & Fixed app.js (Themes & Animation Supported)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -21,6 +21,9 @@ let currentLang = 'en';
 
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
+  // لوکل اسٹورج سے سیو شدہ تھیم لوڈ کریں
+  const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
+  changeAppTheme(savedTheme, false);
 });
 
 function initApp() {
@@ -284,7 +287,6 @@ function renderLedger() {
   });
 }
 
-/* 💾 لیجر اور بلز کے لیے Save All کا فنکشن */
 function saveAllLedgerData() {
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   alert('All Ledger bills successfully saved!');
@@ -524,7 +526,6 @@ function printBillPdf() {
   }
 }
 
-/* 📤 واٹس ایپ اور سوشل میڈیا پر براہ راست شیر کرنے کا فکسڈ فنکشن */
 function shareBillJpgWhatsApp() {
   const container = document.getElementById('printableBillContainer');
   if (window.html2canvas && container) {
@@ -538,7 +539,6 @@ function shareBillJpgWhatsApp() {
             text: 'Here is your bill from Rehma Traders.'
           }).catch(err => console.log('Sharing failed', err));
         } else {
-          // فال بیک: اگر ویب شیر API سپورٹ نہ ہو تو ڈائریکٹ ڈاؤنلوڈ لنک بنائیں
           const link = document.createElement('a');
           link.download = 'rehma-bill.jpg';
           link.href = URL.createObjectURL(blob);
@@ -590,8 +590,20 @@ function toggleLanguage() {
   renderRateList();
 }
 
-function changeAppTheme(themeName) {
-  document.body.className = document.body.className.replace(/theme-\w+/g, '') + ' theme-' + themeName;
+/* 🎨 مکمل اور درست تھیم سوئچر فنکشن */
+function changeAppTheme(themeName, save = true) {
+  const body = document.body;
+  // تمام پرانی تھیم کلاسیں ہٹا دیں
+  body.classList.remove('theme-blue', 'theme-emerald', 'theme-gold', 'theme-purple', 'theme-ruby');
+  // نئی تھیم کلاس لگائیں
+  body.classList.add('theme-' + themeName);
+  
+  if (save) {
+    localStorage.setItem('rehma_theme', themeName);
+  }
+  
+  const selectEl = document.getElementById('themeSelector');
+  if (selectEl) selectEl.value = themeName;
 }
 
 function exportDataBackup() {
