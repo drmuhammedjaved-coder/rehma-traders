@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ur" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REHMA TRADERS - Billing & Inventory PWA</title>
+  <title>رحمہ ٹریڈرز - بلنگ اینڈ انوینٹری</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -89,11 +89,10 @@
       margin: 0;
       padding: 10px;
       transition: all 0.3s ease;
+      direction: rtl;
     }
-    body.lang-ur { direction: rtl; }
-    body.lang-en { direction: ltr; }
 
-    /* ✨ 1. سب سے اوپر ٹرانسپیرنٹ اسلامی بینر */
+    /* ✨ 1. اسلامی بینر */
     .islamic-banner {
       background: transparent;
       border: none;
@@ -128,24 +127,12 @@
     }
 
     @keyframes proPulseGlow {
-      0% {
-        opacity: 0.65;
-        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
-        transform: scale(0.98);
-      }
-      50% {
-        opacity: 1;
-        text-shadow: 0 0 16px rgba(251, 191, 36, 0.9), 0 0 30px rgba(245, 158, 11, 0.7);
-        transform: scale(1.02);
-      }
-      100% {
-        opacity: 0.65;
-        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
-        transform: scale(0.98);
-      }
+      0% { opacity: 0.65; text-shadow: 0 0 4px rgba(251, 191, 36, 0.3); transform: scale(0.98); }
+      50% { opacity: 1; text-shadow: 0 0 16px rgba(251, 191, 36, 0.9), 0 0 30px rgba(245, 158, 11, 0.7); transform: scale(1.02); }
+      100% { opacity: 0.65; text-shadow: 0 0 4px rgba(251, 191, 36, 0.3); transform: scale(0.98); }
     }
 
-    /* 🎯 2. ورٹیکل، چھوٹا اور گول ٹاپ بار مینو */
+    /* 🎯 2. ٹاپ بار مینو */
     .top-bar-clean {
       display: flex;
       flex-direction: column;
@@ -216,10 +203,10 @@
       font-weight: bold;
       border-radius: 4px;
       cursor: pointer;
-      margin-left: 8px;
+      margin-right: 8px;
     }
 
-    /* 🏢 3. برانڈنگ اور لوگو کا کارڈ */
+    /* 🏢 3. برانڈنگ کارڈ */
     .header-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
@@ -240,9 +227,10 @@
     .phone-no-break {
       white-space: nowrap !important;
       display: inline-block;
+      direction: ltr;
     }
 
-    /* 📊 4. ورٹیکل سیلز ڈیش بورڈ کارڈز */
+    /* 📊 4. ڈیش بورڈ کارڈز */
     .dashboard-grid-vertical {
       display: flex;
       flex-direction: column;
@@ -254,7 +242,7 @@
     .dash-card-row {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
-      border-left: 4px solid var(--accent-main);
+      border-right: 4px solid var(--accent-main);
       border-radius: 20px;
       padding: 8px 16px;
       display: flex;
@@ -266,11 +254,7 @@
       box-sizing: border-box;
       height: 38px;
     }
-    body.lang-ur .dash-card-row {
-      border-left: 1px solid var(--border-dark);
-      border-right: 4px solid var(--accent-main);
-    }
-    .dash-card-row h4 { margin: 0; font-size: 11.5px; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
+    .dash-card-row h4 { margin: 0; font-size: 11.5px; color: var(--text-sub); font-weight: 600; }
     .dash-card-row h2 { margin: 0; color: var(--text-bright); font-size: 13.5px; font-weight: 800; }
 
     .section {
@@ -282,7 +266,7 @@
     }
     .hidden-section { display: none !important; }
 
-    /* ↩️ ↪️ انڈو اور ری ڈو اور بیک نیویگیشن بار اسٹائل */
+    /* ↩️ ↪️ نیویگیشن اور انڈو/ری ڈو بار */
     .section-nav-bar {
       display: flex;
       justify-content: space-between;
@@ -415,6 +399,7 @@
       padding: 14px;
     }
 
+    /* 📄 پرنٹ پیپر کا لے آؤٹ */
     .paper-a4 { width: 100%; max-width: 100%; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; }
     .paper-80mm { width: 280px; margin: 0 auto; font-size: 10px; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; }
     .paper-50mm { width: 190px; margin: 0 auto; font-size: 8.5px; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; }
@@ -431,7 +416,7 @@
       color: #000000 !important;
     }
 
-    /* 📏 پرنٹ بل کے روز (Rows) کی اونچائی اور الفاظ انتہائی باریک اور کمپیکٹ */
+    /* 📏 بل کے روز (Rows) کا باریک اسٹائل */
     #printableBillContainer table { 
       background: transparent !important; 
       line-height: 1.05 !important;
@@ -448,14 +433,14 @@
       font-size: 9px !important;
       font-weight: 700 !important;
       background: transparent !important;
-      border-width: 0.5px !important;
+      border: 0.5px solid #000 !important;
     }
     #printableBillContainer td {
       padding: 1px 2px !important;
       font-size: 8.5px !important;
       font-weight: 400 !important;
       background: transparent !important;
-      border-width: 0.5px !important;
+      border: 0.5px solid #000 !important;
     }
 
     .watermark-container {
@@ -488,7 +473,7 @@
     }
     .bill-header-layout img { max-height: 40px; width: auto; }
 
-    /* 📌 صفحے کے بالکل نچلے حصے پر فوٹر اور باریک سائن و بینک تفصیلات */
+    /* 📌 صفحے کے بالکل نچلے حصے پر فوٹر */
     .bill-bottom-footer {
       margin-top: auto;
       padding-top: 4px;
@@ -499,7 +484,7 @@
       display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2px;
     }
 
-    /* 🖋️ انتہائی چھوٹا اور باریک سگنیچر باکس */
+    /* 🖋️ باریک اور چھوٹا سگنیچر */
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
       font-size: 13px !important; 
@@ -511,11 +496,11 @@
       transform: rotate(-2deg);
     }
 
-    /* 💳 انتہائی کمپیکٹ اور باریک آن لائن پے منٹ باکس */
+    /* 💳 الٹرا کمپیکٹ پے منٹ باکس */
     #billPaymentBox {
-      text-align: left; 
+      text-align: right; 
       border: 0.5px solid #000; 
-      padding: 1px 3px !important; 
+      padding: 1px 4px !important; 
       border-radius: 2px; 
       background: transparent;
       line-height: 1.15;
@@ -523,6 +508,7 @@
     #billPaymentBox span {
       font-size: 6.5px !important;
       margin-top: 0px !important;
+      display: block;
     }
 
     .footer-divider-line {
@@ -531,53 +517,106 @@
       width: 100%;
     }
 
+    /* 🖨️ پرنٹ تنظیمات */
     @media print {
-      body { background: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; }
-      body * { visibility: hidden !important; }
-      #previewModal, #previewModal * { visibility: visible !important; }
-      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
-      .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #ffffff !important; border: none !important; color: #000000 !important; }
-      .no-print { display: none !important; }
-      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100vh !important; padding: 0mm !important; margin: 0 !important; background: #ffffff !important; color: #000000 !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }
-      #printableBillContainer * { color: #000000 !important; }
-      #printableBillContainer th, #printableBillContainer td, #printableBillContainer tr { background: transparent !important; color: #000000 !important; border-color: #000000 !important; }
-      .watermark-container { display: flex !important; }
-      .watermark-img { display: block !important; opacity: 0.12 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+      }
+      body * {
+        visibility: hidden !important;
+      }
+      #previewModal, #previewModal * {
+        visibility: visible !important;
+      }
+      .modal-overlay {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+      }
+      .modal-box {
+        box-shadow: none !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        border: none !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #printableBillContainer {
+        position: relative !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        min-height: 98vh !important;
+        padding: 0mm !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+      #printableBillContainer * {
+        color: #000000 !important;
+      }
+      .watermark-container {
+        display: flex !important;
+      }
+      .watermark-img {
+        display: block !important;
+        opacity: 0.12 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
     }
   </style>
 </head>
-<body class="lang-en theme-blue">
+<body class="lang-ur theme-blue">
 
   <div id="updateBanner">
-    🔔 <span>New Update Available!</span>
-    <button onclick="applyAppUpdate()">🔄 Update Now</button>
+    🔔 <span>نیا اپڈیٹ دستیاب ہے!</span>
+    <button onclick="applyAppUpdate()">🔄 ابھی اپڈیٹ کریں</button>
   </div>
 
-  <!-- ✨ 1. سب سے اوپر اعراب کے ساتھ بسم اللہ اور ٹرانسپیرنٹ، بولڈ "وَاللَّهُ خَيْرُ الرَّازِقِينَ" بینر -->
+  <!-- ✨ 1. اسلامی بینر -->
   <div class="islamic-banner">
     <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
     <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
   </div>
 
-  <!-- 🎯 2. ورٹیکل ٹاپ بار (مینو، زبان، تھیم) -->
+  <!-- 🎯 2. ٹاپ بار مینو -->
   <div class="top-bar-clean">
-    <div class="brand-title">REHMA TRADERS</div>
+    <div class="brand-title">رحمہ ٹریڈرز</div>
     <div class="top-buttons-group">
       <select class="btn-compact btn-compact-green" onchange="handleTopMenuSelect(this)">
-        <option value="" selected disabled>🎛️ Menu ▾</option>
-        <option value="mainDashboardMenu">🏠 Dashboard</option>
-        <option value="sectionBill">📝 Create Bill</option>
-        <option value="sectionRateList">⚙️ Rate List</option>
-        <option value="sectionStock">📦 Stock</option>
-        <option value="sectionLedger">🔍 Ledger</option>
-        <option value="exportBackup">💾 Download Backup</option>
-        <option value="importBackup">📂 Restore Backup</option>
+        <option value="" selected disabled>🎛️ مینو ▾</option>
+        <option value="mainDashboardMenu">🏠 ڈیش بورڈ</option>
+        <option value="sectionBill">📝 بل بنائیں</option>
+        <option value="sectionRateList">⚙️ ریٹ لسٹ</option>
+        <option value="sectionStock">📦 اسٹاک انوینٹری</option>
+        <option value="sectionLedger">🔍 کسٹمر لیجر</option>
+        <option value="exportBackup">💾 بیک اپ ڈاؤن لوڈ</option>
+        <option value="importBackup">📂 بیک اپ بحال کریں</option>
       </select>
 
-      <button class="btn-compact" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو/En</button>
+      <button class="btn-compact" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو / En</button>
 
       <select id="themeSelector" class="btn-compact" onchange="changeAppTheme(this.value)">
-        <option value="blue">🎨 Theme ▾</option>
+        <option value="blue">🎨 تھیم چنیں ▾</option>
         <option value="blue">Royal Blue</option>
         <option value="emerald">Emerald</option>
         <option value="gold">Gold</option>
@@ -588,12 +627,12 @@
     </div>
   </div>
 
-  <!-- 🏠 3. مرکزی ڈیش بورڈ اور برانڈنگ سیکشن -->
+  <!-- 🏠 3. ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
-      <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
-      <h1>REHMA TRADERS</h1>
-      <p><strong data-key="proprietor">Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
+      <img src="logo.png" id="mainHeaderLogo" alt="رحمہ ٹریڈرز لوگو" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
+      <h1>رحمہ ٹریڈرز</h1>
+      <p><strong data-key="proprietor">پروپرائٹر:</strong> محمد جاوید</p>
       <p>
         <span class="phone-no-break">📱 0307-4015100</span> | 
         <span class="phone-no-break">📱 0339-1020030</span> | 
@@ -601,22 +640,21 @@
       </p>
     </div>
 
-    <!-- 📊 4. ورٹیکل سیلز ڈیش بورڈ کارڈز -->
     <div class="dashboard-grid-vertical">
-      <div class="dash-card-row" style="border-left-color: #34d399;">
-        <h4 data-key="todaySales">Daily Sales</h4>
+      <div class="dash-card-row" style="border-right-color: #34d399;">
+        <h4 data-key="todaySales">روزانہ کی فروخت</h4>
         <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: var(--accent-main);">
-        <h4 data-key="weeklySales">Weekly Sales</h4>
+      <div class="dash-card-row" style="border-right-color: var(--accent-main);">
+        <h4 data-key="weeklySales">ہفتہ وار فروخت</h4>
         <h2 id="dashWeeklySales" style="color: var(--accent-main);">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: #fbbf24;">
-        <h4 data-key="monthlySales">Monthly Sales</h4>
+      <div class="dash-card-row" style="border-right-color: #fbbf24;">
+        <h4 data-key="monthlySales">ماہانہ فروخت</h4>
         <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
       </div>
-      <div class="dash-card-row" id="showAllBillsBtn" onclick="navigateToView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
-        <h4 data-key="totalSales">Total Sales</h4>
+      <div class="dash-card-row" id="showAllBillsBtn" onclick="navigateToView('sectionLedger')" style="cursor:pointer; border-right-color: #f87171;">
+        <h4 data-key="totalSales">کل فروخت</h4>
         <h2 id="dashSales">Rs. 0</h2>
       </div>
     </div>
@@ -624,183 +662,181 @@
 
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
-  <!-- 📝 نیا بل بنانے کا فارم -->
+  <!-- 📝 بل بنانے کا فارم -->
   <div id="sectionBill" class="section hidden-section">
     <div class="section-nav-bar">
-      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ واپسی</button>
       <div class="undo-redo-group">
-        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
-        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ انڈو</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ ری ڈو</button>
       </div>
     </div>
-    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
+    <h3>📝 <span data-key="createNewBill">نیا بل بنائیں</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
     <div style="display:flex; gap:6px;">
-      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="registerGlobalChange()">
-      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:110px; font-weight:bold;"><span data-key="pickContact">📱 Contacts</span></button>
+      <input type="text" id="custName" placeholder="کسٹمر کا نام" oninput="registerGlobalChange()">
+      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:110px; font-weight:bold;"><span data-key="pickContact">📱 کانٹیکٹس</span></button>
     </div>
-    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="registerGlobalChange()">
+    <input type="text" id="custPhone" placeholder="موبائل نمبر" oninput="registerGlobalChange()">
     
-    <label style="font-size:12px; color:var(--accent-main); font-weight:bold;">📦 Select Items (آئٹم چنیں):</label>
+    <label style="font-size:12px; color:var(--accent-main); font-weight:bold;">📦 آئٹم منتخب کریں:</label>
     <div class="multi-item-container" id="multiItemBox"></div>
-    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ Add Selected Items to Bill</button>
+    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ منتخب آئٹمز بل میں شامل کریں</button>
 
     <table id="billItemsTable">
       <thead>
-        <tr><th data-key="srNo">Sr #</th><th data-key="code">Code</th><th data-key="item">Item</th><th data-key="qty">Qty</th><th data-key="rate">Rate</th><th data-key="total">Total</th><th data-key="action">Action</th></tr>
+        <tr><th data-key="srNo">نمبر</th><th data-key="code">کوڈ</th><th data-key="item">آئٹم تفصیل</th><th data-key="qty">تعداد</th><th data-key="rate">ریٹ</th><th data-key="total">ٹوٹل</th><th data-key="action">ایکشن</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
     <div style="margin-top:12px;">
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
-        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
+        <input type="number" id="prevBalanceInput" placeholder="سابقہ ادھار (Rs.)" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
+        <input type="number" id="discountInput" placeholder="ڈسکاؤنٹ (Rs.)" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
       </div>
       
       <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin:10px 0; padding:10px; background:var(--bg-dark); border-radius:8px; border:1px solid var(--border-dark);">
-        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 17px;">Rs. 0</span></div>
+        <div><strong data-key="netTotal">صافی ٹوٹل:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 17px;">Rs. 0</span></div>
       </div>
       
       <div style="display:flex; gap:6px; margin-top:10px;">
-        <button class="btn-gold" id="previewBillBtn" onclick="openBillPreview()" style="flex:1; padding:12px;">👁️ <span data-key="previewBtn">Print Preview & Confirm</span></button>
+        <button class="btn-gold" id="previewBillBtn" onclick="openBillPreview()" style="flex:1; padding:12px;">👁️ <span data-key="previewBtn">پرنٹ پریویو اور کنفرم کریں</span></button>
       </div>
     </div>
   </div>
 
-  <!-- ⚙️ ریٹ لسٹ سیکشن -->
+  <!-- ⚙️ ریٹ لسٹ -->
   <div id="sectionRateList" class="section hidden-section">
     <div class="section-nav-bar">
-      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ واپسی</button>
       <div class="undo-redo-group">
-        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
-        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ انڈو</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ ری ڈو</button>
       </div>
     </div>
-    <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
+    <h3>⚙️ <span data-key="rateListHeader">ریٹ لسٹ اور آئٹمز مینجمنٹ</span></h3>
     
     <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;">
-      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:10px;">🖼️ <span data-key="shareRateList">Share Rate List as Image (JPG)</span></button>
+      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:10px;">🖼️ <span data-key="shareRateList">ریٹ لسٹ بذریعہ تصویر (JPG) شیئر کریں</span></button>
     </div>
 
     <div style="display:flex; gap:6px; flex-wrap:wrap; background:var(--bg-dark); padding:10px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:10px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
-      <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
-      <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
-      <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">Add</span></button>
+      <input type="text" id="newItemCode" placeholder="کوڈ" style="flex:1;">
+      <input type="number" id="newItemRate" placeholder="ریٹ" style="flex:1;">
+      <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">شامل کریں</span></button>
     </div>
 
     <div id="rateListCaptureArea" style="margin-top:10px; border-radius:8px; border:1px solid #374151;">
       <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
-        <h2 style="margin:2px 0; color:#000; font-size:18px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
-        <p style="margin:1px 0; color:#333; font-size:11px;" id="rlSub">Proprietor: Muhammad Javed | <span class="phone-no-break">📱 0307-4015100</span></p>
+        <h2 style="margin:2px 0; color:#000; font-size:18px;" id="rlTitle">رحمہ ٹریڈرز - آفیشل ریٹ لسٹ</h2>
+        <p style="margin:1px 0; color:#333; font-size:11px;" id="rlSub">پروپرائٹر: محمد جاوید | <span class="phone-no-break">📱 0307-4015100</span></p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
           <tr style="background:#f2f2f2;">
-            <th style="border:1px solid #000; color:#000;" data-key="code">Code</th>
-            <th style="border:1px solid #000; color:#000;" data-key="item">Item Description</th>
-            <th style="border:1px solid #000; color:#000;" data-key="rate">Rate</th>
-            <th class="no-print-col" style="border:1px solid #000; color:#000;">Action</th>
+            <th style="border:1px solid #000; color:#000;" data-key="code">کوڈ</th>
+            <th style="border:1px solid #000; color:#000;" data-key="item">آئٹم تفصیل</th>
+            <th style="border:1px solid #000; color:#000;" data-key="rate">ریٹ</th>
+            <th class="no-print-col" style="border:1px solid #000; color:#000;">ایکشن</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Permanent Rates</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 تمام مستقل ریٹس محفوظ کریں</button>
   </div>
 
-  <!-- 📦 اسٹاک سیکشن -->
+  <!-- 📦 اسٹاک -->
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
     <div class="section-nav-bar">
-      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ واپسی</button>
       <div class="undo-redo-group">
-        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
-        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ انڈو</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ ری ڈو</button>
       </div>
     </div>
-    <h3>📦 Stock Inventory Management</h3>
+    <h3>📦 اسٹاک انوینٹری مینجمنٹ</h3>
     <table id="stockReportTable" style="color:var(--text-bright);">
       <thead>
         <tr>
-          <th>Code</th>
-          <th>Item Name</th>
-          <th>Available Stock Qty</th>
+          <th>کوڈ</th>
+          <th>آئٹم نام</th>
+          <th>دستیاب اسٹاک تعداد</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Stock Inventory</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 تمام اسٹاک محفوظ کریں</button>
   </div>
 
-  <!-- 🔍 لیجر سیکشن -->
+  <!-- 🔍 لیجر -->
   <div id="sectionLedger" class="section hidden-section">
     <div class="section-nav-bar">
-      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <button class="btn-back-fixed" onclick="navigateBack()">⬅️ واپسی</button>
       <div class="undo-redo-group">
-        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
-        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ انڈو</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ ری ڈو</button>
       </div>
     </div>
-    <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
-    <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
+    <h3>🔍 <span data-key="ledgerHeader">کسٹمر لیجر اور بلز تاریخ</span></h3>
+    <input type="text" id="searchCust" placeholder="کسٹمر تلاش کریں..." oninput="filterLedger()">
 
     <div style="margin-bottom: 10px; margin-top: 10px;">
-      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 10px;">🗑️ Delete Marked Bills</button>
+      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 10px;">🗑️ منتخب بلز ڈیلیٹ کریں</button>
     </div>
     
     <table id="ledgerTable">
       <thead>
         <tr>
           <th style="width: 30px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
-          <th data-key="billNoHeader">Bill #</th>
-          <th data-key="custHeader">Customer</th>
-          <th data-key="dateHeader">Date</th>
-          <th data-key="amountHeader">Amount</th>
-          <th data-key="action">Actions</th>
+          <th data-key="billNoHeader">بل #</th>
+          <th data-key="custHeader">کسٹمر</th>
+          <th data-key="dateHeader">تاریخ</th>
+          <th data-key="amountHeader">رقم</th>
+          <th data-key="action">ایکشن</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
 
-  <!-- 🖨️ پرنٹ پریویو ماڈل -->
+  <!-- 🖨️ پرنٹ پریویو ونڈو -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #ccc; padding-bottom:6px; flex-wrap:wrap; gap:6px;">
-        <label style="color:#000; font-size:12px;"><strong>🖨️ Paper Size:</strong></label>
+        <label style="color:#000; font-size:12px;"><strong>🖨️ کاغذی سائز:</strong></label>
         <div style="display:flex; gap:6px; align-items:center;">
           <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:4px; margin:0; background:#f3f4f6; color:#000; font-size:12px;">
-            <option value="paper-a4">A4 Standard</option>
-            <option value="paper-80mm">Thermal 80mm</option>
-            <option value="paper-50mm">Thermal 50mm</option>
+            <option value="paper-a4">A4 اسٹینڈرڈ</option>
+            <option value="paper-80mm">تھرمل 80mm</option>
+            <option value="paper-50mm">تھرمل 50mm</option>
           </select>
-          <button class="btn-back-fixed" onclick="closeBillPreview()" style="padding: 4px 10px; font-size: 11px;">⬅️ Back</button>
+          <button class="btn-back-fixed" onclick="closeBillPreview()" style="padding: 4px 10px; font-size: 11px;">⬅️ بند کریں</button>
         </div>
       </div>
 
-      <!-- 🧾 صفحے کے بالکل نچلے حصے پر باریک بینک تفصیلات، سگنیچر اور نوٹ کا لے آؤٹ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
-          <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
+          <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="واٹرمارک" crossorigin="anonymous" onerror="this.style.display='none'">
         </div>
         
         <div class="bill-content-layer">
-          <!-- اوپر کا حصہ (ہیڈر + بل آئٹمز) -->
           <div>
             <div class="bill-header-layout">
-              <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
+              <img id="printHeaderLogo" src="logo.png" alt="رحمہ ٹریڈرز لوگو" crossorigin="anonymous" onerror="this.style.display='none'">
               <div style="text-align:center;">
-                <h2 style="margin:1px 0; color:#000000; font-size:16px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+                <h2 style="margin:1px 0; color:#000000; font-size:16px; font-weight:800;" id="billHeaderTitle">رحمہ ٹریڈرز</h2>
                 <p style="margin:1px 0; font-size:8.5px; line-height: 1.2;">
-                  <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
+                  <strong id="billPropLabel">پروپرائٹر:</strong> محمد جاوید<br>
                   <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
                 </p>
                 <p style="margin:1px 0; font-size:8px; line-height: 1.2;">
-                  <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
+                  <span class="phone-no-break">💬 واٹس ایپ: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
                 </p>
               </div>
             </div>
@@ -808,18 +844,18 @@
             <div id="billPrintContent" style="margin:4px 0; font-size:8.5px;"></div>
           </div>
 
-          <!-- 📌 صفحے کے بالکل نچلے حصے پر الٹرا-باریک فوٹر -->
+          <!-- 📌 نچلے حصے پر باریک فوٹر -->
           <div class="bill-bottom-footer">
             <div class="bill-footer-grid">
               <div id="billPaymentBox">
-                <span id="payTitle" style="font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-                <span id="payJazz" class="phone-no-break" style="display:block; color:#000;">JazzCash Account: 03074015100</span>
-                <span id="payAbl" class="phone-no-break" style="display:block; color:#000;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-                <span id="payName" style="display:block; color:#000;">Account Title: Muhammad Javed</span>
+                <span id="payTitle" style="font-weight:bold; color:#000; text-decoration:underline;">Online Payment Details:</span>
+                <span id="payJazz" class="phone-no-break" style="color:#000;">JazzCash Account: 03074015100</span>
+                <span id="payAbl" class="phone-no-break" style="color:#000;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+                <span id="payName" style="color:#000;">Account Title: Muhammad Javed</span>
               </div>
 
-              <div style="text-align:right;">
-                <span id="ownerSigLabel" style="font-size:7px; font-weight:bold; display:block;">Owner Signature</span>
+              <div style="text-align:left;">
+                <span id="ownerSigLabel" style="font-size:7px; font-weight:bold; display:block;">مالک کے دستخط</span>
                 <span class="signature-box">M. Javed</span>
               </div>
             </div>
@@ -827,23 +863,23 @@
             <div class="footer-divider-line"></div>
 
             <div style="text-align:center;">
-              <p id="billNoteTxt" style="margin:0; font-size:7px; font-weight:normal; color:#333;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+              <p id="billNoteTxt" style="margin:0; font-size:7px; font-weight:normal; color:#333;">نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="no-print" style="display:flex; gap:4px; margin-top:10px; border-top:1px solid #ddd; padding-top:8px; flex-wrap:wrap;">
-        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">⬅️ Back / Close</button>
-        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖼️ Share JPG</button>
-        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Confirm & Print</button>
+        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">⬅️ بند کریں</button>
+        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖼️ تصویر (JPG) شیئر کریں</button>
+        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ پرنٹ کریں</button>
       </div>
     </div>
   </div>
 
   <script src="app.js"></script>
   <script>
-    /* 🧭 اسمارٹ نیویگیشن ہسٹری مینیجر */
+    /* 🧭 نیویگیشن ہسٹری */
     let navigationStack = ['mainDashboardMenu'];
 
     function getCurrentView() {
@@ -880,7 +916,42 @@
       }
     }
 
-    /* ↩️ ↪️ انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر (Full Input Stack History) */
+    /* ⌨️ 🎯 انٹر دابنے پر دائیں/بائیں (Columns) کی بجائے نیچے (Rows) نیویگیشن کا فکسڈ کوڈ */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
+          // اگر ٹیکسٹ ایریا یا کسی بٹن پر نہ ہو
+          e.preventDefault();
+
+          // موجودہ فارم یا ٹیبل میں تمام ان پٹس کی لسٹ
+          const currentTable = activeEl.closest('table');
+          if (currentTable) {
+            const currentRow = activeEl.closest('tr');
+            const nextRow = currentRow ? currentRow.nextElementSibling : null;
+            if (nextRow) {
+              const cellIndex = Array.from(activeEl.closest('td').parentNode.children).indexOf(activeEl.closest('td'));
+              const targetTd = nextRow.children[cellIndex];
+              const targetInput = targetTd ? targetTd.querySelector('input, select') : null;
+              if (targetInput) {
+                targetInput.focus();
+                if (targetInput.select) targetInput.select();
+                return;
+              }
+            }
+          }
+
+          // اگر ٹیبل سے باہر ہو تو اگلی فیلڈ پر فوکس کریں
+          const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
+          const currentIndex = allInputs.indexOf(activeEl);
+          if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
+            allInputs[currentIndex + 1].focus();
+          }
+        }
+      }
+    });
+
+    /* ↩️ ↪️ انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر */
     let inputStateHistory = [];
     let historyStepIndex = -1;
 
@@ -934,6 +1005,11 @@
       });
     }
 
+    /* 🖨️ پرنٹ کا فنکشن */
+    function executeFinalPrint() {
+      window.print();
+    }
+
     function handleTopMenuSelect(selectEl) {
       const val = selectEl.value;
       if (!val) return;
@@ -948,11 +1024,11 @@
       selectEl.value = '';
     }
 
-    /* ⚡ PWA Service Worker (آف لائن سپورٹ کے لیے) */
+    /* ⚡ PWA Service Worker (آف لائن سپورٹ) */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v7';
+          const CACHE_NAME = 'rehma-traders-v9';
           const urlsToCache = [
             './',
             './index.html',
@@ -990,7 +1066,7 @@
         const blob = new Blob([swCode], { type: 'text/javascript' });
         const swUrl = URL.createObjectURL(blob);
         navigator.serviceWorker.register(swUrl)
-          .then(reg => console.log('Offline ServiceWorker Registered Successfully!'))
+          .then(reg => console.log('ServiceWorker Registered Successfully!'))
           .catch(err => console.log('ServiceWorker Registration Failed:', err));
       });
     }
