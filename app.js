@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Keyboard Navigation Fixed)
+   REHMA TRADERS - Complete & Fixed app.js (Professional Themes Support)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -21,7 +21,7 @@ let currentLang = 'en';
 
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
-  const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
+  const savedTheme = localStorage.getItem('rehma_theme') || 'navy';
   changeAppTheme(savedTheme, false);
 });
 
@@ -139,7 +139,6 @@ function renderBillItemsTable() {
   calculateBillTotals();
 }
 
-/* ✨ کی بورڈ کی غیر ضروری شفٹنگ کو روکنے والا فنکشن */
 function handleInputKeydown(event) {
   if (event.key === 'Enter') {
     event.preventDefault();
@@ -602,7 +601,7 @@ function toggleLanguage() {
 
 function changeAppTheme(themeName, save = true) {
   const body = document.body;
-  body.classList.remove('theme-blue', 'theme-emerald', 'theme-gold', 'theme-purple', 'theme-ruby');
+  body.classList.remove('theme-navy', 'theme-slate', 'theme-sage', 'theme-mocha', 'theme-indigo');
   body.classList.add('theme-' + themeName);
   
   if (save) {
