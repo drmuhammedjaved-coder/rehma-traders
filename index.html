@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur" dir="rtl" class="notranslate" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
   <title>رحمہ ٹریڈرز - بلنگ اینڈ انوینٹری</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -585,7 +586,7 @@
     }
   </style>
 </head>
-<body class="lang-ur theme-blue">
+<body class="lang-ur theme-blue notranslate" translate="no">
 
   <div id="updateBanner">
     🔔 <span>نیا اپڈیٹ دستیاب ہے!</span>
@@ -916,15 +917,13 @@
       }
     }
 
-    /* ⌨️ 🎯 انٹر دابنے پر دائیں/بائیں (Columns) کی بجائے نیچے (Rows) نیویگیشن کا فکسڈ کوڈ */
+    /* ⌨️ 🎯 انٹر دبانے پر نیچے والی رو (Row) میں نیویگیشن */
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const activeEl = document.activeElement;
         if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
-          // اگر ٹیکسٹ ایریا یا کسی بٹن پر نہ ہو
           e.preventDefault();
 
-          // موجودہ فارم یا ٹیبل میں تمام ان پٹس کی لسٹ
           const currentTable = activeEl.closest('table');
           if (currentTable) {
             const currentRow = activeEl.closest('tr');
@@ -941,7 +940,6 @@
             }
           }
 
-          // اگر ٹیبل سے باہر ہو تو اگلی فیلڈ پر فوکس کریں
           const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
           const currentIndex = allInputs.indexOf(activeEl);
           if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
@@ -951,7 +949,7 @@
       }
     });
 
-    /* ↩️ ↪️ انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر */
+    /* ↩️ ↪️ انڈو اور ری ڈو کا ہینڈلر */
     let inputStateHistory = [];
     let historyStepIndex = -1;
 
@@ -1024,11 +1022,11 @@
       selectEl.value = '';
     }
 
-    /* ⚡ PWA Service Worker (آف لائن سپورٹ) */
+    /* ⚡ PWA Service Worker */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v9';
+          const CACHE_NAME = 'rehma-traders-v10';
           const urlsToCache = [
             './',
             './index.html',
