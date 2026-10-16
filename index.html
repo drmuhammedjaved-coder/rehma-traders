@@ -8,30 +8,31 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body.theme-blue {
-      --bg-dark: #0b132b; --panel-bg: #1c2541; --card-bg: #3a506b;
-      --accent-main: #38bdf8; --text-bright: #ffffff; --text-sub: #94a3b8;
-      --border-dark: #334155; --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
+    /* 🎨 نئے پروفیشنل، سوفٹ اور ڈیسنٹ بزنس تھیمز */
+    body.theme-navy {
+      --bg-dark: #0f172a; --panel-bg: #1e293b; --card-bg: #334155;
+      --accent-main: #38bdf8; --text-bright: #f8fafc; --text-sub: #94a3b8;
+      --border-dark: #475569; --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
     }
-    body.theme-emerald {
-      --bg-dark: #064e3b; --panel-bg: #065f46; --card-bg: #047857;
-      --accent-main: #34d399; --text-bright: #ffffff; --text-sub: #a7f3d0;
-      --border-dark: #059669; --btn-grad: linear-gradient(135deg, #059669, #047857);
+    body.theme-slate {
+      --bg-dark: #121212; --panel-bg: #1e1e1e; --card-bg: #2d2d2d;
+      --accent-main: #e2e8f0; --text-bright: #ffffff; --text-sub: #a1a1aa;
+      --border-dark: #3f3f46; --btn-grad: linear-gradient(135deg, #52525b, #3f3f46);
     }
-    body.theme-gold {
-      --bg-dark: #18181b; --panel-bg: #27272a; --card-bg: #3f3f46;
-      --accent-main: #fbbf24; --text-bright: #ffffff; --text-sub: #fde68a;
-      --border-dark: #52525b; --btn-grad: linear-gradient(135deg, #d97706, #b45309);
+    body.theme-sage {
+      --bg-dark: #13221b; --panel-bg: #1c3328; --card-bg: #284738;
+      --accent-main: #6ee7b7; --text-bright: #ecfdf5; --text-sub: #a7f3d0;
+      --border-dark: #375a49; --btn-grad: linear-gradient(135deg, #059669, #047857);
     }
-    body.theme-purple {
-      --bg-dark: #2e1065; --panel-bg: #3b0764; --card-bg: #581c87;
-      --accent-main: #c084fc; --text-bright: #ffffff; --text-sub: #e9d5ff;
-      --border-dark: #6b21a8; --btn-grad: linear-gradient(135deg, #9333ea, #7e22ce);
+    body.theme-mocha {
+      --bg-dark: #1c1917; --panel-bg: #292524; --card-bg: #44403c;
+      --accent-main: #fdba74; --text-bright: #fafaf9; --text-sub: #d6d3d1;
+      --border-dark: #57534e; --btn-grad: linear-gradient(135deg, #c2410c, #9a3412);
     }
-    body.theme-ruby {
-      --bg-dark: #4c0519; --panel-bg: #831843; --card-bg: #9f1239;
-      --accent-main: #fb7185; --text-bright: #ffffff; --text-sub: #fecdd3;
-      --border-dark: #be123c; --btn-grad: linear-gradient(135deg, #e11d48, #be123c);
+    body.theme-indigo {
+      --bg-dark: #1e1b4b; --panel-bg: #312e81; --card-bg: #3730a3;
+      --accent-main: #818cf8; --text-bright: #e0e7ff; --text-sub: #c7d2fe;
+      --border-dark: #4f46e5; --btn-grad: linear-gradient(135deg, #6366f1, #4f46e5);
     }
 
     body {
@@ -156,7 +157,7 @@
     }
   </style>
 </head>
-<body class="lang-en theme-blue">
+<body class="lang-en theme-navy">
 
   <div class="islamic-banner">
     <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
@@ -178,12 +179,12 @@
       </select>
       <button class="btn-compact" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو/En</button>
       <select id="themeSelector" class="btn-compact" onchange="changeAppTheme(this.value)">
-        <option value="blue" selected>🎨 Theme ▾</option>
-        <option value="blue">🔵 Royal Blue</option>
-        <option value="emerald">🟢 Emerald Green</option>
-        <option value="gold">🟡 Golden Luxury</option>
-        <option value="purple">🟣 Neon Purple</option>
-        <option value="ruby">🔴 Ruby Red</option>
+        <option value="navy" selected>🎨 Theme ▾</option>
+        <option value="navy">🔵 Corporate Navy</option>
+        <option value="slate">⚫ Slate Charcoal</option>
+        <option value="sage">🟢 Forest Sage</option>
+        <option value="mocha">🟤 Warm Mocha</option>
+        <option value="indigo">🟣 Royal Indigo</option>
       </select>
     </div>
   </div>
