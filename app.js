@@ -159,11 +159,13 @@ function renderMultiItemSelector() {
   container.innerHTML = '';
   rateList.forEach((item, idx) => {
     const div = document.createElement('div');
-    div.style.cssText = 'display:flex; align-items:center; gap:8px; margin:4px 0; background:var(--bg-dark); padding:6px; border-radius:6px;';
+    div.className = 'multi-item-row';
     div.innerHTML = `
-      <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:20px; height:20px; accent-color:var(--accent-main);">
-      <label for="chk_item_${idx}" style="flex:1; font-size:12px; cursor:pointer;">${item.code ? item.code + ' - ' : ''}${currentLang === 'ur' ? item.nameUr : item.nameEn} (Rs. ${item.rate})</label>
-      <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:60px; padding:4px; text-align:center;">
+      <div style="display:flex; align-items:center; gap:8px; flex:1;">
+        <input type="checkbox" id="chk_item_${idx}" value="${item.code}" style="width:18px; height:18px; accent-color:var(--accent-main); cursor:pointer;">
+        <label for="chk_item_${idx}" style="font-size:11.5px; cursor:pointer;">${item.code ? item.code + ' - ' : ''}${currentLang === 'ur' ? item.nameUr : item.nameEn} (Rs. ${item.rate})</label>
+      </div>
+      <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:55px; padding:3px; text-align:center;">
     `;
     container.appendChild(div);
   });
@@ -321,4 +323,218 @@ function renderLedger() {
   if (!tbody) return;
   tbody.innerHTML = '';
   
-  billsHistory.forEach((
+  billsHistory.forEach((bill, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" class="bill-select-chk" data-index="${idx}"></td>
+      <td>${bill.billNo}</td>
+      <td>${bill.custName}</td>
+      <td>${bill.date}</td>
+      <td>Rs. ${bill.netTotal}</td>
+      <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterLedger() {
+  const query = document.getElementById('searchCust').value.toLowerCase();
+  const rows = document.querySelectorAll('#ledgerTable tbody tr');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+
+function toggleSelectAllBills(chk) {
+  document.querySelectorAll('.bill-select-chk').forEach(c => c.checked = chk.checked);
+}
+
+function deleteSelectedMarkedBills() {
+  const chks = document.querySelectorAll('.bill-select-chk:checked');
+  if (chks.length === 0) {
+    alert('Please select bills to delete.');
+    return;
+  }
+  if (confirm('Are you sure to delete selected bills?')) {
+    const indices = Array.from(chks).map(c => parseInt(c.getAttribute('data-index'))).sort((a,b) => b - a);
+    indices.forEach(idx => billsHistory.splice(idx, 1));
+    localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+    renderLedger();
+    updateDashboardStats();
+  }
+}
+
+function updateDashboardStats() {
+  const total = billsHistory.reduce((acc, b) => acc + (parseFloat(b.netTotal) || 0), 0);
+  const dashSales = document.getElementById('dashSales');
+  if (dashSales) dashSales.innerText = `Rs. ${total}`;
+}
+
+/* --------------------------------------------------------------------------
+   🖨️ PREVIEW, PRINT & EXPORT
+   -------------------------------------------------------------------------- */
+function openBillPreview() {
+  if (billItems.length === 0) {
+    alert('Please add items to bill first!');
+    return;
+  }
+  const custName = document.getElementById('custName').value || 'Cash Customer';
+  const custPhone = document.getElementById('custPhone').value || '-';
+  const prevBalance = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
+  const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+  const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
+  const netTotal = subTotal + prevBalance - discount;
+
+  const contentDiv = document.getElementById('billPrintContent');
+  let itemsHtml = `
+    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px;">
+      <span><strong>Customer:</strong> ${custName}</span>
+      <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+  `;
+
+  billItems.forEach((item, idx) => {
+    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
+  });
+
+  itemsHtml += `
+      </tbody>
+    </table>
+    <div style="margin-top:4px; text-align:right; font-size:10px; line-height:1.2;">
+      <div>SubTotal: Rs. ${subTotal}</div>
+      ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
+      ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
+      <div><strong>Net Total: Rs. ${netTotal}</strong></div>
+    </div>
+  `;
+
+  contentDiv.innerHTML = itemsHtml;
+  document.getElementById('previewModal').style.display = 'block';
+
+  // Save to history automatically
+  const billRecord = {
+    billNo: document.getElementById('nextBillNo').innerText,
+    custName,
+    custPhone,
+    date: new Date().toLocaleDateString(),
+    netTotal,
+    items: [...billItems]
+  };
+  billsHistory.push(billRecord);
+  localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+  updateDashboardStats();
+}
+
+function closeBillPreview() {
+  document.getElementById('previewModal').style.display = 'none';
+}
+
+function changePaperSize(sizeClass) {
+  const container = document.getElementById('printableBillContainer');
+  container.className = sizeClass;
+}
+
+function exportBillJpgAndShare() {
+  const container = document.getElementById('printableBillContainer');
+  html2canvas(container, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'rehma-bill.jpg';
+    link.href = canvas.toDataURL('image/jpeg', 0.9);
+    link.click();
+  });
+}
+
+function exportRateListJpg() {
+  const container = document.getElementById('rateListCaptureArea');
+  html2canvas(container, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'rehma-ratelist.jpg';
+    link.href = canvas.toDataURL('image/jpeg', 0.9);
+    link.click();
+  });
+}
+
+function executeFinalPrint() {
+  window.print();
+}
+
+/* --------------------------------------------------------------------------
+   🌐 LANGUAGE & BACKUP
+   -------------------------------------------------------------------------- */
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'ur' : 'en';
+  const body = document.body;
+  const langBtn = document.getElementById('langToggleBtn');
+
+  if (currentLang === 'ur') {
+    body.classList.add('lang-ur');
+    body.classList.remove('lang-en');
+    if (langBtn) langBtn.innerText = '🌐 اردو';
+  } else {
+    body.classList.add('lang-en');
+    body.classList.remove('lang-ur');
+    if (langBtn) langBtn.innerText = '🌐 English';
+  }
+  renderMultiItemSelector();
+  renderRateList();
+}
+
+function changeAppTheme(themeName) {
+  document.body.className = document.body.className.replace(/theme-\w+/g, '') + ' theme-' + themeName;
+}
+
+function exportDataBackup() {
+  const data = {
+    ratelist: rateList,
+    bills: billsHistory
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'rehma-traders-backup.json';
+  link.click();
+}
+
+function importDataBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.ratelist) {
+        rateList = data.ratelist;
+        localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+      }
+      if (data.bills) {
+        billsHistory = data.bills;
+        localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+      }
+      initApp();
+      alert('Backup restored successfully!');
+    } catch (err) {
+      alert('Invalid backup file!');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function pickContact() {
+  if ('contacts' in navigator && 'select' in navigator.contacts) {
+    navigator.contacts.select(['name', 'tel'], {multiple: false}).then(contacts => {
+      if (contacts && contacts.length > 0) {
+        const contact = contacts[0];
+        if (contact.name) document.getElementById('custName').value = contact.name[0];
+        if (contact.tel) document.getElementById('custPhone').value = contact.tel[0];
+      }
+    }).catch(err => alert('Contact selection failed or cancelled.'));
+  } else {
+    alert('Contact Picker API is not supported on this browser/device.');
+  }
+}
