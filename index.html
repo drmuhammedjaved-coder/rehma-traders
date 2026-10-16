@@ -87,7 +87,7 @@
       background-color: var(--bg-dark);
       color: var(--text-bright);
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       transition: all 0.3s ease;
     }
     body.lang-ur { direction: rtl; }
@@ -97,31 +97,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border-dark);
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
     }
 
     .top-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .theme-select-box {
+    .theme-select-box, .nav-menu-select {
       background: var(--panel-bg);
       color: var(--text-bright);
       border: 2px solid var(--accent-main);
       font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 30px;
+      padding: 6px 12px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       outline: none;
       box-shadow: 0 2px 8px var(--btn-shadow);
-      transition: all 0.2s ease;
+    }
+
+    .nav-menu-select {
+      background: #059669 !important;
+      color: #ffffff !important;
+      border-color: #047857 !important;
     }
 
     .lang-btn {
@@ -129,26 +135,26 @@
       color: var(--text-bright);
       border: 1px solid var(--border-dark);
       font-weight: 700;
-      padding: 8px 18px;
-      border-radius: 30px;
+      padding: 6px 14px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     #updateBanner {
       display: none;
       background: var(--btn-grad);
       color: #fff;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-align: center;
     }
     #updateBanner button {
       background: #f59e0b;
       color: #000;
       border: none;
-      padding: 6px 14px;
+      padding: 4px 10px;
       font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
@@ -157,91 +163,53 @@
 
     .global-toolbar {
       position: sticky;
-      top: 10px;
+      top: 5px;
       z-index: 1000;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       background: var(--panel-bg);
-      padding: 10px 16px;
-      border-radius: 16px;
+      padding: 8px 12px;
+      border-radius: 14px;
       border: 1px solid var(--border-dark);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .header-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
-      border-radius: 20px;
-      padding: 24px;
+      border-radius: 16px;
+      padding: 14px;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
-    .header-card img.main-logo { max-height: 95px; margin-bottom: 12px; }
-    .header-card h1 { color: var(--text-bright); margin: 0 0 6px 0; font-size: 28px; font-weight: 800; }
-    .header-card p { margin: 4px 0; font-size: 13.5px; color: var(--text-sub); }
+    .header-card img.main-logo { max-height: 70px; margin-bottom: 6px; }
+    .header-card h1 { color: var(--text-bright); margin: 0 0 4px 0; font-size: 22px; font-weight: 800; }
+    .header-card p { margin: 2px 0; font-size: 12px; color: var(--text-sub); }
     
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .dash-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
-      border-top: 4px solid var(--accent-main);
-      border-radius: 16px;
-      padding: 14px;
+      border-top: 3px solid var(--accent-main);
+      border-radius: 12px;
+      padding: 10px;
       text-align: center;
     }
-    .dash-card h4 { margin: 0; font-size: 11px; color: var(--text-sub); text-transform: uppercase; }
-    .dash-card h2 { margin: 6px 0 0 0; color: var(--text-bright); font-size: 17px; font-weight: 700; }
-
-    .menu-nav-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 16px;
-      margin-bottom: 10px;
-    }
-    .menu-nav-btn {
-      background: var(--btn-grad);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50px;
-      padding: 18px 22px;
-      text-align: center;
-      cursor: pointer;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 8px 20px var(--btn-shadow);
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-    .menu-nav-btn:hover {
-      transform: translateY(-5px) scale(1.03);
-      filter: brightness(1.15);
-    }
-    .menu-nav-btn span.icon { 
-      font-size: 24px; 
-      background: rgba(255, 255, 255, 0.2);
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
+    .dash-card h4 { margin: 0; font-size: 10px; color: var(--text-sub); text-transform: uppercase; }
+    .dash-card h2 { margin: 4px 0 0 0; color: var(--text-bright); font-size: 15px; font-weight: 700; }
 
     .section {
       background: var(--panel-bg);
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
       border: 1px solid var(--border-dark);
     }
     .hidden-section { display: none !important; }
@@ -250,17 +218,12 @@
       background: #059669 !important;
       color: #ffffff !important;
       border: 2px solid #047857 !important;
-      padding: 8px 20px;
-      border-radius: 25px;
+      padding: 6px 16px;
+      border-radius: 20px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 13.5px;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
-      transition: all 0.2s ease;
-    }
-    .btn-dashboard-fixed:hover {
-      background: #047857 !important;
-      filter: brightness(1.1);
+      font-size: 12px;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
     }
 
     .btn-save-fixed {
@@ -273,26 +236,21 @@
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       width: 100%;
-      font-size: 16px;
-      transition: all 0.2s ease;
-    }
-    .btn-save-fixed:hover {
-      background: #1a1a1a !important;
-      border-color: #555555 !important;
+      font-size: 15px;
     }
 
-    h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-top: 0; font-size: 18px; font-weight: 700; }
+    h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 10px; margin-top: 0; font-size: 16px; font-weight: 700; }
 
     input, select {
       width: 100%;
-      padding: 12px 14px;
-      margin: 6px 0;
-      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 5px 0;
+      border-radius: 10px;
       border: 1px solid var(--border-dark);
       background: var(--bg-dark);
       color: var(--text-bright);
       box-sizing: border-box;
-      font-size: 14px;
+      font-size: 13.5px;
       outline: none;
     }
 
@@ -302,7 +260,7 @@
       font-weight: 700;
       border: none;
       border-radius: 25px;
-      padding: 12px 20px;
+      padding: 10px 18px;
       cursor: pointer;
       box-shadow: 0 4px 12px var(--btn-shadow);
     }
@@ -312,7 +270,7 @@
       color: var(--text-bright);
       border: 1px solid var(--border-dark);
       border-radius: 25px;
-      padding: 10px 18px;
+      padding: 8px 16px;
       cursor: pointer;
       font-weight: 600;
     }
@@ -327,8 +285,8 @@
       cursor: pointer;
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
-    th, td { border: 1px solid var(--border-dark); padding: 12px; text-align: center; font-size: 13.5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid var(--border-dark); padding: 10px; text-align: center; font-size: 12.5px; }
     th { background: var(--bg-dark); color: var(--text-bright); font-weight: 700; }
     td { background: var(--panel-bg); color: var(--text-bright); }
 
@@ -340,7 +298,7 @@
       backdrop-filter: blur(5px);
       z-index: 9999;
       overflow-y: auto;
-      padding: 20px;
+      padding: 12px;
       box-sizing: border-box;
     }
     
@@ -349,8 +307,8 @@
       color: #000000 !important;
       max-width: 600px;
       margin: 10px auto;
-      border-radius: 20px;
-      padding: 24px;
+      border-radius: 16px;
+      padding: 16px;
     }
 
     .paper-a4 { width: 100%; max-width: 100%; }
@@ -360,7 +318,7 @@
     #printableBillContainer, #rateListCaptureArea {
       background: #ffffff !important;
       color: #000000 !important;
-      padding: 20px;
+      padding: 16px;
       box-sizing: border-box;
       position: relative;
     }
@@ -409,30 +367,30 @@
     }
 
     .bill-header-layout {
-      display: flex; align-items: center; justify-content: center; gap: 15px; border-bottom: 2px solid #000; padding-bottom: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 12px; border-bottom: 2px solid #000; padding-bottom: 10px;
     }
-    .bill-header-layout img { max-height: 70px; width: auto; }
+    .bill-header-layout img { max-height: 60px; width: auto; }
 
     .bill-footer-grid {
-      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding-top: 10px;
+      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; padding-top: 8px;
     }
 
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
-      font-size: 28px;
+      font-size: 26px;
       color: #000000;
       border-bottom: 2px solid #000000;
-      padding: 0 12px 2px 12px;
+      padding: 0 10px 2px 10px;
       display: inline-block;
       letter-spacing: 1px;
       transform: rotate(-3deg);
     }
 
     .multi-item-container {
-      max-height: 180px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 12px; padding: 8px; margin: 8px 0;
+      max-height: 160px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 10px; padding: 6px; margin: 6px 0;
     }
     .multi-item-row {
-      display: flex; align-items: center; justify-content: space-between; padding: 6px 6px; border-bottom: 1px solid var(--border-dark);
+      display: flex; align-items: center; justify-content: space-between; padding: 5px 6px; border-bottom: 1px solid var(--border-dark);
     }
     .multi-item-row:last-child { border-bottom: none; }
 
@@ -513,9 +471,21 @@
     <button onclick="applyAppUpdate()">🔄 Update Now (ابھی اپ ڈیٹ کریں)</button>
   </div>
 
+  <!-- 🎯 اوپر کی ٹاپ بار (جہاں تمام کنٹرولز اور نیا مین مینو موجود ہے) -->
   <div class="top-bar">
-    <div style="color: var(--accent-main); font-weight: 800; font-size: 16px;">REHMA TRADERS</div>
+    <div style="color: var(--accent-main); font-weight: 800; font-size: 15px;">REHMA TRADERS</div>
     <div class="top-controls">
+      <!-- 🎛️ نیا نویلا مین مینو کا ڈراپ ڈاؤن -->
+      <select class="nav-menu-select" onchange="handleTopMenuSelect(this)">
+        <option value="" selected disabled>🎛️ Main Menu ▾</option>
+        <option value="sectionBill">📝 Create New Bill</option>
+        <option value="sectionRateList">⚙️ Rate List & Items</option>
+        <option value="sectionStock">📦 Stock Management</option>
+        <option value="sectionLedger">🔍 Customer Ledger & History</option>
+        <option value="exportBackup">💾 Download Backup</option>
+        <option value="importBackup">📂 Restore Backup</option>
+      </select>
+
       <select id="themeSelector" class="theme-select-box" onchange="changeAppTheme(this.value)">
         <option value="blue">🎨 Royal Blue</option>
         <option value="emerald">🎨 Emerald Night</option>
@@ -524,17 +494,18 @@
         <option value="ruby">🎨 Ruby Dark</option>
         <option value="light">🎨 Clean Light Mode</option>
       </select>
-      <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">🌐 Switch to اردو</button>
+      
+      <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو / En</button>
     </div>
   </div>
 
   <div class="global-toolbar">
     <div>
-      <button class="btn-silver" onclick="triggerGlobalUndo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">↩️ Undo</button>
-      <button class="btn-silver" onclick="triggerGlobalRedo()" style="padding:6px 12px; font-size:12px; font-weight:bold;">🔄 Redo</button>
+      <button class="btn-silver" onclick="triggerGlobalUndo()" style="padding:5px 10px; font-size:11px; font-weight:bold;">↩️ Undo</button>
+      <button class="btn-silver" onclick="triggerGlobalRedo()" style="padding:5px 10px; font-size:11px; font-weight:bold;">🔄 Redo</button>
     </div>
     <div>
-      <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:11px;">🛠️ Safe Code Restore</button>
+      <button class="btn-danger" onclick="safeRestoreAppCode()" style="font-size:10.5px; padding:6px 12px;">🛠️ Safe Code Restore</button>
     </div>
   </div>
 
@@ -543,8 +514,7 @@
     <h1>REHMA TRADERS</h1>
     <p><strong data-key="proprietor">Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
     <p>📱 0307-4015100 | 📱 0339-1020030</p>
-    <p>💬 WhatsApp: 0333-5255117</p>
-    <p>📧 rehmatraders786@gmail.com</p>
+    <p>💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
   </div>
 
   <div class="dashboard-grid">
@@ -566,53 +536,22 @@
     </div>
   </div>
 
-  <!-- 🎯 مین ڈیش بورڈ پر بیک اپ ڈاؤن لوڈ اور ریستور کے نئے نمایاں بٹن -->
-  <div class="section" style="border: 2px solid var(--accent-main); padding: 16px; margin-bottom: 20px;">
-    <h3 style="text-align:center; border:none; margin-bottom:12px; font-size:16px;">💾 ڈیٹا بیک اپ اور بحالی (Data Backup & Restore)</h3>
-    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-      <button class="btn-gold" onclick="exportDataBackup()" style="flex:1; font-weight:bold; padding:14px; font-size:14px;">💾 <span data-key="backup">Download Ledger Backup</span></button>
-      <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; font-weight:bold; padding:14px; font-size:14px; background:#1e293b; color:#fff; border:1px solid var(--accent-main);">📂 Restore Backup (ڈیٹا بحال کریں)</button>
-      <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
-    </div>
-  </div>
+  <!-- hidden file input for restore backup -->
+  <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
-  <div id="mainDashboardMenu" class="section">
-    <h3 style="text-align:center; border:none; margin-bottom:16px;">🎛️ Main Menu / مین مینو</h3>
-    <div class="menu-nav-grid">
-      <div class="menu-nav-btn" onclick="switchView('sectionBill')">
-        <span class="icon">📝</span>
-        <span>Create New Bill</span>
-      </div>
-      <div class="menu-nav-btn" onclick="switchView('sectionRateList')">
-        <span class="icon">⚙️</span>
-        <span>Rate List & Items</span>
-      </div>
-      <div class="menu-nav-btn" onclick="switchView('sectionStock')">
-        <span class="icon">📦</span>
-        <span>Stock Management</span>
-      </div>
-      <div class="menu-nav-btn" onclick="switchView('sectionLedger')">
-        <span class="icon">🔍</span>
-        <span>Ledger & Backup</span>
-      </div>
-    </div>
-  </div>
-
-  <div id="sectionBill" class="section hidden-section">
-    <div class="back-nav-bar">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
-    </div>
+  <!-- 📝 بل بنانے کی مین اسکرین (ایپ کھولتے ہی سامنے نظر آئے گی) -->
+  <div id="sectionBill" class="section">
     <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
-    <div style="display:flex; gap:8px;">
+    <div style="display:flex; gap:6px;">
       <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="registerGlobalChange()">
-      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:140px; font-size:12px; font-weight:bold;"><span data-key="pickContact">📱 Contacts</span></button>
+      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:120px; font-size:11px; font-weight:bold;"><span data-key="pickContact">📱 Contacts</span></button>
     </div>
     <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="registerGlobalChange()">
     
-    <label style="font-size:13px; color:var(--accent-main); font-weight:bold;">📦 Select Multiple Items (ایک سے زیادہ آئٹم چنیں):</label>
+    <label style="font-size:12px; color:var(--accent-main); font-weight:bold;">📦 Select Multiple Items (ایک سے زیادہ آئٹم چنیں):</label>
     <div class="multi-item-container" id="multiItemBox"></div>
-    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0; font-size:14px;">➕ Add Selected Items to Bill</button>
+    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0; font-size:13px;">➕ Add Selected Items to Bill</button>
 
     <table id="billItemsTable">
       <thead>
@@ -621,33 +560,33 @@
       <tbody></tbody>
     </table>
 
-    <div style="margin-top:14px;">
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:140px;">
-        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:140px;">
+    <div style="margin-top:12px;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:130px;">
+        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:130px;">
       </div>
       
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; margin:12px 0; padding:12px; background:var(--bg-dark); border-radius:12px; border:1px solid var(--border-dark);">
-        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 18px;">Rs. 0</span></div>
+      <div style="display:flex; justify-style:space-between; align-items:center; font-size:14px; margin:10px 0; padding:10px; background:var(--bg-dark); border-radius:10px; border:1px solid var(--border-dark);">
+        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 17px;">Rs. 0</span></div>
       </div>
       
-      <div style="display:flex; gap:8px; margin-top:14px;">
+      <div style="display:flex; gap:6px; margin-top:12px;">
         <button class="btn-gold" id="previewBillBtn" onclick="openBillPreview()" style="flex:1;">👁️ <span data-key="previewBtn">Print Preview & Confirm</span></button>
       </div>
     </div>
   </div>
 
   <div id="sectionRateList" class="section hidden-section">
-    <div class="back-nav-bar">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <button class="btn-dashboard-fixed" onclick="switchView('sectionBill')">🏠 Back to Billing</button>
     </div>
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
     
-    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:12px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
+    <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;">
+      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:10px;">🖼️ <span data-key="shareRateList">Share Rate List as HD Image (JPG)</span></button>
     </div>
 
-    <div style="display:flex; gap:8px; flex-wrap:wrap; background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--border-dark); margin-bottom:12px;">
+    <div style="display:flex; gap:6px; flex-wrap:wrap; background:var(--bg-dark); padding:10px; border-radius:10px; border:1px solid var(--border-dark); margin-bottom:10px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
       <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
@@ -655,10 +594,10 @@
       <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">Add Item</span></button>
     </div>
 
-    <div id="rateListCaptureArea" style="margin-top:16px; border-radius:8px; border:1px solid #374151;">
-      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:10px;">
-        <h2 style="margin:2px 0; color:#000; font-size:22px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
-        <p style="margin:2px 0; color:#333; font-size:12px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+    <div id="rateListCaptureArea" style="margin-top:12px; border-radius:8px; border:1px solid #374151;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
+        <h2 style="margin:2px 0; color:#000; font-size:20px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
+        <p style="margin:2px 0; color:#333; font-size:11px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
@@ -673,15 +612,15 @@
       </table>
     </div>
 
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:14px;">💾 Save All Permanent Rates</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Permanent Rates</button>
   </div>
 
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
-    <div class="back-nav-bar">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <button class="btn-dashboard-fixed" onclick="switchView('sectionBill')">🏠 Back to Billing</button>
     </div>
-    <h3>📦 Stock Inventory Management (اسٹاک مینجمنٹ رپورٹ)</h3>
-    <p style="font-size: 13px; color: var(--text-sub);">یہ سیکشن صرف آپ کے پاس دکان کے اسٹاک کا حساب رکھنے کے لیے ہے، یہ کسٹمر کو نہیں دکھتا۔</p>
+    <h3>📦 Stock Inventory Management (اسٹاک رپورٹ)</h3>
+    <p style="font-size: 12px; color: var(--text-sub);">یہ سیکشن صرف آپ کے پاس دکان کے اسٹاک کا حساب رکھنے کے لیے ہے۔</p>
     <table id="stockReportTable" style="color:var(--text-bright);">
       <thead>
         <tr>
@@ -693,24 +632,24 @@
       <tbody></tbody>
     </table>
 
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:14px;">💾 Save All Stock Inventory</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Stock Inventory</button>
   </div>
 
   <div id="sectionLedger" class="section hidden-section">
-    <div class="back-nav-bar">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <button class="btn-dashboard-fixed" onclick="switchView('sectionBill')">🏠 Back to Billing</button>
     </div>
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
     <input type="text" id="searchCust" placeholder="Search Customer / کسٹمر کا نام لکھ کر تلاش کریں..." oninput="filterLedger()">
 
-    <div style="margin-bottom: 12px; margin-top: 14px;">
-      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 12px;">🗑️ Delete Marked Bills (مقررہ نشان زدہ بل حذف کریں)</button>
+    <div style="margin-bottom: 10px; margin-top: 10px;">
+      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 10px;">🗑️ Delete Marked Bills (مقررہ نشان زدہ بل حذف کریں)</button>
     </div>
     
     <table id="ledgerTable">
       <thead>
         <tr>
-          <th style="width: 40px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
+          <th style="width: 35px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
           <th data-key="billNoHeader">Bill #</th>
           <th data-key="custHeader">Customer</th>
           <th data-key="dateHeader">Date & Time</th>
@@ -724,15 +663,15 @@
 
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
-      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px; flex-wrap:wrap; gap:8px;">
-        <label style="color:#000;"><strong>🖨️ Paper Size:</strong></label>
+      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #ccc; padding-bottom:6px; flex-wrap:wrap; gap:6px;">
+        <label style="color:#000; font-size:12px;"><strong>🖨️ Paper Size:</strong></label>
         <div style="display:flex; gap:6px; align-items:center;">
-          <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:6px; margin:0; background:#f3f4f6; color:#000;">
+          <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:4px; margin:0; background:#f3f4f6; color:#000; font-size:12px;">
             <option value="paper-a4">A4 / Standard Page</option>
             <option value="paper-80mm">Thermal 80mm</option>
             <option value="paper-50mm">Thermal 50mm / 58mm</option>
           </select>
-          <button class="btn-dashboard-fixed" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="padding: 6px 14px; font-size: 12px;">🏠 Dashboard</button>
+          <button class="btn-dashboard-fixed" onclick="closeBillPreview(); switchView('sectionBill');" style="padding: 5px 12px; font-size: 11px;">🏠 Billing Screen</button>
         </div>
       </div>
 
@@ -745,42 +684,58 @@
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:2px 0; color:#000000; font-size:24px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:2px 0; font-size:12px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
-              <p style="margin:2px 0; font-size:11px;">💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
+              <h2 style="margin:2px 0; color:#000000; font-size:22px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+              <p style="margin:2px 0; font-size:11px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
+              <p style="margin:2px 0; font-size:10px;">💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
             </div>
           </div>
 
-          <div id="billPrintContent" style="margin:12px 0; font-size:12px;"></div>
+          <div id="billPrintContent" style="margin:10px 0; font-size:11px;"></div>
 
-          <div style="text-align:center; margin-top:12px; border-top:1px dashed #000000; padding-top:8px;">
-            <p id="billNoteTxt" style="margin:2px 0; font-size:11px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
+          <div style="text-align:center; margin-top:10px; border-top:1px dashed #000000; padding-top:6px;">
+            <p id="billNoteTxt" style="margin:2px 0; font-size:10px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
           </div>
 
           <div class="bill-footer-grid">
-            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:6px 10px; border-radius:6px; background:transparent;">
-              <span id="payTitle" style="font-size:10px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:2px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-              <span id="payName" style="font-size:10px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
+            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:5px 8px; border-radius:6px; background:transparent;">
+              <span id="payTitle" style="font-size:9.5px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
+              <span id="payJazz" style="font-size:9.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
+              <span id="payAbl" style="font-size:9.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+              <span id="payName" style="font-size:9.5px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
             </div>
 
             <div style="text-align:right;">
-              <span id="ownerSigLabel" style="font-size:11px; font-weight:bold; display:block;">Owner Signature</span>
+              <span id="ownerSigLabel" style="font-size:10px; font-weight:bold; display:block;">Owner Signature</span>
               <span class="signature-box">M. Javed</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="no-print" style="display:flex; gap:8px; margin-top:16px; border-top:1px solid #ddd; padding-top:12px; flex-wrap:wrap;">
-        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:25px; font-weight:bold; cursor:pointer;">✏️ Back / Close</button>
-        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:10px; border-radius:25px; font-weight:bold; cursor:pointer;">🖼️ Share HD JPG</button>
-        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:10px; border-radius:25px; font-weight:bold; cursor:pointer;">🖨️ Confirm & Print</button>
+      <div class="no-print" style="display:flex; gap:6px; margin-top:12px; border-top:1px solid #ddd; padding-top:10px; flex-wrap:wrap;">
+        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:12px;">✏️ Back / Close</button>
+        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:12px;">🖼️ Share HD JPG</button>
+        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:8px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:12px;">🖨️ Confirm & Print</button>
       </div>
     </div>
   </div>
 
   <script src="app.js"></script>
+  <script>
+    // 🎛️ اوپر کے مین مینو کو ہینڈل کرنے کا فنکشن
+    function handleTopMenuSelect(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+
+      if (val === 'exportBackup') {
+        exportDataBackup();
+      } else if (val === 'importBackup') {
+        document.getElementById('importBackupInput').click();
+      } else {
+        switchView(val);
+      }
+      selectEl.value = ''; // Reset select to default header
+    }
+  </script>
 </body>
 </html>
