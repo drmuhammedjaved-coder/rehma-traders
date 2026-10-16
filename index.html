@@ -68,41 +68,40 @@
     .multi-item-container { max-height: 140px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 6px; padding: 4px; margin: 4px 0; }
     .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px; border-bottom: 1px solid var(--border-dark); font-size: 11px; }
 
-    /* 🖨️ انتہائی پروفیشنل، نفاست والا اور سنگل پیج پرنٹ ڈیزائن */
+    /* 🖨️ پرفیکٹ پریویو اور پرنٹ لے آؤٹ */
     .modal-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(11, 19, 43, 0.9); z-index: 9999; overflow-y: auto; padding: 4px; box-sizing: border-box;
+      background: rgba(11, 19, 43, 0.9); z-index: 9999; overflow-y: auto; padding: 10px; box-sizing: border-box;
     }
-    .modal-box { background: #fff; color: #000; max-width: 500px; margin: 10px auto; border-radius: 8px; padding: 10px; }
+    .modal-box { background: #fff; color: #000; max-width: 450px; margin: 20px auto; border-radius: 8px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 
     #printableBillContainer {
-      background: #fff !important; color: #000 !important; padding: 6px; box-sizing: border-box; width: 100%;
-      display: flex; flex-direction: column; justify-content: space-between; min-height: 250mm;
+      background: #fff !important; color: #000 !important; padding: 8px; box-sizing: border-box; width: 100%;
     }
     #printableBillContainer * { color: #000 !important; }
 
-    .bill-header { display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #000; padding-bottom: 4px; }
-    .bill-header img { max-height: 32px; width: auto; }
+    .bill-header { display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #000; padding-bottom: 6px; }
+    .bill-header img { max-height: 35px; width: auto; }
 
-    #printableBillContainer table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    #printableBillContainer table { width: 100%; border-collapse: collapse; margin-top: 6px; }
     #printableBillContainer th, #printableBillContainer td {
-      border: 0.5px solid #000 !important; padding: 2px 3px !important; font-size: 8.5px !important; line-height: 1.1 !important; text-align: center;
+      border: 0.5px solid #000 !important; padding: 3px 4px !important; font-size: 9.5px !important; line-height: 1.2 !important; text-align: center;
     }
     #printableBillContainer th { background: #f1f5f9 !important; font-weight: bold; }
 
-    .bill-footer { margin-top: auto; border-top: 1px solid #000; padding-top: 4px; }
-    .bill-footer-grid { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
-    .signature-box { font-family: 'Great Vibes', cursive; font-size: 14px; border-bottom: 1px solid #000; padding: 0 6px; display: inline-block; }
+    .bill-footer { margin-top: 15px; border-top: 1px solid #000; padding-top: 6px; }
+    .bill-footer-grid { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 6px; }
+    .signature-box { font-family: 'Great Vibes', cursive; font-size: 15px; border-bottom: 1px solid #000; padding: 0 6px; display: inline-block; }
 
     @media print {
-      @page { size: A4; margin: 4mm; }
+      @page { size: A4; margin: 5mm; }
       body { background: #fff !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
       body * { visibility: hidden !important; }
       #previewModal, #previewModal * { visibility: visible !important; }
       .modal-overlay { position: fixed !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: #fff !important; padding: 0 !important; margin: 0 !important; }
       .modal-box { box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; border: none !important; background: #fff !important; }
       .no-print { display: none !important; }
-      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; padding: 0 !important; margin: 0 !important; }
+      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; }
     }
   </style>
 </head>
@@ -139,7 +138,6 @@
     </div>
   </div>
 
-  <!-- 🏠 ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
       <img src="logo.png" style="max-height:40px;" onerror="this.style.display='none'">
@@ -157,7 +155,6 @@
 
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
-  <!-- 📝 بل ونڈو -->
   <div id="sectionBill" class="section hidden-section">
     <button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button>
     <h3>📝 Create New Bill (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
@@ -188,7 +185,6 @@
     <button class="btn-gold" onclick="openBillPreview()" style="width:100%;">👁️ Print Preview & Confirm</button>
   </div>
 
-  <!-- ⚙️ ریٹ لسٹ -->
   <div id="sectionRateList" class="section hidden-section">
     <button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button>
     <h3>⚙️ Rate List & Items</h3>
@@ -212,7 +208,6 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save Rates</button>
   </div>
 
-  <!-- 📦 اسٹاک -->
   <div id="sectionStock" class="section hidden-section">
     <button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button>
     <h3>📦 Stock Inventory</h3>
@@ -223,7 +218,6 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save Stock</button>
   </div>
 
-  <!-- 🔍 لیجر -->
   <div id="sectionLedger" class="section hidden-section">
     <button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button>
     <h3>🔍 Customer Ledger</h3>
@@ -235,7 +229,6 @@
     </table>
   </div>
 
-  <!-- 🖨️ پرنٹ پریویو ماڈل -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ddd; padding-bottom:4px;">
@@ -247,7 +240,7 @@
         <button class="btn-back-step" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="margin:0;">🏠 Dashboard</button>
       </div>
 
-      <div id="printableBillContainer" class="paper-a4">
+      <div id="printableBillContainer">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" crossorigin="anonymous" onerror="this.style.display='none'">
         </div>
@@ -263,7 +256,6 @@
 
           <div id="billPrintContent" style="margin:4px 0;"></div>
 
-          <!-- 📌 فٹر، سگنیچر اور نوٹ بالکل باٹم میں -->
           <div class="bill-footer">
             <div class="bill-footer-grid">
               <div style="text-align:left; border:0.5px solid #000; padding:2px; border-radius:2px; font-size:7.5px;">
