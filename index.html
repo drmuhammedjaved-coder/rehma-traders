@@ -101,7 +101,7 @@
       padding: 6px 12px;
       border-radius: 30px;
       border: 1px solid var(--border-dark);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
@@ -138,6 +138,36 @@
       border: 1px solid #047857 !important;
     }
 
+    /* ✨ شاندار اور سٹائلش اسلامی بینر */
+    .islamic-banner {
+      background: linear-gradient(135deg, #1e293b, #0f172a, #1e293b);
+      border: 2px solid var(--accent-main);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .islamic-banner h2 {
+      margin: 0;
+      font-family: 'Amiri', 'Traditional Arabic', 'Times New Roman', serif;
+      font-size: 26px;
+      font-weight: 700;
+      background: linear-gradient(to right, #fbbf24, #f59e0b, #38bdf8, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .islamic-banner p {
+      margin: 4px 0 0 0;
+      font-size: 11px;
+      color: var(--text-sub);
+      letter-spacing: 0.5px;
+    }
+
     #updateBanner {
       display: none;
       background: var(--btn-grad);
@@ -167,16 +197,16 @@
       text-align: center;
       margin-bottom: 12px;
     }
-    .header-card img.main-logo { max-height: 60px; margin-bottom: 6px; }
-    .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 20px; font-weight: 800; }
+    .header-card img.main-logo { max-height: 55px; margin-bottom: 6px; }
+    .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 19px; font-weight: 800; }
     .header-card p { margin: 2px 0; font-size: 11.5px; color: var(--text-sub); }
 
-    /* 📊 ڈیش بورڈ کی ورٹیکل (ایک کے نیچے ایک) خوبصورت ترتیب */
+    /* 📊 ورٹیکل سیلز کارڈز */
     .dashboard-grid-vertical {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .dash-card-row {
       background: var(--panel-bg);
@@ -396,7 +426,7 @@
     <button onclick="applyAppUpdate()">🔄 Update Now</button>
   </div>
 
-  <!-- 🎯 کلین ٹاپ بار -->
+  <!-- 🎯 ٹاپ بار (مینو، زبان، تھیم) -->
   <div class="top-bar-clean">
     <div class="brand-title">REHMA TRADERS</div>
     <div class="top-buttons-group">
@@ -425,6 +455,12 @@
     </div>
   </div>
 
+  <!-- ✨ سب سے اوپر خوبصورت اسلامی بینر -->
+  <div class="islamic-banner">
+    <h2>وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
+    <p>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+  </div>
+
   <!-- 🏠 مرکزی ڈیش بورڈ سیکشن -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
@@ -434,7 +470,7 @@
       <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
     </div>
 
-    <!-- 📊 ورٹیکل سیلز کارڈز (ایک کے نیچے ایک) -->
+    <!-- 📊 ورٹیکل سیلز کارڈز -->
     <div class="dashboard-grid-vertical">
       <div class="dash-card-row" style="border-left-color: #34d399;">
         <h4 data-key="todaySales">Daily Sales</h4>
