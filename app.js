@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (PDF Download & Perfect Print)
+   REHMA TRADERS - Complete & Fixed app.js (Working Print & PDF Dialog)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -473,7 +473,7 @@ function changePaperSize(sizeClass) {
   if (container) container.className = sizeClass;
 }
 
-/* 📥 ڈائریکٹ پی ڈی ایف سیو/ڈاؤن لوڈ کرنے کا نیا فنکشن */
+/* 📥 ڈائریکٹ پی ڈی ایف سیو/ڈاؤن لوڈ کرنے کا فنکشن */
 function downloadBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
@@ -488,6 +488,34 @@ function downloadBillPdf() {
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('Rehma_Traders_Bill.pdf');
+    });
+  }
+}
+
+/* 🖨️ فکسڈ پرنٹ فنکشن (موبائل اور براؤزر کے لیے ڈائریکٹ پرنٹ پیج اوپن کرے گا) */
+function printBillPdf() {
+  const container = document.getElementById('printableBillContainer');
+  if (!container) return;
+
+  if (window.html2canvas && window.jspdf) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      
+      // پرنٹ یا ప్రివ്യൂ کے لیے PDF کو براہ راست براؤزر میں کھولیں
+      const pdfBlobUrl = pdf.output('bloburl');
+      const printWindow = window.open(pdfBlobUrl, '_blank');
+      if (printWindow) {
+        printWindow.print();
+      } else {
+        // اگر پاپ اپ بلاک ہو جائے تو فال بیک کے طور پر پرنٹ کمانڈ چلائیں
+        window.print();
+      }
     });
   } else {
     window.print();
@@ -516,10 +544,6 @@ function exportRateListJpg() {
       link.click();
     });
   }
-}
-
-function executeFinalPrint() {
-  window.print();
 }
 
 function toggleLanguage() {
