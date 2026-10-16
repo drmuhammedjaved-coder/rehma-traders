@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Billing & Inventory PWA (Complete & Robust app.js)
+   REHMA TRADERS - Robust & Complete app.js (Auto-fallback for all formats)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -37,6 +37,26 @@ function initApp() {
   generateNextBillNumber();
 }
 
+function getItemName(item) {
+  if (!item) return '-';
+  if (typeof item === 'string') return item;
+  if (currentLang === 'ur') {
+    return item.nameUr || item.name || item.itemName || item.nameEn || '-';
+  } else {
+    return item.nameEn || item.name || item.itemName || item.nameUr || '-';
+  }
+}
+
+function getItemRate(item) {
+  if (!item) return 0;
+  return parseFloat(item.rate || item.itemRate || item.price || 0);
+}
+
+function getItemQty(item) {
+  if (!item) return 0;
+  return parseFloat(item.qty || item.quantity || item.itemQty || 0);
+}
+
 function generateNextBillNumber() {
   const nextNo = 'INV-' + (1001 + billsHistory.length);
   const el = document.getElementById('nextBillNo');
@@ -54,13 +74,14 @@ function renderMultiItemSelector() {
     const div = document.createElement('div');
     div.className = 'multi-item-row';
     const stockQty = item.stock !== undefined ? item.stock : 50;
-    const name = currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr);
+    const name = getItemName(item);
+    const rate = getItemRate(item);
     div.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
         <input type="checkbox" id="chk_item_${idx}" value="${item.code || ''}" style="width:16px; height:16px; accent-color:var(--accent-main);">
         <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
           ${item.code ? item.code + ' - ' : ''}<strong>${name}</strong> 
-          <span style="color:var(--accent-main);">(Rate: ${item.rate} | Stock: ${stockQty})</span>
+          <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
         </label>
       </div>
       <input type="number" id="qty_item_${idx}" value="1" min="1" style="width:50px; padding:2px; text-align:center; font-size:11px;">
@@ -75,7 +96,8 @@ function addSelectedMultipleItems() {
     const qtyInput = document.getElementById(`qty_item_${idx}`);
     if (chk && chk.checked) {
       const qty = parseFloat(qtyInput.value) || 1;
-      const itemName = currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr);
+      const itemName = getItemName(item);
+      const rate = getItemRate(item);
       const existing = billItems.find(i => i.name === itemName);
       if (existing) {
         existing.qty += qty;
@@ -83,7 +105,7 @@ function addSelectedMultipleItems() {
         billItems.push({
           code: item.code || '',
           name: itemName,
-          rate: item.rate || 0,
+          rate: rate,
           qty: qty
         });
       }
@@ -100,7 +122,7 @@ function renderBillItemsTable() {
   tbody.innerHTML = '';
   
   billItems.forEach((item, index) => {
-    const total = item.rate * item.qty;
+    const total = (item.rate || 0) * (item.qty || 0);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${index + 1}</td>
@@ -132,7 +154,7 @@ function removeBillItem(index) {
 }
 
 function calculateBillTotals() {
-  const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
+  const subTotal = billItems.reduce((acc, item) => acc + ((item.rate || 0) * (item.qty || 0)), 0);
   const prevBalanceInput = document.getElementById('prevBalanceInput');
   const discountInput = document.getElementById('discountInput');
   const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
@@ -152,11 +174,13 @@ function renderRateList() {
   tbody.innerHTML = '';
 
   rateList.forEach((item, index) => {
+    const name = getItemName(item);
+    const rate = getItemRate(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${item.code || ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
-      <td style="border:1px solid #000; color:#000;"><input type="number" value="${item.rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${name}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="number" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
     tbody.appendChild(tr);
@@ -214,10 +238,11 @@ function renderStockTable() {
   tbody.innerHTML = '';
   rateList.forEach((item, index) => {
     const stockQty = item.stock !== undefined ? item.stock : 50;
+    const name = getItemName(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${item.code || '-'}</td>
-      <td>${currentLang === 'ur' ? (item.nameUr || item.nameEn) : (item.nameEn || item.nameUr)}</td>
+      <td>${name}</td>
       <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
     tbody.appendChild(tr);
@@ -229,27 +254,42 @@ function updateStockQty(index, val) {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
 }
 
+function getBillTotal(bill) {
+  if (!bill) return 0;
+  if (bill.netTotal !== undefined && bill.netTotal !== null && bill.netTotal !== "") return parseFloat(bill.netTotal);
+  if (bill.grandTotal !== undefined && bill.grandTotal !== null) return parseFloat(bill.grandTotal);
+  if (bill.total !== undefined && bill.total !== null) return parseFloat(bill.total);
+  if (bill.subTotal !== undefined && bill.subTotal !== null) return parseFloat(bill.subTotal);
+
+  const items = bill.items || bill.billItems || [];
+  if (Array.isArray(items) && items.length > 0) {
+    return items.reduce((acc, i) => acc + (getItemRate(i) * getItemQty(i)), 0);
+  }
+  return 0;
+}
+
 function renderLedger() {
   const tbody = document.querySelector('#ledgerTable tbody');
   if (!tbody) return;
   tbody.innerHTML = '';
   
   billsHistory.forEach((bill, idx) => {
-    const tr = document.createElement('tr');
     const customer = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
+    const totalAmount = getBillTotal(bill);
+    const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><input type="checkbox" class="bill-select-chk" data-index="${idx}"></td>
       <td>${bill.billNo || 'INV-' + (1001 + idx)}</td>
       <td>${customer}</td>
       <td>${bill.date || '-'}</td>
-      <td>Rs. ${bill.netTotal || bill.total || 0}</td>
+      <td>Rs. ${totalAmount}</td>
       <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-/* 📌 کسٹمر نام اور بل ڈیٹا کا درست پریویو */
+/* 📌 बिल डिटेल प्रीव्यू (इमेज में आ रही गलतियों का पूर्ण सुधार) */
 function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
@@ -258,7 +298,8 @@ function viewBillDetails(index) {
   if (!contentDiv) return;
 
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
-  const phone = bill.custPhone || bill.phone || '-';
+  const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
+  const totalAmount = getBillTotal(bill);
 
   let itemsHtml = `
     <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
@@ -266,7 +307,7 @@ function viewBillDetails(index) {
       <span><strong>Date:</strong> ${bill.date || '-'}</span>
     </div>
     <div style="margin-bottom:4px; font-size:10px;">
-      <span><strong>Customer:</strong> ${customerName} (${phone})</span>
+      <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
     </div>
     <table>
       <thead>
@@ -275,24 +316,27 @@ function viewBillDetails(index) {
       <tbody>
   `;
 
-  let subTotal = 0;
+  let calculatedSubTotal = 0;
   const itemsList = bill.items || bill.billItems || [];
-  if (Array.isArray(itemsList)) {
+  if (Array.isArray(itemsList) && itemsList.length > 0) {
     itemsList.forEach((item, idx) => {
-      const rate = item.rate || 0;
-      const qty = item.qty || item.quantity || 0;
-      const t = rate * qty;
-      subTotal += t;
-      itemsHtml += `<tr><td>${idx+1}</td><td>${item.name || item.itemName || '-'}</td><td>${qty}</td><td>${rate}</td><td>${t}</td></tr>`;
+      const name = getItemName(item);
+      const rate = getItemRate(item);
+      const qty = getItemQty(item);
+      const rowTotal = rate * qty;
+      calculatedSubTotal += rowTotal;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
     });
   }
+
+  const finalNet = totalAmount > 0 ? totalAmount : calculatedSubTotal;
 
   itemsHtml += `
       </tbody>
     </table>
     <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
-      <div>SubTotal: Rs. ${subTotal}</div>
-      <div><strong>Net Total: Rs. ${bill.netTotal || bill.total || subTotal}</strong></div>
+      <div>SubTotal: Rs. ${calculatedSubTotal || finalNet}</div>
+      <div><strong>Net Total: Rs. ${finalNet}</strong></div>
     </div>
   `;
 
@@ -330,14 +374,14 @@ function deleteSelectedMarkedBills() {
 }
 
 function updateDashboardStats() {
-  const total = billsHistory.reduce((acc, b) => acc + (parseFloat(b.netTotal || b.total) || 0), 0);
+  const total = billsHistory.reduce((acc, b) => acc + getBillTotal(b), 0);
   const dashSales = document.getElementById('dashSales');
   if (dashSales) dashSales.innerText = `Rs. ${total}`;
 
   const todayStr = new Date().toLocaleDateString();
   const todaySales = billsHistory
     .filter(b => b.date === todayStr)
-    .reduce((acc, b) => acc + (parseFloat(b.netTotal || b.total) || 0), 0);
+    .reduce((acc, b) => acc + getBillTotal(b), 0);
   
   const dashToday = document.getElementById('dashTodaySales');
   if (dashToday) dashToday.innerText = `Rs. ${todaySales}`;
@@ -361,7 +405,7 @@ function openBillPreview() {
   const custName = (custNameInput && custNameInput.value.trim() !== '') ? custNameInput.value.trim() : 'Cash Customer';
   
   const custPhoneInput = document.getElementById('custPhone');
-  const custPhone = custPhoneInput ? custPhoneInput.value : '-';
+  const custPhone = custPhoneInput ? custPhoneInput.value : '';
 
   const prevBalanceInput = document.getElementById('prevBalanceInput');
   const discountInput = document.getElementById('discountInput');
@@ -373,7 +417,7 @@ function openBillPreview() {
   const contentDiv = document.getElementById('billPrintContent');
   let itemsHtml = `
     <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
-      <span><strong>Customer:</strong> ${custName}</span>
+      <span><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</span>
       <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
     </div>
     <table>
@@ -414,7 +458,7 @@ function openBillPreview() {
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   
   billItems.forEach(bi => {
-    const match = rateList.find(r => (currentLang === 'ur' ? r.nameUr : r.nameEn) === bi.name);
+    const match = rateList.find(r => getItemName(r) === bi.name);
     if (match) {
       match.stock = Math.max(0, (match.stock !== undefined ? match.stock : 50) - bi.qty);
     }
@@ -463,7 +507,7 @@ function executeFinalPrint() {
 }
 
 /* --------------------------------------------------------------------------
-   🌐 BACKUP RESTORE (FIXED & SAFE)
+   🌐 BACKUP RESTORE
    -------------------------------------------------------------------------- */
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'ur' : 'en';
@@ -524,9 +568,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
+      alert('बैकअप सफलतापूर्वक रिस्टोर हो गया है!');
     } catch (err) {
-      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
+      alert('फाइल पढ़ने में समस्या आई। कृपया सही बैकअप फाइल चुनें।');
     }
   };
   reader.readAsText(file);
