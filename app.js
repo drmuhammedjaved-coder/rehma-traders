@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Billing & Inventory PWA (app.js)
+   REHMA TRADERS - Billing & Inventory PWA (Complete app.js)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -228,7 +228,7 @@ function calculateBillTotals() {
 }
 
 /* --------------------------------------------------------------------------
-   ⚙️ RATE LIST MANAGEMENT
+   ⚙️ RATE LIST MANAGEMENT (مکمل اور محفوظ)
    -------------------------------------------------------------------------- */
 function renderRateList() {
   const tbody = document.querySelector('#rateListTable tbody');
@@ -238,13 +238,21 @@ function renderRateList() {
   rateList.forEach((item, index) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;">${item.code}</td>
-      <td style="border:1px solid #000; color:#000;">${currentLang === 'ur' ? item.nameUr : item.nameEn}</td>
-      <td style="border:1px solid #000; color:#000;">${item.rate}</td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${item.code}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${currentLang === 'ur' ? item.nameUr : item.nameEn}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="number" value="${item.rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
     tbody.appendChild(tr);
   });
+}
+
+function updateRateField(index, field, value) {
+  if (field === 'rate') {
+    rateList[index][field] = parseFloat(value) || 0;
+  } else {
+    rateList[index][field] = value;
+  }
 }
 
 function addNewItem() {
@@ -276,7 +284,7 @@ function savePermanentRatesList() {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   renderRateList();
   renderMultiItemSelector();
-  alert('Saved successfully!');
+  alert('Rates and Items saved successfully!');
 }
 
 /* --------------------------------------------------------------------------
