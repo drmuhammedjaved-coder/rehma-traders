@@ -77,7 +77,7 @@ let defaultItems = [
   { nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی چھوٹا', code: '', rate: 220, stock: 18 },
   { nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بڑا', code: '', rate: 250, stock: 14 },
   { nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', code: '', rate: 430, stock: 22 },
-  { nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', code: '1036001001585', rate: 450, stock: 25 }
+  { nameEn: 'Iron Cover W/ Cut', nameUr: '1036001001585', rate: 450, stock: 25 }
 ];
 
 let itemsList = [];
@@ -87,6 +87,14 @@ let currentPendingBillObj = null;
 
 let globalUndoStack = [];
 let globalRedoStack = [];
+
+function changeAppTheme(themeName) {
+  document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+  if (themeName !== 'blue') {
+    document.body.classList.add(`theme-${themeName}`);
+  }
+  localStorage.setItem('rehma_theme', themeName);
+}
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -158,6 +166,39 @@ function switchView(targetId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function saveActiveBillDraft() {
+  const draftData = {
+    custName: document.getElementById('custName')?.value || '',
+    custPhone: document.getElementById('custPhone')?.value || '',
+    prevBalance: document.getElementById('prevBalanceInput')?.value || '',
+    discount: document.getElementById('discountInput')?.value || '',
+    currentBillItems: currentBillItems
+  };
+  localStorage.setItem('rehma_active_draft', JSON.stringify(draftData));
+}
+
+function restoreActiveBillDraft() {
+  try {
+    const savedDraft = localStorage.getItem('rehma_active_draft');
+    if (savedDraft) {
+      const draft = JSON.parse(savedDraft);
+      if (draft.custName) document.getElementById('custName').value = draft.custName;
+      if (draft.custPhone) document.getElementById('custPhone').value = draft.custPhone;
+      if (draft.prevBalance) document.getElementById('prevBalanceInput').value = draft.prevBalance;
+      if (draft.discount) document.getElementById('discountInput').value = draft.discount;
+      if (draft.currentBillItems && draft.currentBillItems.length > 0) {
+        currentBillItems = draft.currentBillItems;
+        renderCurrentBillTable();
+        calculateBillTotals();
+      }
+    }
+  } catch (e) {}
+}
+
+function clearActiveBillDraft() {
+  localStorage.removeItem('rehma_active_draft');
+}
+
 function captureGlobalState() {
   return JSON.stringify({
     itemsList: itemsList,
@@ -171,6 +212,7 @@ function captureGlobalState() {
 }
 
 function registerGlobalChange() {
+  saveActiveBillDraft();
   globalUndoStack.push(captureGlobalState());
   if (globalUndoStack.length > 30) globalUndoStack.shift();
   globalRedoStack = [];
@@ -198,6 +240,7 @@ function applyGlobalState(stateStr) {
   calculateBillTotals();
   updateDashboard();
   renderLedger(dbBills);
+  saveActiveBillDraft();
 }
 
 function triggerGlobalUndo() {
@@ -229,6 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dbBills = [];
   }
 
+  const savedTheme = localStorage.getItem('rehma_theme') || 'blue';
+  const themeSelect = document.getElementById('themeSelector');
+  if (themeSelect) themeSelect.value = savedTheme;
+  changeAppTheme(savedTheme);
+
   switchView('mainDashboardMenu');
   renderMultiItemBox();
   renderRateListTable();
@@ -236,14 +284,25 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDashboard();
   renderLedger(dbBills);
   updateNextBillNo();
+  
+  restoreActiveBillDraft();
+});
+
+window.addEventListener('beforeunload', saveActiveBillDraft);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    saveActiveBillDraft();
+  }
 });
 
 function toggleLanguage() {
   registerGlobalChange();
   currentLang = currentLang === 'en' ? 'ur' : 'en';
-  document.body.className = currentLang === 'en' ? 'lang-en' : 'lang-ur';
+  document.body.className = document.body.className.replace(/lang-\w+/g, '').trim();
+  document.body.classList.add(currentLang === 'en' ? 'lang-en' : 'lang-ur');
+  
   const btn = document.getElementById('langToggleBtn');
-  if (btn) btn.innerText = currentLang === 'en' ? '🌐 Switch to اردو' : '🌐 Switch to English';
+  if (btn) btn.innerText = currentLang === 'en' ? '🌐 اردو/En' : '🌐 اردو/En';
 
   document.querySelectorAll('[data-key]').forEach(el => {
     const key = el.getAttribute('data-key');
@@ -266,6 +325,7 @@ async function pickContact() {
         registerGlobalChange();
         if (contacts[0].name && contacts[0].name[0]) document.getElementById('custName').value = contacts[0].name[0];
         if (contacts[0].tel && contacts[0].tel[0]) document.getElementById('custPhone').value = contacts[0].tel[0];
+        saveActiveBillDraft();
       }
     } catch (err) {}
   } else {
@@ -290,16 +350,16 @@ function renderMultiItemBox() {
     
     let isOutOfStock = currStock <= 0;
     let stockBadge = isOutOfStock 
-      ? `<span style="color:#ef4444; font-weight:bold; margin-left:8px;">⚠️ (مال ختم ہے)</span>` 
-      : `<span style="color:#34d399; margin-left:8px;">[Stock: ${currStock}]</span>`;
+      ? `<span style="color:#ef4444; font-weight:bold; margin-left:6px;">⚠️</span>` 
+      : `<span style="color:#34d399; margin-left:6px;">[${currStock}]</span>`;
 
     box.innerHTML += `
       <div class="multi-item-row" style="${isOutOfStock ? 'opacity:0.6;' : ''}">
-        <label style="font-size:12px; cursor:pointer;">
-          <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:6px;">
+        <label style="font-size:11.5px; cursor:pointer;">
+          <input type="checkbox" class="item-checkbox" value="${idx}" ${isOutOfStock ? 'disabled' : ''} style="width:auto; margin-right:4px;">
           ${displayName}${codeStr} ${stockBadge}
         </label>
-        <span style="font-size:12px; color:var(--gold-primary); font-weight:bold;">Rs. ${item.rate}</span>
+        <span style="font-size:11.5px; color:var(--accent-main); font-weight:bold;">Rs. ${item.rate}</span>
       </div>
     `;
   });
@@ -333,6 +393,7 @@ function addSelectedMultipleItems() {
 
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function renderRateListTable() {
@@ -352,9 +413,9 @@ function renderRateListTable() {
     tbody.innerHTML += `<tr>
       <td style="border:1px solid #000; padding:4px;"><input type="text" value="${item.code || ''}" oninput="updateItemCode(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
       <td style="border:1px solid #000; padding:4px;"><input type="text" value="${itemName}" oninput="updateItemName(${idx}, this.value)" style="padding:4px; margin:0; width:100%; border:1px solid #ccc; background:#fff; color:#000;"></td>
-      <td style="border:1px solid #000; padding:4px;"><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:4px; margin:0; width:70px; border:1px solid #ccc; background:#fff; color:#000;"></td>
+      <td style="border:1px solid #000; padding:4px;"><input type="number" value="${item.rate}" oninput="updateItemRate(${idx}, this.value)" style="padding:4px; margin:0; width:60px; border:1px solid #ccc; background:#fff; color:#000;"></td>
       <td class="no-print-col" style="border:1px solid #000; padding:4px; white-space:nowrap;">
-        <button type="button" onclick="deleteRateListItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px;">❌</button>
+        <button type="button" onclick="deleteRateListItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px;">❌</button>
       </td>
     </tr>`;
   });
@@ -373,7 +434,7 @@ function renderStockReportTable() {
     tbody.innerHTML += `<tr>
       <td>${item.code || '---'}</td>
       <td>${itemName}</td>
-      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:6px; width:80px; text-align:center; background:#0b0f19; color:var(--text-bright); border:1px solid var(--border-dark); border-radius:4px; ${stockWarningStyle}"></td>
+      <td><input type="number" value="${currStock}" oninput="updateItemStock(${idx}, this.value)" style="padding:6px; width:70px; text-align:center; background:var(--bg-dark); color:var(--text-bright); border:1px solid var(--border-dark); border-radius:4px; ${stockWarningStyle}"></td>
     </tr>`;
   });
 }
@@ -453,6 +514,7 @@ function removeBillItem(index) {
   currentBillItems.splice(index, 1);
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function renderCurrentBillTable() {
@@ -463,23 +525,24 @@ function renderCurrentBillTable() {
     let nameShow = currentLang === 'ur' ? i.nameUr : i.nameEn;
     tbody.innerHTML += `<tr>
       <td>${idx + 1}</td>
-      <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:80px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="text" value="${i.code}" oninput="updateBillItemCode(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
       <td>${nameShow}</td>
-      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
-      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:70px; text-align:center; border:1px solid var(--border-dark); background:#0b0f19; color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="number" value="${i.qty}" min="1" oninput="updateBillItemQty(${idx}, this.value)" style="padding:4px; width:50px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
+      <td><input type="number" value="${i.rate}" oninput="updateBillItemRate(${idx}, this.value)" style="padding:4px; width:60px; text-align:center; border:1px solid var(--border-dark); background:var(--bg-dark); color:var(--text-bright); border-radius:4px;"></td>
       <td>Rs. ${i.total}</td>
-      <td><button type="button" onclick="removeBillItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">❌</button></td>
+      <td><button type="button" onclick="removeBillItem(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-weight:bold;">❌</button></td>
     </tr>`;
   });
 }
 
-function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); }
+function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); saveActiveBillDraft(); }
 function updateBillItemQty(idx, val) {
   registerGlobalChange();
   let newQty = parseInt(val) || 1;
   currentBillItems[idx].qty = newQty;
   currentBillItems[idx].total = newQty * currentBillItems[idx].rate;
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function updateBillItemRate(idx, val) {
@@ -488,6 +551,7 @@ function updateBillItemRate(idx, val) {
   currentBillItems[idx].rate = newRate;
   currentBillItems[idx].total = currentBillItems[idx].qty * newRate;
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function calculateBillTotals() {
@@ -497,6 +561,7 @@ function calculateBillTotals() {
 
   let netTotal = (subtotal - discount) + prevBalance;
   document.getElementById('grandTotalTxt').innerText = 'Rs. ' + netTotal;
+  saveActiveBillDraft();
 }
 
 function openBillPreview() {
@@ -572,6 +637,8 @@ function executeFinalPrint() {
   document.getElementById('prevBalanceInput').value = '';
   document.getElementById('grandTotalTxt').innerText = 'Rs. 0';
 
+  clearActiveBillDraft();
+
   updateDashboard();
   renderLedger(dbBills);
   renderRateListTable();
@@ -630,6 +697,7 @@ function cloneAndRepeatBill(index) {
 
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
   switchView('sectionBill');
 }
 
@@ -638,6 +706,22 @@ function renderBillToPrintArea(b) {
 
   document.getElementById('billHeaderTitle').innerText = isUr ? 'رحمہ ٹریڈرز' : 'REHMA TRADERS';
   document.getElementById('billPropLabel').innerText = isUr ? 'پروپرائٹر:' : 'Proprietor:';
+
+  if (isUr) {
+    document.getElementById('billNoteTxt').innerText = 'نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔';
+    document.getElementById('payTitle').innerText = 'آن لائن ادائیگی کے لیے:';
+    document.getElementById('payJazz').innerText = 'جاز کیش اکاؤنٹ: 03074015100';
+    document.getElementById('payAbl').innerText = 'الائیڈ بینک (ABL) IBAN: PK44ABPA0010140074540011';
+    document.getElementById('payName').innerText = 'اکاؤنٹ نیم: محمد جاوید';
+    document.getElementById('ownerSigLabel').innerText = 'پروپرائٹر دستخط';
+  } else {
+    document.getElementById('billNoteTxt').innerText = 'Note: Bought items can be exchanged or returned if faulty.';
+    document.getElementById('payTitle').innerText = 'Online Payment Details:';
+    document.getElementById('payJazz').innerText = 'JazzCash Account: 03074015100';
+    document.getElementById('payAbl').innerText = 'Allied Bank (ABL) IBAN: PK44ABPA0010140074540011';
+    document.getElementById('payName').innerText = 'Account Title: Muhammad Javed';
+    document.getElementById('ownerSigLabel').innerText = 'Owner Signature';
+  }
 
   let headersHtml = isUr ? `
     <th style="border:1px solid #000; padding:4px;">نمبر شمار</th>
@@ -688,7 +772,7 @@ function renderBillToPrintArea(b) {
   let prevBalHtml = b.prevBalance > 0 ? `<p style="margin:2px 0; color:#555;">${labels.prev} Rs. ${b.prevBalance}</p>` : '';
 
   document.getElementById('billPrintContent').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11.5px;">
       <div><strong>${labels.billNo}</strong> ${b.id}<br><strong>${labels.cust}</strong> ${b.customer} (${b.phone || 'N/A'})</div>
       <div style="text-align:right;"><strong>${labels.date}</strong> ${b.date}</div>
     </div>
@@ -738,17 +822,64 @@ function renderLedger(data) {
   if (!tbody) return;
   tbody.innerHTML = '';
   data.forEach((b, idx) => {
+    let realIdx = dbBills.findIndex(item => item.id === b.id);
+    if (realIdx === -1) realIdx = idx;
+
     tbody.innerHTML += `<tr>
+      <td style="text-align: center; width: 30px;">
+        <input type="checkbox" class="bill-select-checkbox" value="${realIdx}" style="width: 18px; height: 18px; cursor: pointer;">
+      </td>
       <td>${b.id}</td>
-      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--gold-primary);">${b.customer}</strong></td>
+      <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--accent-main);">${b.customer}</strong></td>
       <td>${b.date}</td>
-      <td style="color:var(--gold-primary); font-weight:bold;">Rs. ${b.netAmount}</td>
+      <td style="color:var(--accent-main); font-weight:bold;">Rs. ${b.netAmount}</td>
       <td>
-        <button type="button" class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
-        <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
+        <button type="button" class="btn-silver" onclick="previewHistoryBill(${realIdx})" style="padding:4px 6px; font-size:10.5px; margin-right:2px;">👁️</button>
+        <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${realIdx})" style="padding:4px 6px; font-size:10.5px;">🔄</button>
       </td>
     </tr>`;
   });
+  const selectAllCb = document.getElementById('selectAllBillsCheckbox');
+  if (selectAllCb) selectAllCb.checked = false;
+}
+
+function toggleSelectAllBills(masterCb) {
+  const checkboxes = document.querySelectorAll('.bill-select-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = masterCb.checked;
+  });
+}
+
+function deleteSelectedMarkedBills() {
+  const checkboxes = document.querySelectorAll('.bill-select-checkbox:checked');
+  if (checkboxes.length === 0) {
+    alert("براہ کرم ڈیلیٹ کرنے کے لیے کم از کم ایک بل مارک (ٹک) کریں۔");
+    return;
+  }
+
+  if (confirm(`کیا آپ واقعی منتخب کردہ ${checkboxes.length} بل ہسٹری سے حذف کرنا چاہتے ہیں؟`)) {
+    registerGlobalChange();
+
+    let indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.value));
+    indicesToDelete.sort((a, b) => b - a);
+
+    indicesToDelete.forEach(idx => {
+      dbBills.splice(idx, 1);
+    });
+
+    localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
+    updateDashboard();
+
+    const query = document.getElementById('searchCust')?.value.toLowerCase() || '';
+    if (query) {
+      filterLedger();
+    } else {
+      renderLedger(dbBills);
+    }
+
+    updateNextBillNo();
+    alert("منتخب کردہ بل کامیابی سے حذف کر دیے گئے ہیں!");
+  }
 }
 
 function filterLedger() {
