@@ -93,7 +93,59 @@
     body.lang-ur { direction: rtl; }
     body.lang-en { direction: ltr; }
 
-    /* 🎯 ورٹیکل، چھوٹا اور گول ٹاپ بار */
+    /* ✨ 1. سب سے اوپر ٹرانسپیرنٹ اسلامی بینر */
+    .islamic-banner {
+      background: transparent;
+      border: none;
+      padding: 6px 0px 10px 0px;
+      text-align: center;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .islamic-bismillah {
+      margin: 0 0 4px 0;
+      font-family: 'Amiri', 'Traditional Arabic', 'Urdu Typesetting', serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent-main);
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+    }
+
+    .islamic-razzaq {
+      margin: 0;
+      font-family: 'Amiri', 'Traditional Arabic', 'Urdu Typesetting', serif;
+      font-size: min(10vw, 42px);
+      font-weight: 900;
+      color: #fbbf24;
+      white-space: nowrap;
+      display: block;
+      width: 100%;
+      letter-spacing: 1px;
+      animation: proPulseGlow 2.5s infinite ease-in-out;
+    }
+
+    @keyframes proPulseGlow {
+      0% {
+        opacity: 0.65;
+        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
+        transform: scale(0.98);
+      }
+      50% {
+        opacity: 1;
+        text-shadow: 0 0 16px rgba(251, 191, 36, 0.9), 0 0 30px rgba(245, 158, 11, 0.7);
+        transform: scale(1.02);
+      }
+      100% {
+        opacity: 0.65;
+        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
+        transform: scale(0.98);
+      }
+    }
+
+    /* 🎯 2. ورٹیکل، چھوٹا اور گول ٹاپ بار مینو */
     .top-bar-clean {
       display: flex;
       flex-direction: column;
@@ -146,59 +198,6 @@
       border: 1px solid #047857 !important;
     }
 
-    /* ✨ ٹرانسپیرنٹ بیک گراؤنڈ اور فل ڈتھ پروفیشنل اسلامی بینر */
-    .islamic-banner {
-      background: transparent;
-      border: none;
-      padding: 10px 0px;
-      text-align: center;
-      margin-bottom: 12px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    
-    .islamic-bismillah {
-      margin: 0 0 4px 0;
-      font-family: 'Amiri', 'Traditional Arabic', 'Urdu Typesetting', serif;
-      font-size: 17px;
-      font-weight: bold;
-      color: var(--accent-main);
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
-    }
-
-    .islamic-razzaq {
-      margin: 0;
-      font-family: 'Amiri', 'Traditional Arabic', 'Urdu Typesetting', serif;
-      font-size: min(10vw, 42px);
-      font-weight: 900;
-      color: #fbbf24;
-      white-space: nowrap;
-      display: block;
-      width: 100%;
-      letter-spacing: 1px;
-      animation: proPulseGlow 2.5s infinite ease-in-out;
-    }
-
-    /* 💡 الٹرا - پروفیشنل پلسنگ اینڈ گلوئنگ اینیمیشن */
-    @keyframes proPulseGlow {
-      0% {
-        opacity: 0.65;
-        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
-        transform: scale(0.98);
-      }
-      50% {
-        opacity: 1;
-        text-shadow: 0 0 16px rgba(251, 191, 36, 0.9), 0 0 30px rgba(245, 158, 11, 0.7);
-        transform: scale(1.02);
-      }
-      100% {
-        opacity: 0.65;
-        text-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
-        transform: scale(0.98);
-      }
-    }
-
     #updateBanner {
       display: none;
       background: var(--btn-grad);
@@ -220,19 +219,25 @@
       margin-left: 8px;
     }
 
+    /* 🏢 3. برانڈنگ اور لوگو کا کارڈ (بڑا لوگو) */
     .header-card {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
       border-radius: 18px;
-      padding: 12px;
+      padding: 14px 12px;
       text-align: center;
       margin-bottom: 12px;
     }
-    .header-card img.main-logo { max-height: 55px; margin-bottom: 6px; }
-    .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 19px; font-weight: 800; }
-    .header-card p { margin: 2px 0; font-size: 11.5px; color: var(--text-sub); }
+    .header-card img.main-logo { 
+      max-height: 85px; 
+      width: auto;
+      margin-bottom: 8px; 
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    .header-card h1 { color: var(--text-bright); margin: 0 0 4px 0; font-size: 21px; font-weight: 800; }
+    .header-card p { margin: 3px 0; font-size: 12px; color: var(--text-sub); }
 
-    /* 📊 ورٹیکل سیلز کارڈز (گول اور کمپیکٹ) */
+    /* 📊 4. ورٹیکل سیلز کارڈز (گول اور کمپیکٹ) */
     .dashboard-grid-vertical {
       display: flex;
       flex-direction: column;
@@ -463,7 +468,13 @@
     <button onclick="applyAppUpdate()">🔄 Update Now</button>
   </div>
 
-  <!-- 🎯 ورٹیکل ٹاپ بار (مینو، زبان، تھیم) -->
+  <!-- ✨ 1. سب سے اوپر اعراب کے ساتھ بسم اللہ اور ٹرانسپیرنٹ، بولڈ "وَاللَّهُ خَيْرُ الرَّازِقِينَ" بینر -->
+  <div class="islamic-banner">
+    <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+    <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
+  </div>
+
+  <!-- 🎯 2. ورٹیکل ٹاپ بار (مینو، زبان، تھیم) -->
   <div class="top-bar-clean">
     <div class="brand-title">REHMA TRADERS</div>
     <div class="top-buttons-group">
@@ -492,14 +503,9 @@
     </div>
   </div>
 
-  <!-- ✨ اعراب کے ساتھ بسم اللہ اور ٹرانسپیرنٹ، بولڈ "وَاللَّهُ خَيْرُ الرَّازِقِينَ" بینر -->
-  <div class="islamic-banner">
-    <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
-    <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
-  </div>
-
-  <!-- 🏠 مرکزی ڈیش بورڈ سیکشن -->
+  <!-- 🏠 3. مرکزی ڈیش بورڈ اور برانڈنگ سیکشن -->
   <div id="mainDashboardMenu" class="section">
+    <!-- 🏢 بڑا لوگو اور کانٹیکٹ برانڈنگ -->
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
       <h1>REHMA TRADERS</h1>
@@ -507,7 +513,7 @@
       <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
     </div>
 
-    <!-- 📊 ورٹیکل، چھوٹے اور گول سیلز کارڈز -->
+    <!-- 📊 4. ورٹیکل سیلز ڈیش بورڈ کارڈز -->
     <div class="dashboard-grid-vertical">
       <div class="dash-card-row" style="border-left-color: #34d399;">
         <h4 data-key="todaySales">Daily Sales</h4>
@@ -731,6 +737,53 @@
         switchView(val);
       }
       selectEl.value = '';
+    }
+
+    /* ⚡ PWA Service Worker (آف لائن سپورٹ کے لیے) */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swCode = `
+          const CACHE_NAME = 'rehma-traders-v2';
+          const urlsToCache = [
+            './',
+            './index.html',
+            './app.js',
+            './manifest.json',
+            './logo.png'
+          ];
+
+          self.addEventListener('install', event => {
+            event.waitUntil(
+              caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+            );
+            self.skipWaiting();
+          });
+
+          self.addEventListener('activate', event => {
+            event.waitUntil(
+              caches.keys().then(keys => Promise.all(
+                keys.map(key => {
+                  if (key !== CACHE_NAME) return caches.delete(key);
+                })
+              ))
+            );
+            self.clients.claim();
+          });
+
+          self.addEventListener('fetch', event => {
+            event.respondWith(
+              caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => caches.match('./index.html'));
+              })
+            );
+          });
+        `;
+        const blob = new Blob([swCode], { type: 'text/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl)
+          .then(reg => console.log('Offline ServiceWorker Registered Successfully!'))
+          .catch(err => console.log('ServiceWorker Registration Failed:', err));
+      });
     }
   </script>
 </body>
