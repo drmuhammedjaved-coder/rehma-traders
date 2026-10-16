@@ -326,9 +326,11 @@
       padding: 20px;
       box-sizing: border-box;
     }
+    
+    /* 🎯 پرنٹ ماڈل کو تمام تھیمز سے بالکل آزاد کر کے خالص سفید (White) اور سیاہ (Black) کر دیا گیا ہے */
     .modal-box {
-      background: #ffffff;
-      color: #000000;
+      background: #ffffff !important;
+      color: #000000 !important;
       max-width: 600px;
       margin: 10px auto;
       border-radius: 20px;
@@ -345,6 +347,11 @@
       padding: 20px;
       box-sizing: border-box;
       position: relative;
+    }
+
+    /* پرنٹ ایریا کے تمام اندرونی ٹیکسٹ اور عناصر کو مستقل بلیک رکھنا */
+    #printableBillContainer * {
+      color: #000000 !important;
     }
 
     .watermark-container {
@@ -382,6 +389,8 @@
     #printableBillContainer tr {
       background: transparent !important;
       background-color: transparent !important;
+      color: #000000 !important;
+      border-color: #000000 !important;
     }
 
     .bill-header-layout {
@@ -437,6 +446,7 @@
         padding: 0 !important;
         background: #ffffff !important;
         border: none !important;
+        color: #000000 !important;
       }
       .no-print {
         display: none !important;
@@ -449,12 +459,18 @@
         padding: 0mm !important;
         margin: 0 !important;
         background: #ffffff !important;
+        color: #000000 !important;
+      }
+      #printableBillContainer * {
+        color: #000000 !important;
       }
       #printableBillContainer th, 
       #printableBillContainer td, 
       #printableBillContainer tr {
         background: transparent !important;
         background-color: transparent !important;
+        color: #000000 !important;
+        border-color: #000000 !important;
       }
       .watermark-container {
         display: flex !important;
@@ -648,7 +664,6 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px; padding:14px;">💾 Save All Stock Inventory</button>
   </div>
 
-  <!-- کسٹمر لیجر و ہسٹری (مارکڈ بل ڈیلیٹ کرنے کے آپشن کے ساتھ) -->
   <div id="sectionLedger" class="section hidden-section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
@@ -662,7 +677,6 @@
       <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
     </div>
 
-    <!-- مارک کیے گئے بلوں کو ڈیلیٹ کرنے کا بٹن -->
     <div style="margin-bottom: 12px;">
       <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 12px;">🗑️ Delete Marked Bills (مقررہ نشان زدہ بل حذف کریں)</button>
     </div>
@@ -685,7 +699,7 @@
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px;">
-        <label><strong>🖨️ Paper Size:</strong></label>
+        <label style="color:#000;"><strong>🖨️ Paper Size:</strong></label>
         <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:6px; margin:0; background:#f3f4f6; color:#000;">
           <option value="paper-a4">A4 / Standard Page</option>
           <option value="paper-80mm">Thermal 80mm</option>
