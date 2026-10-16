@@ -228,7 +228,7 @@ function calculateBillTotals() {
 }
 
 /* --------------------------------------------------------------------------
-   ⚙️ RATE LIST MANAGEMENT (مکمل اور محفوظ)
+   ⚙️ RATE LIST MANAGEMENT
    -------------------------------------------------------------------------- */
 function renderRateList() {
   const tbody = document.querySelector('#rateListTable tbody');
@@ -253,6 +253,7 @@ function updateRateField(index, field, value) {
   } else {
     rateList[index][field] = value;
   }
+  localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
 }
 
 function addNewItem() {
