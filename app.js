@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Professional Themes Support)
+   REHMA TRADERS - Complete & Fixed app.js (Urdu Keyboard Popup Fixed)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -179,12 +179,18 @@ function renderRateList() {
   tbody.innerHTML = '';
 
   rateList.forEach((item, index) => {
-    const name = getItemName(item);
+    const nameEn = item.nameEn || item.name || '';
+    const nameUr = item.nameUr || '';
     const rate = getItemRate(item);
     const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${name}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
+      <td style="border:1px solid #000; color:#000;">
+        <div style="display:flex; gap:2px;">
+          <input type="text" value="${nameEn}" oninput="updateRateField(${index}, 'nameEn', this.value)" placeholder="English" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
+          <input type="text" value="${nameUr}" oninput="updateRateField(${index}, 'nameUr', this.value)" placeholder="اردو" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
+        </div>
+      </td>
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
@@ -209,7 +215,7 @@ function addNewItem() {
   const rate = parseFloat(document.getElementById('newItemRate').value);
 
   if (!nameEn && !nameUr) {
-    alert('Please enter item name!');
+    alert('Please enter item name (English or Urdu)!');
     return;
   }
 
