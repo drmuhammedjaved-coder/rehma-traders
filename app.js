@@ -654,6 +654,23 @@ function renderBillToPrintArea(b) {
   document.getElementById('billHeaderTitle').innerText = isUr ? 'رحمہ ٹریڈرز' : 'REHMA TRADERS';
   document.getElementById('billPropLabel').innerText = isUr ? 'پروپرائٹر:' : 'Proprietor:';
 
+  // زبان کے حساب سے نوٹ اور ادائیگی کی تفصیلات کو سیٹ کرنا
+  if (isUr) {
+    document.getElementById('billNoteTxt').innerText = 'نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔';
+    document.getElementById('payTitle').innerText = 'آن لائن ادائیگی کے لیے:';
+    document.getElementById('payJazz').innerText = 'جاز کیش اکاؤنٹ: 03074015100';
+    document.getElementById('payAbl').innerText = 'الائیڈ بینک (ABL) IBAN: PK44ABPA0010140074540011';
+    document.getElementById('payName').innerText = 'اکاؤنٹ نیم: محمد جاوید';
+    document.getElementById('ownerSigLabel').innerText = 'پروپرائٹر دستخط';
+  } else {
+    document.getElementById('billNoteTxt').innerText = 'Note: Bought items can be exchanged or returned if faulty.';
+    document.getElementById('payTitle').innerText = 'Online Payment Details:';
+    document.getElementById('payJazz').innerText = 'JazzCash Account: 03074015100';
+    document.getElementById('payAbl').innerText = 'Allied Bank (ABL) IBAN: PK44ABPA0010140074540011';
+    document.getElementById('payName').innerText = 'Account Title: Muhammad Javed';
+    document.getElementById('ownerSigLabel').innerText = 'Owner Signature';
+  }
+
   let headersHtml = isUr ? `
     <th style="border:1px solid #000; padding:4px;">نمبر شمار</th>
     <th style="border:1px solid #000; padding:4px;">تفصیل سامان</th>
@@ -753,15 +770,20 @@ function renderLedger(data) {
   if (!tbody) return;
   tbody.innerHTML = '';
   data.forEach((b, idx) => {
+    let realIdx = dbBills.findIndex(item => item.id === b.id);
+    if (realIdx === -1) realIdx = idx;
+
     tbody.innerHTML += `<tr>
-      <td><input type="checkbox" class="bill-select-checkbox" value="${idx}" style="width:auto;"></td>
+      <td style="text-align: center; width: 40px;">
+        <input type="checkbox" class="bill-select-checkbox" value="${realIdx}" style="width: 20px; height: 20px; cursor: pointer;">
+      </td>
       <td>${b.id}</td>
       <td><strong onclick="filterByCustomer('${b.customer}')" style="cursor:pointer; color:var(--accent-main);">${b.customer}</strong></td>
       <td>${b.date}</td>
       <td style="color:var(--accent-main); font-weight:bold;">Rs. ${b.netAmount}</td>
       <td>
-        <button type="button" class="btn-silver" onclick="previewHistoryBill(${idx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
-        <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${idx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
+        <button type="button" class="btn-silver" onclick="previewHistoryBill(${realIdx})" style="padding:4px 8px; font-size:11px; margin-right:4px;">👁️ Preview</button>
+        <button type="button" class="btn-gold" onclick="cloneAndRepeatBill(${realIdx})" style="padding:4px 8px; font-size:11px;">🔄 Repeat</button>
       </td>
     </tr>`;
   });
@@ -787,8 +809,6 @@ function deleteSelectedMarkedBills() {
     registerGlobalChange();
 
     let indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.value));
-    
-    // بڑی انڈیکس سے چھوٹی انڈیکس کی طرف فلٹر کریں تاکہ ارے انڈیکس خراب نہ ہوں
     indicesToDelete.sort((a, b) => b - a);
 
     indicesToDelete.forEach(idx => {
@@ -797,7 +817,14 @@ function deleteSelectedMarkedBills() {
 
     localStorage.setItem('rehma_bills', JSON.stringify(dbBills));
     updateDashboard();
-    renderLedger(dbBills);
+
+    const query = document.getElementById('searchCust')?.value.toLowerCase() || '';
+    if (query) {
+      filterLedger();
+    } else {
+      renderLedger(dbBills);
+    }
+
     updateNextBillNo();
     alert("منتخب کردہ بل کامیابی سے حذف کر دیے گئے ہیں!");
   }
