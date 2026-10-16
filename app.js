@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Urdu Keyboard Popup Fixed)
+   REHMA TRADERS - Complete & Fixed app.js (Repeat Bill & Urdu Keyboard Supported)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -18,6 +18,7 @@ let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let billItems = [];
 let currentLang = 'en';
+let activeViewingBillIndex = null; // ✨ ریپیٹ بل کے لیے ایکٹو بل انڈیکس ٹریک کرنے کی変数
 
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -308,6 +309,8 @@ function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
 
+  activeViewingBillIndex = index; // ✨ ٹریک رکھیں کہ کونسا بل دیکھ رہے ہیں
+
   const contentDiv = document.getElementById('billPrintContent');
   if (!contentDiv) return;
 
@@ -359,6 +362,33 @@ function viewBillDetails(index) {
   contentDiv.innerHTML = itemsHtml;
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'block';
+}
+
+/* ✨ ریپیٹ بل (Repeat Bill) کا نیا فنکشن */
+function repeatCurrentBill() {
+  if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
+    alert('No bill selected for repeat!');
+    return;
+  }
+
+  const oldBill = billsHistory[activeViewingBillIndex];
+
+  // پرانے بل کا ڈیٹا کرنٹ بل ایڈیٹر میں لوڈ کریں
+  document.getElementById('custName').value = oldBill.custName || oldBill.customerName || '';
+  document.getElementById('custPhone').value = oldBill.custPhone || oldBill.phone || '';
+  
+  // آئٹمز کو کاپی کریں
+  billItems = JSON.parse(JSON.stringify(oldBill.items || oldBill.billItems || []));
+  
+  // نئے بل کا نمبر آٹومیٹک جنریٹ کریں
+  generateNextBillNumber();
+  
+  // بل اسکرین پر جائیں
+  closeBillPreview();
+  switchView('sectionBill');
+  renderBillItemsTable();
+  
+  alert('Bill loaded successfully as a new Repeat Bill! Check new Invoice number.');
 }
 
 function filterLedger() {
