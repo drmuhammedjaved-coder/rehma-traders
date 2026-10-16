@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Robust & Complete app.js (Auto-fallback for all formats)
+   REHMA TRADERS - App.js (Custom Layout & Fixed Item Codes)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -12,12 +12,7 @@ let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
   { code: '2019580141000', nameEn: 'Square Small', nameUr: 'اسکوائر سمال', rate: 280, stock: 25 },
   { code: '2013147621000', nameEn: 'Square Large', nameUr: 'اسکوائر لارج', rate: 380, stock: 15 },
   { code: '2011476821000', nameEn: 'Gloves Pair', nameUr: 'گلوز پیئر', rate: 155, stock: 60 },
-  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 },
-  { code: '', nameEn: 'Port Holder', nameUr: 'پارف ہولڈر', rate: 70, stock: 30 },
-  { code: '', nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی سمال', rate: 220, stock: 20 },
-  { code: '', nameEn: 'Tea Cozy Big', nameUr: 'ٹی کوزی بگ', rate: 250, stock: 18 },
-  { code: '', nameEn: 'Iron Cover Cut', nameUr: 'آئرن کور کٹ', rate: 430, stock: 12 },
-  { code: '1036001001585', nameEn: 'Iron Cover W/ Cut', nameUr: 'آئرن کور ود کٹ', rate: 450, stock: 10 }
+  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 }
 ];
 
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
@@ -57,15 +52,17 @@ function getItemQty(item) {
   return parseFloat(item.qty || item.quantity || item.itemQty || 0);
 }
 
+function getItemCode(item) {
+  if (!item) return '-';
+  return item.code || item.itemCode || '-';
+}
+
 function generateNextBillNumber() {
   const nextNo = 'INV-' + (1001 + billsHistory.length);
   const el = document.getElementById('nextBillNo');
   if (el) el.innerText = nextNo;
 }
 
-/* --------------------------------------------------------------------------
-   📦 RENDER MULTI ITEM SELECTOR
-   -------------------------------------------------------------------------- */
 function renderMultiItemSelector() {
   const container = document.getElementById('multiItemBox');
   if (!container) return;
@@ -76,11 +73,12 @@ function renderMultiItemSelector() {
     const stockQty = item.stock !== undefined ? item.stock : 50;
     const name = getItemName(item);
     const rate = getItemRate(item);
+    const code = getItemCode(item);
     div.innerHTML = `
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
-        <input type="checkbox" id="chk_item_${idx}" value="${item.code || ''}" style="width:16px; height:16px; accent-color:var(--accent-main);">
+        <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main);">
         <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
-          ${item.code ? item.code + ' - ' : ''}<strong>${name}</strong> 
+          ${code !== '-' ? code + ' - ' : ''}<strong>${name}</strong> 
           <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
         </label>
       </div>
@@ -98,12 +96,13 @@ function addSelectedMultipleItems() {
       const qty = parseFloat(qtyInput.value) || 1;
       const itemName = getItemName(item);
       const rate = getItemRate(item);
+      const code = getItemCode(item);
       const existing = billItems.find(i => i.name === itemName);
       if (existing) {
         existing.qty += qty;
       } else {
         billItems.push({
-          code: item.code || '',
+          code: code,
           name: itemName,
           rate: rate,
           qty: qty
@@ -165,9 +164,6 @@ function calculateBillTotals() {
   if (grandTotalTxt) grandTotalTxt.innerText = `Rs. ${netTotal}`;
 }
 
-/* --------------------------------------------------------------------------
-   ⚙️ RATE LIST MANAGEMENT
-   -------------------------------------------------------------------------- */
 function renderRateList() {
   const tbody = document.querySelector('#rateListTable tbody');
   if (!tbody) return;
@@ -176,9 +172,10 @@ function renderRateList() {
   rateList.forEach((item, index) => {
     const name = getItemName(item);
     const rate = getItemRate(item);
+    const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${item.code || ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${name}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="number" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
@@ -229,9 +226,6 @@ function savePermanentRatesList() {
   alert('Rates and Items saved successfully!');
 }
 
-/* --------------------------------------------------------------------------
-   📦 STOCK & LEDGER
-   -------------------------------------------------------------------------- */
 function renderStockTable() {
   const tbody = document.querySelector('#stockReportTable tbody');
   if (!tbody) return;
@@ -239,9 +233,10 @@ function renderStockTable() {
   rateList.forEach((item, index) => {
     const stockQty = item.stock !== undefined ? item.stock : 50;
     const name = getItemName(item);
+    const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${item.code || '-'}</td>
+      <td>${code}</td>
       <td>${name}</td>
       <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
@@ -289,7 +284,7 @@ function renderLedger() {
   });
 }
 
-/* 📌 बिल डिटेल प्रीव्यू (इमेज में आ रही गलतियों का पूर्ण सुधार) */
+/* 📌 کسٹمر نیم سب سے اوپر، کوڈز کالم اور درست ڈیٹا لک */
 function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
@@ -302,16 +297,16 @@ function viewBillDetails(index) {
   const totalAmount = getBillTotal(bill);
 
   let itemsHtml = `
-    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
-      <span><strong>Bill #:</strong> ${bill.billNo || 'INV-1001'}</span>
-      <span><strong>Date:</strong> ${bill.date || '-'}</span>
-    </div>
-    <div style="margin-bottom:4px; font-size:10px;">
-      <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${bill.billNo || 'INV-1001'}</span>
+        <span><strong>Date:</strong> ${bill.date || '-'}</span>
+      </div>
     </div>
     <table>
       <thead>
-        <tr><th>Sr</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+        <tr><th>Sr</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
       </thead>
       <tbody>
   `;
@@ -321,11 +316,12 @@ function viewBillDetails(index) {
   if (Array.isArray(itemsList) && itemsList.length > 0) {
     itemsList.forEach((item, idx) => {
       const name = getItemName(item);
+      const code = getItemCode(item);
       const rate = getItemRate(item);
       const qty = getItemQty(item);
       const rowTotal = rate * qty;
       calculatedSubTotal += rowTotal;
-      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${code}</td><td>${name}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
     });
   }
 
@@ -334,7 +330,7 @@ function viewBillDetails(index) {
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${calculatedSubTotal || finalNet}</div>
       <div><strong>Net Total: Rs. ${finalNet}</strong></div>
     </div>
@@ -393,9 +389,6 @@ function updateDashboardStats() {
   if (dashMonthly) dashMonthly.innerText = `Rs. ${total}`;
 }
 
-/* --------------------------------------------------------------------------
-   🖨️ PREVIEW & PRINT
-   -------------------------------------------------------------------------- */
 function openBillPreview() {
   if (billItems.length === 0) {
     alert('Please add items to bill first!');
@@ -416,25 +409,28 @@ function openBillPreview() {
 
   const contentDiv = document.getElementById('billPrintContent');
   let itemsHtml = `
-    <div style="display:flex; justify-content:space-between; border-bottom:0.5px solid #000; padding-bottom:2px; margin-bottom:4px; font-size:10px;">
-      <span><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</span>
-      <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001'}</span>
+        <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
+      </div>
     </div>
     <table>
       <thead>
-        <tr><th>Sr</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+        <tr><th>Sr</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
       </thead>
       <tbody>
   `;
 
   billItems.forEach((item, idx) => {
-    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
+    itemsHtml += `<tr><td>${idx+1}</td><td>${item.code || '-'}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
   });
 
   itemsHtml += `
       </tbody>
     </table>
-    <div style="margin-top:4px; text-align:right; font-size:9.5px; line-height:1.2;">
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
       <div>SubTotal: Rs. ${subTotal}</div>
       ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
       ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
@@ -506,9 +502,6 @@ function executeFinalPrint() {
   window.print();
 }
 
-/* --------------------------------------------------------------------------
-   🌐 BACKUP RESTORE
-   -------------------------------------------------------------------------- */
 function toggleLanguage() {
   currentLang = currentLang === 'en' ? 'ur' : 'en';
   const body = document.body;
@@ -568,9 +561,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('बैकअप सफलतापूर्वक रिस्टोर हो गया है!');
+      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
     } catch (err) {
-      alert('फाइल पढ़ने में समस्या आई। कृपया सही बैकअप फाइल चुनें।');
+      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
     }
   };
   reader.readAsText(file);
