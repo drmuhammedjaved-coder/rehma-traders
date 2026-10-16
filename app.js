@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - App.js (Item Name First, Code Second Order)
+   REHMA TRADERS - Complete & Fixed app.js (PDF Download & Perfect Print)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -473,6 +473,27 @@ function changePaperSize(sizeClass) {
   if (container) container.className = sizeClass;
 }
 
+/* 📥 ڈائریکٹ پی ڈی ایف سیو/ڈاؤن لوڈ کرنے کا نیا فنکشن */
+function downloadBillPdf() {
+  const container = document.getElementById('printableBillContainer');
+  if (!container) return;
+
+  if (window.html2canvas) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('Rehma_Traders_Bill.pdf');
+    });
+  } else {
+    window.print();
+  }
+}
+
 function exportBillJpgAndShare() {
   const container = document.getElementById('printableBillContainer');
   if (window.html2canvas && container) {
@@ -560,9 +581,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('بیک اپ सफलतापूर्वक रिस्टोर हो गया है!');
+      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
     } catch (err) {
-      alert('फाइल पढ़ने में समस्या आई। कृपया सही बैकअप फाइल चुनें।');
+      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
     }
   };
   reader.readAsText(file);
