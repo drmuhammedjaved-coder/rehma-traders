@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* 🎨 نئے پروفیشنل، سوفٹ اور ڈیسنٹ بزنس تھیمز */
     body.theme-navy {
       --bg-dark: #0f172a; --panel-bg: #1e293b; --card-bg: #334155;
       --accent-main: #38bdf8; --text-bright: #f8fafc; --text-sub: #94a3b8;
@@ -264,11 +263,12 @@
     <h3>⚙️ Rate List & Items</h3>
     <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; width:100%; margin-bottom:6px; padding:6px;">🖼️ Share Rate List JPG</button>
 
+    <!-- ✨ اردو اور انگریزی نام لکھنے کے لیے آزاد ٹیکسٹ ان پٹس (اردو کی بورڈ پاپ اپ کے ساتھ مکمل سپورٹ) -->
     <div style="display:flex; gap:4px; flex-wrap:wrap; background:var(--bg-dark); padding:6px; border-radius:6px; margin-bottom:6px;">
-      <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
-      <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
+      <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;" autocomplete="on" lang="en">
+      <input type="text" id="newItemNameUr" placeholder="اردو نام درج کریں" style="flex:2;" autocomplete="on" lang="ur">
       <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
-      <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
+      <input type="number" inputmode="numeric" id="newItemRate" placeholder="Rate" style="flex:1;">
       <button class="btn-silver" onclick="addNewItem()" style="flex:1; font-weight:bold;">Add</button>
     </div>
 
