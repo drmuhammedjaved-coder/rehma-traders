@@ -282,20 +282,49 @@
     }
     .hidden-section { display: none !important; }
 
-    /* ⬅️ پچھلی اسکرین پر جانے کے لیے اسمارٹ بیک بٹن */
+    /* ↩️ ↪️ انڈو اور ری ڈو اور بیک نیویگیشن بار اسٹائل */
+    .section-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .undo-redo-group {
+      display: flex;
+      gap: 6px;
+    }
+
     .btn-back-fixed {
       background: #0284c7 !important;
       color: #ffffff !important;
       border: 1px solid #0369a1 !important;
-      padding: 7px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 11.5px;
       box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+    }
+
+    .btn-undo-redo {
+      background: var(--bg-dark);
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 11.5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-save-fixed {
@@ -563,8 +592,12 @@
 
   <!-- 📝 نیا بل بنانے کا فارم -->
   <div id="sectionBill" class="section hidden-section">
-    <div style="margin-bottom:12px;">
+    <div class="section-nav-bar">
       <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <div class="undo-redo-group">
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+      </div>
     </div>
     <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
@@ -603,8 +636,12 @@
 
   <!-- ⚙️ ریٹ لسٹ سیکشن -->
   <div id="sectionRateList" class="section hidden-section">
-    <div style="margin-bottom:12px;">
+    <div class="section-nav-bar">
       <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <div class="undo-redo-group">
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+      </div>
     </div>
     <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
     
@@ -643,8 +680,12 @@
 
   <!-- 📦 اسٹاک سیکشن -->
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
-    <div style="margin-bottom:12px;">
+    <div class="section-nav-bar">
       <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <div class="undo-redo-group">
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+      </div>
     </div>
     <h3>📦 Stock Inventory Management</h3>
     <table id="stockReportTable" style="color:var(--text-bright);">
@@ -663,8 +704,12 @@
 
   <!-- 🔍 لیجر سیکشن -->
   <div id="sectionLedger" class="section hidden-section">
-    <div style="margin-bottom:12px;">
+    <div class="section-nav-bar">
       <button class="btn-back-fixed" onclick="navigateBack()">⬅️ Back</button>
+      <div class="undo-redo-group">
+        <button class="btn-undo-redo" onclick="triggerUndoAction()">↩️ Undo</button>
+        <button class="btn-undo-redo" onclick="triggerRedoAction()">↪️ Redo</button>
+      </div>
     </div>
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
     <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
@@ -703,7 +748,7 @@
         </div>
       </div>
 
-      <!-- 🧾 انتہائی باریک، پتلی روز (Rows) اور صاف سستے پرنٹ کا لے آؤٹ -->
+      <!-- 🧾 انتہائی باریک، پتلی روز (Rows) اور صاف پرنٹ کا لے آؤٹ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -793,6 +838,27 @@
       }
     }
 
+    /* ↩️ ↪️ انڈو اور ری ڈو فنکشنز (app.js کی ہسٹری کے لیے گلوبل ہینڈلر) */
+    function triggerUndoAction() {
+      if (typeof undoLastChange === 'function') {
+        undoLastChange();
+      } else if (typeof undo === 'function') {
+        undo();
+      } else if (document.queryCommandSupported && document.queryCommandSupported('undo')) {
+        document.execCommand('undo');
+      }
+    }
+
+    function triggerRedoAction() {
+      if (typeof redoLastChange === 'function') {
+        redoLastChange();
+      } else if (typeof redo === 'function') {
+        redo();
+      } else if (document.queryCommandSupported && document.queryCommandSupported('redo')) {
+        document.execCommand('redo');
+      }
+    }
+
     function handleTopMenuSelect(selectEl) {
       const val = selectEl.value;
       if (!val) return;
@@ -811,7 +877,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v4';
+          const CACHE_NAME = 'rehma-traders-v5';
           const urlsToCache = [
             './',
             './index.html',
