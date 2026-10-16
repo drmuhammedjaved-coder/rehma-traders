@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - App.js (Custom Layout & Fixed Item Codes)
+   REHMA TRADERS - App.js (Item Name First, Code Second Order)
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -78,7 +78,7 @@ function renderMultiItemSelector() {
       <div style="display:flex; align-items:center; gap:8px; flex:1;">
         <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main);">
         <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
-          ${code !== '-' ? code + ' - ' : ''}<strong>${name}</strong> 
+          <strong>${name}</strong> ${code !== '-' ? '(' + code + ')' : ''} 
           <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
         </label>
       </div>
@@ -125,8 +125,8 @@ function renderBillItemsTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td>${item.code || '-'}</td>
       <td>${item.name}</td>
+      <td>${item.code || '-'}</td>
       <td><input type="number" value="${item.qty}" min="1" oninput="updateBillItemQty(${index}, this.value)" style="width:50px; text-align:center; padding:2px;"></td>
       <td><input type="number" value="${item.rate}" oninput="updateBillItemRate(${index}, this.value)" style="width:60px; text-align:center; padding:2px;"></td>
       <td>Rs. ${total}</td>
@@ -175,8 +175,8 @@ function renderRateList() {
     const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="text" value="${name}" oninput="updateRateField(${index}, '${currentLang === 'ur' ? 'nameUr' : 'nameEn'}', this.value)" style="width:95%; background:transparent; border:none; text-align:center; color:#000;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td style="border:1px solid #000; color:#000;"><input type="number" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
       <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
@@ -236,8 +236,8 @@ function renderStockTable() {
     const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${code}</td>
       <td>${name}</td>
+      <td>${code}</td>
       <td><input type="number" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
     tbody.appendChild(tr);
@@ -284,7 +284,6 @@ function renderLedger() {
   });
 }
 
-/* 📌 کسٹمر نیم سب سے اوپر، کوڈز کالم اور درست ڈیٹا لک */
 function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
@@ -306,7 +305,7 @@ function viewBillDetails(index) {
     </div>
     <table>
       <thead>
-        <tr><th>Sr</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
       </thead>
       <tbody>
   `;
@@ -321,7 +320,7 @@ function viewBillDetails(index) {
       const qty = getItemQty(item);
       const rowTotal = rate * qty;
       calculatedSubTotal += rowTotal;
-      itemsHtml += `<tr><td>${idx+1}</td><td>${code}</td><td>${name}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${code}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
     });
   }
 
@@ -418,13 +417,13 @@ function openBillPreview() {
     </div>
     <table>
       <thead>
-        <tr><th>Sr</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
       </thead>
       <tbody>
   `;
 
   billItems.forEach((item, idx) => {
-    itemsHtml += `<tr><td>${idx+1}</td><td>${item.code || '-'}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
+    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.code || '-'}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
   });
 
   itemsHtml += `
@@ -561,9 +560,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
+      alert('بیک اپ सफलतापूर्वक रिस्टोर हो गया है!');
     } catch (err) {
-      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
+      alert('फाइल पढ़ने में समस्या आई। कृपया सही बैकअप फाइल चुनें।');
     }
   };
   reader.readAsText(file);
