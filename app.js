@@ -1,8 +1,8 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Fixed app.js (Repeat Bill & Urdu Keyboard Supported)
+   REHMA TRADERS - Complete & Final app.js (With Safe Factory Default Reset)
    ========================================================================== */
 
-let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
+const defaultRateList = [
   { code: '2017594941000', nameEn: '3 Pcs Chab', nameUr: '3 پیس چھاب', rate: 300, stock: 50 },
   { code: '2011476521000', nameEn: 'Single Chab', nameUr: 'سنگل چھاب', rate: 190, stock: 40 },
   { code: '2011476521000', nameEn: 'Naan Chab', nameUr: 'نان چھاب', rate: 200, stock: 35 },
@@ -15,10 +15,11 @@ let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
   { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 }
 ];
 
+let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let billItems = [];
 let currentLang = 'en';
-let activeViewingBillIndex = null; // ✨ ریپیٹ بل کے لیے ایکٹو بل انڈیکس ٹریک کرنے کی変数
+let activeViewingBillIndex = null;
 
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -33,6 +34,17 @@ function initApp() {
   renderLedger();
   updateDashboardStats();
   generateNextBillNumber();
+}
+
+/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (جو لیجر کو محفوظ رکھتا ہے) */
+function confirmResetToDefaultApp() {
+  const confirmation = confirm("⚠️ WARNING:\n\nAre you sure you want to reset the app structure and rate list to factory defaults?\n\n(Your existing Customer Ledger & Bills History will remain SAFE).");
+  if (confirmation) {
+    rateList = JSON.parse(JSON.stringify(defaultRateList));
+    localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+    initApp();
+    alert('App structure successfully restored to default! Your Ledger data is safe.');
+  }
 }
 
 function getItemName(item) {
@@ -309,7 +321,7 @@ function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
 
-  activeViewingBillIndex = index; // ✨ ٹریک رکھیں کہ کونسا بل دیکھ رہے ہیں
+  activeViewingBillIndex = index;
 
   const contentDiv = document.getElementById('billPrintContent');
   if (!contentDiv) return;
@@ -364,7 +376,6 @@ function viewBillDetails(index) {
   if (modal) modal.style.display = 'block';
 }
 
-/* ✨ ریپیٹ بل (Repeat Bill) کا نیا فنکشن */
 function repeatCurrentBill() {
   if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
     alert('No bill selected for repeat!');
@@ -373,17 +384,12 @@ function repeatCurrentBill() {
 
   const oldBill = billsHistory[activeViewingBillIndex];
 
-  // پرانے بل کا ڈیٹا کرنٹ بل ایڈیٹر میں لوڈ کریں
   document.getElementById('custName').value = oldBill.custName || oldBill.customerName || '';
   document.getElementById('custPhone').value = oldBill.custPhone || oldBill.phone || '';
   
-  // آئٹمز کو کاپی کریں
   billItems = JSON.parse(JSON.stringify(oldBill.items || oldBill.billItems || []));
-  
-  // نئے بل کا نمبر آٹومیٹک جنریٹ کریں
   generateNextBillNumber();
   
-  // بل اسکرین پر جائیں
   closeBillPreview();
   switchView('sectionBill');
   renderBillItemsTable();
