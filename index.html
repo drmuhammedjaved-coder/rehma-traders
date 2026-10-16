@@ -263,7 +263,6 @@
     <h3>⚙️ Rate List & Items</h3>
     <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; width:100%; margin-bottom:6px; padding:6px;">🖼️ Share Rate List JPG</button>
 
-    <!-- ✨ اردو اور انگریزی نام لکھنے کے لیے آزاد ٹیکسٹ ان پٹس (اردو کی بورڈ پاپ اپ کے ساتھ مکمل سپورٹ) -->
     <div style="display:flex; gap:4px; flex-wrap:wrap; background:var(--bg-dark); padding:6px; border-radius:6px; margin-bottom:6px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;" autocomplete="on" lang="en">
       <input type="text" id="newItemNameUr" placeholder="اردو نام درج کریں" style="flex:2;" autocomplete="on" lang="ur">
@@ -368,11 +367,13 @@
         </div>
       </div>
 
-      <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px;">
-        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Close</button>
-        <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">📥 Save PDF</button>
-        <button onclick="shareBillJpgWhatsApp()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">📤 Share WA</button>
-        <button onclick="printBillPdf()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Print</button>
+      <!-- ✨ ریپیٹ بل کا نیا بٹن شامل کر دیا گیا ہے -->
+      <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px; flex-wrap:wrap;">
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">✏️ Close</button>
+        <button onclick="repeatCurrentBill()" style="flex:1; background:#8b5cf6; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">🔁 Repeat Bill</button>
+        <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">📥 Save PDF</button>
+        <button onclick="shareBillJpgWhatsApp()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">📤 Share WA</button>
+        <button onclick="printBillPdf()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">🖨️ Print</button>
       </div>
     </div>
   </div>
