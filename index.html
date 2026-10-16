@@ -20,67 +20,12 @@
       --btn-shadow: rgba(2, 132, 199, 0.4);
     }
 
-    body.theme-blue {
-      --bg-dark: #0b132b;
-      --panel-bg: #1c2541;
-      --card-bg: #3a506b;
-      --accent-main: #38bdf8;
-      --border-dark: #334155;
-      --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
-      --btn-shadow: rgba(2, 132, 199, 0.4);
-    }
-
-    body.theme-emerald {
-      --bg-dark: #062c22;
-      --panel-bg: #0a4033;
-      --card-bg: #115e4c;
-      --accent-main: #34d399;
-      --border-dark: #064e3b;
-      --btn-grad: linear-gradient(135deg, #059669, #047857);
-      --btn-shadow: rgba(5, 150, 105, 0.4);
-    }
-
-    body.theme-gold {
-      --bg-dark: #121212;
-      --panel-bg: #1e1e1e;
-      --card-bg: #2d2d2d;
-      --accent-main: #fbbf24;
-      --border-dark: #3f3f46;
-      --btn-grad: linear-gradient(135deg, #d4af37, #aa7c11);
-      --btn-shadow: rgba(212, 175, 55, 0.4);
-    }
-
-    body.theme-purple {
-      --bg-dark: #130327;
-      --panel-bg: #210936;
-      --card-bg: #3c1361;
-      --accent-main: #c084fc;
-      --border-dark: #4c1d95;
-      --btn-grad: linear-gradient(135deg, #7e22ce, #6b21a8);
-      --btn-shadow: rgba(126, 34, 206, 0.4);
-    }
-
-    body.theme-ruby {
-      --bg-dark: #2b0910;
-      --panel-bg: #401018;
-      --card-bg: #5c1823;
-      --accent-main: #f87171;
-      --border-dark: #7f1d1d;
-      --btn-grad: linear-gradient(135deg, #dc2626, #991b1b);
-      --btn-shadow: rgba(220, 38, 38, 0.4);
-    }
-
-    body.theme-light {
-      --bg-dark: #f8fafc;
-      --panel-bg: #ffffff;
-      --card-bg: #e2e8f0;
-      --accent-main: #0284c7;
-      --text-bright: #0f172a;
-      --text-sub: #475569;
-      --border-dark: #cbd5e1;
-      --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
-      --btn-shadow: rgba(2, 132, 199, 0.3);
-    }
+    body.theme-blue { --bg-dark: #0b132b; --panel-bg: #1c2541; --card-bg: #3a506b; --accent-main: #38bdf8; --border-dark: #334155; }
+    body.theme-emerald { --bg-dark: #062c22; --panel-bg: #0a4033; --card-bg: #115e4c; --accent-main: #34d399; --border-dark: #064e3b; }
+    body.theme-gold { --bg-dark: #121212; --panel-bg: #1e1e1e; --card-bg: #2d2d2d; --accent-main: #fbbf24; --border-dark: #3f3f46; }
+    body.theme-purple { --bg-dark: #130327; --panel-bg: #210936; --card-bg: #3c1361; --accent-main: #c084fc; --border-dark: #4c1d95; }
+    body.theme-ruby { --bg-dark: #2b0910; --panel-bg: #401018; --card-bg: #5c1823; --accent-main: #f87171; --border-dark: #7f1d1d; }
+    body.theme-light { --bg-dark: #f8fafc; --panel-bg: #ffffff; --card-bg: #e2e8f0; --accent-main: #0284c7; --text-bright: #0f172a; --text-sub: #475569; --border-dark: #cbd5e1; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -93,362 +38,171 @@
     body.lang-ur { direction: rtl; }
     body.lang-en { direction: ltr; }
 
-    .top-bar-clean {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel-bg);
-      padding: 6px 12px;
-      border-radius: 30px;
-      border: 1px solid var(--border-dark);
-      margin-bottom: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .brand-title {
-      color: var(--accent-main);
-      font-weight: 800;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .top-buttons-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-compact {
-      background: var(--bg-dark);
-      color: var(--text-bright);
-      border: 1px solid var(--border-dark);
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 11.5px;
-      outline: none;
-      height: 32px;
-      box-sizing: border-box;
-    }
-
-    .btn-compact-green {
-      background: #059669 !important;
-      color: #ffffff !important;
-      border: 1px solid #047857 !important;
-    }
-
-    /* ✨ شاندار، بڑا اور چمکتا (Blinking & Glowing) اسلامی بینر */
+    /* ✨ سب سے اوپر ٹرانسپیرنٹ اسلامی بینر */
     .islamic-banner {
-      background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
-      border: 2px solid #fbbf24;
-      border-radius: 16px;
-      padding: 16px 8px;
+      background: transparent !important;
+      border: none;
+      padding: 6px 0px 10px 0px;
       text-align: center;
-      margin-bottom: 12px;
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+      margin-bottom: 8px;
       width: 100%;
       box-sizing: border-box;
     }
     
     .islamic-bismillah {
-      margin: 0 0 6px 0;
-      font-family: 'Amiri', 'Traditional Arabic', 'Times New Roman', serif;
-      font-size: 14px;
-      color: var(--text-sub);
-      letter-spacing: 1px;
+      margin: 0 0 4px 0;
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--accent-main);
+      text-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
     }
 
     .islamic-razzaq {
       margin: 0;
-      font-family: 'Amiri', 'Traditional Arabic', 'Urdu Typesetting', serif;
+      font-family: 'Amiri', 'Traditional Arabic', serif;
       font-size: min(8.5vw, 36px);
       font-weight: 900;
       color: #fbbf24;
       white-space: nowrap;
       display: block;
       width: 100%;
-      letter-spacing: 0.5px;
-      animation: goldBlinkGlow 1.8s infinite alternate ease-in-out;
+      letter-spacing: 1px;
+      animation: proPulseGlow 2.5s infinite ease-in-out;
     }
 
-    /* 💡 لائٹنگ اور بلنکنگ اینیمیشن */
-    @keyframes goldBlinkGlow {
-      0% {
-        opacity: 0.4;
-        text-shadow: 0 0 2px #d4af37;
-        transform: scale(0.98);
-      }
-      50% {
-        opacity: 0.85;
-        text-shadow: 0 0 12px #fbbf24, 0 0 22px #f59e0b;
-      }
-      100% {
-        opacity: 1;
-        text-shadow: 0 0 18px #fbbf24, 0 0 35px #f59e0b, 0 0 45px #38bdf8;
-        transform: scale(1.02);
-      }
+    @keyframes proPulseGlow {
+      0% { opacity: 0.7; text-shadow: 0 0 5px rgba(251, 191, 36, 0.4); transform: scale(0.99); }
+      50% { opacity: 1; text-shadow: 0 0 15px rgba(251, 191, 36, 0.9), 0 0 25px rgba(245, 158, 11, 0.7); transform: scale(1.01); }
+      100% { opacity: 0.7; text-shadow: 0 0 5px rgba(251, 191, 36, 0.4); transform: scale(0.99); }
     }
 
-    #updateBanner {
-      display: none;
-      background: var(--btn-grad);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      text-align: center;
-      font-size: 12px;
-    }
-    #updateBanner button {
-      background: #f59e0b;
-      color: #000;
-      border: none;
-      padding: 3px 8px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-left: 8px;
-    }
-
-    .header-card {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .header-card img.main-logo { max-height: 55px; margin-bottom: 6px; }
-    .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 19px; font-weight: 800; }
-    .header-card p { margin: 2px 0; font-size: 11.5px; color: var(--text-sub); }
-
-    /* 📊 ورٹیکل سیلز کارڈز */
-    .dashboard-grid-vertical {
+    /* 🎯 ورٹیکل بٹنز بار (اسلامی بینر کے نیچے) */
+    .top-bar-clean {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 14px;
+      align-items: center;
+      gap: 6px;
+      background: var(--panel-bg);
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border-dark);
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
+
+    .brand-title { color: var(--accent-main); font-weight: 800; font-size: 13.5px; }
+    .top-buttons-group { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; }
+
+    .btn-compact {
+      background: var(--bg-dark);
+      color: var(--text-bright);
+      border: 1px solid var(--border-dark);
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 11.5px;
+      height: 32px;
+      width: 100%;
+      max-width: 160px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .btn-compact-green { background: #059669 !important; color: #ffffff !important; border: 1px solid #047857 !important; }
+
+    .header-card { background: var(--panel-bg); border: 1px solid var(--border-dark); border-radius: 14px; padding: 12px; text-align: center; margin-bottom: 12px; }
+    .header-card img.main-logo { max-height: 50px; margin-bottom: 4px; }
+    .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 18px; font-weight: 800; }
+    .header-card p { margin: 2px 0; font-size: 11px; color: var(--text-sub); }
+
+    .dashboard-grid-vertical { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .dash-card-row {
       background: var(--panel-bg);
       border: 1px solid var(--border-dark);
       border-left: 5px solid var(--accent-main);
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      cursor: pointer;
     }
-    body.lang-ur .dash-card-row {
-      border-left: 1px solid var(--border-dark);
-      border-right: 5px solid var(--accent-main);
-    }
-    .dash-card-row h4 { margin: 0; font-size: 13px; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
-    .dash-card-row h2 { margin: 0; color: var(--text-bright); font-size: 16px; font-weight: 800; }
+    .dash-card-row h4 { margin: 0; font-size: 12px; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
+    .dash-card-row h2 { margin: 0; color: var(--text-bright); font-size: 15px; font-weight: 800; }
 
-    .section {
-      background: var(--panel-bg);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-      border: 1px solid var(--border-dark);
-    }
+    .section { background: var(--panel-bg); border-radius: 14px; padding: 12px; margin-bottom: 14px; border: 1px solid var(--border-dark); }
     .hidden-section { display: none !important; }
 
-    .btn-dashboard-fixed {
-      background: #059669 !important;
-      color: #ffffff !important;
-      border: 1px solid #047857 !important;
-      padding: 8px 18px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .btn-back-step { background: #475569 !important; color: #ffffff !important; border: 1px solid #334155 !important; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 11.5px; margin-bottom: 10px; display: inline-flex; align-items: center; gap: 4px; }
+    .btn-save-fixed { background: #000000 !important; color: #ffffff !important; border: 1px solid #333333 !important; font-weight: 700; border-radius: 20px; padding: 10px 16px; cursor: pointer; width: 100%; font-size: 13px; }
 
-    .btn-save-fixed {
-      background: #000000 !important;
-      color: #ffffff !important;
-      border: 1px solid #333333 !important;
-      font-weight: 700;
-      border-radius: 20px;
-      padding: 12px 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      width: 100%;
-      font-size: 14px;
-    }
-
-    h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 8px; margin-top: 0; font-size: 15px; font-weight: 700; }
+    h3 { color: var(--text-bright); border-bottom: 1px solid var(--border-dark); padding-bottom: 6px; margin-top: 0; font-size: 14px; font-weight: 700; }
 
     input, select {
-      width: 100%;
-      padding: 10px 12px;
-      margin: 4px 0;
-      border-radius: 8px;
-      border: 1px solid var(--border-dark);
-      background: var(--bg-dark);
-      color: var(--text-bright);
-      box-sizing: border-box;
-      font-size: 13px;
-      outline: none;
+      width: 100%; padding: 8px 10px; margin: 3px 0; border-radius: 8px; border: 1px solid var(--border-dark);
+      background: var(--bg-dark); color: var(--text-bright); font-size: 12px; outline: none; box-sizing: border-box;
     }
 
-    button.btn-gold {
-      background: var(--btn-grad);
-      color: #ffffff;
-      font-weight: 700;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px var(--btn-shadow);
-      font-size: 13px;
-    }
+    button.btn-gold { background: var(--btn-grad); color: #ffffff; font-weight: 700; border: none; border-radius: 20px; padding: 8px 14px; cursor: pointer; font-size: 12px; }
+    button.btn-silver { background: var(--card-bg); color: var(--text-bright); border: 1px solid var(--border-dark); border-radius: 20px; padding: 6px 12px; cursor: pointer; font-size: 11.5px; }
+    button.btn-danger { background: #dc2626; color: #ffffff; border: none; border-radius: 20px; padding: 6px 12px; font-weight: 600; cursor: pointer; font-size: 11.5px; }
 
-    button.btn-silver {
-      background: var(--card-bg);
-      color: var(--text-bright);
-      border: 1px solid var(--border-dark);
-      border-radius: 20px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    button.btn-danger {
-      background: #dc2626;
-      color: #ffffff;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 14px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid var(--border-dark); padding: 8px 4px; text-align: center; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { border: 1px solid var(--border-dark); padding: 6px 4px; text-align: center; font-size: 11.5px; }
     th { background: var(--bg-dark); color: var(--text-bright); font-weight: 700; }
     td { background: var(--panel-bg); color: var(--text-bright); }
 
     .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(11, 19, 43, 0.85);
-      backdrop-filter: blur(5px);
-      z-index: 9999;
-      overflow-y: auto;
-      padding: 8px;
-      box-sizing: border-box;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(4px); z-index: 9999; overflow-y: auto; padding: 4px; box-sizing: border-box;
     }
-    
-    .modal-box {
-      background: #ffffff !important;
-      color: #000000 !important;
-      max-width: 600px;
-      margin: 5px auto;
-      border-radius: 14px;
-      padding: 14px;
-    }
+    .modal-box { background: #ffffff !important; color: #000000 !important; max-width: 500px; margin: 10px auto; border-radius: 10px; padding: 10px; }
 
-    .paper-a4 { width: 100%; max-width: 100%; }
-    .paper-80mm { width: 280px; margin: 0 auto; font-size: 10px; }
-    .paper-50mm { width: 190px; margin: 0 auto; font-size: 8.5px; }
-
-    #printableBillContainer, #rateListCaptureArea {
-      background: #ffffff !important;
-      color: #000000 !important;
-      padding: 14px;
-      box-sizing: border-box;
-      position: relative;
+    #printableBillContainer {
+      background: #ffffff !important; color: #000000 !important; padding: 8px; box-sizing: border-box; width: 100%;
     }
+    #printableBillContainer * { color: #000000 !important; }
 
-    #printableBillContainer * {
-      color: #000000 !important;
-    }
+    .bill-header { display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #000; padding-bottom: 4px; }
+    .bill-header img { max-height: 35px; width: auto; }
 
-    .watermark-container {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      pointer-events: none; z-index: 0; overflow: hidden;
+    #printableBillContainer table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    #printableBillContainer th, #printableBillContainer td {
+      border: 0.5px solid #000 !important; padding: 3px 4px !important; font-size: 9.5px !important; line-height: 1.2 !important; text-align: center;
     }
+    #printableBillContainer th { background: #f1f5f9 !important; font-weight: bold; }
 
-    .watermark-img {
-      opacity: 0.14 !important;
-      max-width: 60% !important;
-      height: auto !important;
-      pointer-events: none !important;
-      display: block !important;
-    }
-    
-    .bill-content-layer { position: relative; z-index: 1; }
-
-    #printableBillContainer table { background: transparent !important; }
-    #printableBillContainer th, 
-    #printableBillContainer td, 
-    #printableBillContainer tr {
-      background: transparent !important;
-      background-color: transparent !important;
-      color: #000000 !important;
-      border-color: #000000 !important;
-    }
-
-    .bill-header-layout {
-      display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 2px solid #000; padding-bottom: 8px;
-    }
-    .bill-header-layout img { max-height: 50px; width: auto; }
-
-    .bill-footer-grid {
-      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px; padding-top: 6px;
-    }
-
-    .signature-box {
-      font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
-      font-size: 24px; color: #000000; border-bottom: 2px solid #000000;
-      padding: 0 8px 1px 8px; display: inline-block; letter-spacing: 1px; transform: rotate(-3deg);
-    }
+    .bill-footer { margin-top: 15px; border-top: 1px solid #000; padding-top: 6px; }
+    .bill-footer-grid { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 6px; }
+    .signature-box { font-family: 'Great Vibes', cursive; font-size: 15px; border-bottom: 1px solid #000; padding: 0 6px; display: inline-block; }
 
     .multi-item-container {
       max-height: 140px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; padding: 4px; margin: 4px 0;
     }
-    .multi-item-row {
-      display: flex; align-items: center; justify-content: space-between; padding: 4px 4px; border-bottom: 1px solid var(--border-dark);
-    }
-    .multi-item-row:last-child { border-bottom: none; }
+    .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 4px; border-bottom: 1px solid var(--border-dark); font-size: 11.5px; }
 
     @media print {
+      @page { size: A4; margin: 5mm; }
       body { background: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; }
       body * { visibility: hidden !important; }
       #previewModal, #previewModal * { visibility: visible !important; }
-      .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
-      .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #ffffff !important; border: none !important; color: #000000 !important; }
+      .modal-overlay { position: fixed !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
+      .modal-box { box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; border: none !important; background: #ffffff !important; }
       .no-print { display: none !important; }
-      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; padding: 0mm !important; margin: 0 !important; background: #ffffff !important; color: #000000 !important; }
-      #printableBillContainer * { color: #000000 !important; }
-      #printableBillContainer th, #printableBillContainer td, #printableBillContainer tr { background: transparent !important; color: #000000 !important; border-color: #000000 !important; }
-      .watermark-container { display: flex !important; }
-      .watermark-img { display: block !important; opacity: 0.15 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; }
     }
   </style>
 </head>
 <body class="lang-en theme-blue">
 
-  <div id="updateBanner">
-    🔔 <span>New Update Available!</span>
-    <button onclick="applyAppUpdate()">🔄 Update Now</button>
+  <!-- 1️⃣ سب سے اوپر بسم اللہ اور واللہ خیر الرازقین بینر -->
+  <div class="islamic-banner">
+    <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+    <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
   </div>
 
-  <!-- 🎯 ٹاپ بار (مینو، زبان، تھیم) -->
+  <!-- 2️⃣ ورٹیکل مینو اور بٹنز (بینر کے نیچے) -->
   <div class="top-bar-clean">
     <div class="brand-title">REHMA TRADERS</div>
     <div class="top-buttons-group">
@@ -477,37 +231,30 @@
     </div>
   </div>
 
-  <!-- ✨ سب سے اوپر بسم اللہ اور بلنکنگ "وَاللَّهُ خَيْرُ الرَّازِقِينَ" بینر -->
-  <div class="islamic-banner">
-    <p class="islamic-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-    <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
-  </div>
-
-  <!-- 🏠 مرکزی ڈیش بورڈ سیکشن -->
+  <!-- 🏠 ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
       <h1>REHMA TRADERS</h1>
-      <p><strong data-key="proprietor">Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
+      <p><strong>Proprietor:</strong> Muhammad Javed (محمد جاوید)</p>
       <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
     </div>
 
-    <!-- 📊 ورٹیکل سیلز کارڈز -->
     <div class="dashboard-grid-vertical">
-      <div class="dash-card-row" style="border-left-color: #34d399;">
-        <h4 data-key="todaySales">Daily Sales</h4>
-        <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
+      <div class="dash-card-row" style="border-left-color: #34d399;" onclick="switchView('sectionBill')">
+        <h4>📝 Create New Bill</h4>
+        <h2>➔</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: var(--accent-main);">
-        <h4 data-key="weeklySales">Weekly Sales</h4>
-        <h2 id="dashWeeklySales" style="color: var(--accent-main);">Rs. 0</h2>
+      <div class="dash-card-row" style="border-left-color: var(--accent-main);" onclick="switchView('sectionRateList')">
+        <h4>⚙️ Rate List & Items</h4>
+        <h2>➔</h2>
       </div>
-      <div class="dash-card-row" style="border-left-color: #fbbf24;">
-        <h4 data-key="monthlySales">Monthly Sales</h4>
-        <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
+      <div class="dash-card-row" style="border-left-color: #fbbf24;" onclick="switchView('sectionStock')">
+        <h4>📦 Stock Inventory</h4>
+        <h2>➔</h2>
       </div>
-      <div class="dash-card-row" id="showAllBillsBtn" onclick="switchView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
-        <h4 data-key="totalSales">Total Sales</h4>
+      <div class="dash-card-row" style="border-left-color: #f87171;" onclick="switchView('sectionLedger')">
+        <h4>🔍 Customer Ledger</h4>
         <h2 id="dashSales">Rs. 0</h2>
       </div>
     </div>
@@ -515,127 +262,101 @@
 
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
-  <!-- 📝 نیا بل بنانے کا فارم -->
+  <!-- 📝 بل ونڈو -->
   <div id="sectionBill" class="section hidden-section">
-    <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
-    </div>
-    <h3>📝 <span data-key="createNewBill">Create New Bill</span> (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>📝 Create New Bill (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
     <div style="display:flex; gap:6px;">
-      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="registerGlobalChange()">
-      <button class="btn-silver" id="pickContactBtn" onclick="pickContact()" style="width:110px; font-weight:bold;"><span data-key="pickContact">📱 Contacts</span></button>
+      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام">
+      <button class="btn-silver" onclick="pickContact()" style="width:100px; font-weight:bold;">📱 Contacts</button>
     </div>
-    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="registerGlobalChange()">
+    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر">
     
-    <label style="font-size:12px; color:var(--accent-main); font-weight:bold;">📦 Select Items (آئٹم چنیں):</label>
+    <label style="font-size:11.5px; color:var(--accent-main); font-weight:bold;">📦 Select Items & Stock (آئٹم اور اسٹاک چنیں):</label>
     <div class="multi-item-container" id="multiItemBox"></div>
-    <button class="btn-gold" id="addSelectedItemsBtn" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ Add Selected Items to Bill</button>
+    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:6px 0;">➕ Add Selected Items to Bill</button>
 
     <table id="billItemsTable">
       <thead>
-        <tr><th data-key="srNo">Sr #</th><th data-key="code">Code</th><th data-key="item">Item</th><th data-key="qty">Qty</th><th data-key="rate">Rate</th><th data-key="total">Total</th><th data-key="action">Action</th></tr>
+        <tr><th>Sr #</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <div style="margin-top:12px;">
-      <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
-        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals(); registerGlobalChange();" style="flex:1; min-width:120px;">
+    <div style="margin-top:10px;">
+      <div style="display:flex; gap:6px;">
+        <input type="number" id="prevBalanceInput" placeholder="Previous Balance / سابقہ ادھار" oninput="calculateBillTotals()">
+        <input type="number" id="discountInput" placeholder="Discount (Rs.) / ڈسکاؤنٹ" oninput="calculateBillTotals()">
       </div>
       
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; margin:10px 0; padding:10px; background:var(--bg-dark); border-radius:8px; border:1px solid var(--border-dark);">
-        <div><strong data-key="netTotal">Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 17px;">Rs. 0</span></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px; margin:8px 0; padding:8px; background:var(--bg-dark); border-radius:8px; border:1px solid var(--border-dark);">
+        <div><strong>Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: 800; font-size: 16px;">Rs. 0</span></div>
       </div>
       
-      <div style="display:flex; gap:6px; margin-top:10px;">
-        <button class="btn-gold" id="previewBillBtn" onclick="openBillPreview()" style="flex:1; padding:12px;">👁️ <span data-key="previewBtn">Print Preview & Confirm</span></button>
-      </div>
+      <button class="btn-gold" onclick="openBillPreview()" style="width:100%; padding:10px;">👁️ Print Preview & Confirm</button>
     </div>
   </div>
 
-  <!-- ⚙️ ریٹ لسٹ سیکشن -->
+  <!-- ⚙️ ریٹ لسٹ ونڈو -->
   <div id="sectionRateList" class="section hidden-section">
-    <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
-    </div>
-    <h3>⚙️ <span data-key="rateListHeader">Rate List & Items Management</span></h3>
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>⚙️ Rate List & Items Management</h3>
     
-    <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap;">
-      <button class="btn-silver" id="shareRateListJpgBtn" onclick="exportRateListJpg()" style="background:#059669; color:#fff; border:none; font-weight:bold; flex:2; padding:10px;">🖼️ <span data-key="shareRateList">Share Rate List as Image (JPG)</span></button>
-    </div>
+    <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; width:100%; margin-bottom:8px; padding:8px;">🖼️ Share Rate List as Image (JPG)</button>
 
-    <div style="display:flex; gap:6px; flex-wrap:wrap; background:var(--bg-dark); padding:10px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:10px;">
+    <div style="display:flex; gap:6px; flex-wrap:wrap; background:var(--bg-dark); padding:8px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:8px;">
       <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;">
       <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:2;">
       <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
       <input type="number" id="newItemRate" placeholder="Rate" style="flex:1;">
-      <button class="btn-silver" id="addNewItemBtn" onclick="addNewItem()" style="flex:1; font-weight:bold;"><span data-key="addItem">Add</span></button>
+      <button class="btn-silver" onclick="addNewItem()" style="flex:1; font-weight:bold;">Add</button>
     </div>
 
-    <div id="rateListCaptureArea" style="margin-top:10px; border-radius:8px; border:1px solid #374151;">
-      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
-        <h2 style="margin:2px 0; color:#000; font-size:18px;" id="rlTitle">REHMA TRADERS - OFFICIAL RATE LIST</h2>
-        <p style="margin:1px 0; color:#333; font-size:11px;" id="rlSub">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+    <div id="rateListCaptureArea" style="border-radius:8px; border:1px solid #374151;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:6px;">
+        <h2 style="margin:2px 0; color:#000; font-size:16px;">REHMA TRADERS - OFFICIAL RATE LIST</h2>
+        <p style="margin:1px 0; color:#333; font-size:10px;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
       </div>
       <table id="rateListTable" style="color:#000;">
         <thead>
           <tr style="background:#f2f2f2;">
-            <th style="border:1px solid #000; color:#000;" data-key="code">Code</th>
-            <th style="border:1px solid #000; color:#000;" data-key="item">Item Description</th>
-            <th style="border:1px solid #000; color:#000;" data-key="rate">Rate</th>
+            <th style="border:1px solid #000; color:#000;">Code</th>
+            <th style="border:1px solid #000; color:#000;">Item Description</th>
+            <th style="border:1px solid #000; color:#000;">Rate</th>
             <th class="no-print-col" style="border:1px solid #000; color:#000;">Action</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
-
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Permanent Rates</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:10px;">💾 Save All Permanent Rates</button>
   </div>
 
-  <!-- 📦 اسٹاک سیکشن -->
+  <!-- 📦 اسٹاک ونڈو -->
   <div id="sectionStock" class="section hidden-section" style="border: 2px dashed var(--accent-main);">
-    <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
-    </div>
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
     <h3>📦 Stock Inventory Management</h3>
-    <table id="stockReportTable" style="color:var(--text-bright);">
+    <table id="stockReportTable">
       <thead>
-        <tr>
-          <th>Code</th>
-          <th>Item Name</th>
-          <th>Available Stock Qty</th>
-        </tr>
+        <tr><th>Code</th><th>Item Name</th><th>Available Stock Qty</th></tr>
       </thead>
       <tbody></tbody>
     </table>
-
-    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:12px;">💾 Save All Stock Inventory</button>
+    <button class="btn-save-fixed" onclick="savePermanentRatesList()" style="margin-top:10px;">💾 Save All Stock Inventory</button>
   </div>
 
-  <!-- 🔍 لیجر سیکشن -->
+  <!-- 🔍 لیجر ونڈو -->
   <div id="sectionLedger" class="section hidden-section">
-    <div style="margin-bottom:12px;">
-      <button class="btn-dashboard-fixed" onclick="switchView('mainDashboardMenu')">🏠 Back to Dashboard</button>
-    </div>
-    <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>🔍 Customer Ledger & History</h3>
     <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
-
-    <div style="margin-bottom: 10px; margin-top: 10px;">
-      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 10px;">🗑️ Delete Marked Bills</button>
-    </div>
-    
+    <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; margin: 8px 0; padding: 8px;">🗑️ Delete Marked Bills</button>
     <table id="ledgerTable">
       <thead>
         <tr>
-          <th style="width: 30px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
-          <th data-key="billNoHeader">Bill #</th>
-          <th data-key="custHeader">Customer</th>
-          <th data-key="dateHeader">Date</th>
-          <th data-key="amountHeader">Amount</th>
-          <th data-key="action">Actions</th>
+          <th style="width: 25px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
+          <th>Bill #</th><th>Customer</th><th>Date</th><th>Amount</th><th>Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -645,76 +366,89 @@
   <!-- 🖨️ پرنٹ پریویو ماڈل -->
   <div id="previewModal" class="modal-overlay">
     <div class="modal-box">
-      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #ccc; padding-bottom:6px; flex-wrap:wrap; gap:6px;">
-        <label style="color:#000; font-size:12px;"><strong>🖨️ Paper Size:</strong></label>
-        <div style="display:flex; gap:6px; align-items:center;">
-          <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; padding:4px; margin:0; background:#f3f4f6; color:#000; font-size:12px;">
-            <option value="paper-a4">A4 Standard</option>
-            <option value="paper-80mm">Thermal 80mm</option>
-            <option value="paper-50mm">Thermal 50mm</option>
-          </select>
-          <button class="btn-dashboard-fixed" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="padding: 5px 12px; font-size: 11px;">🏠 Dashboard</button>
-        </div>
+      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:4px;">
+        <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; font-size:11px; padding:2px;">
+          <option value="paper-a4">A4 Standard</option>
+          <option value="paper-80mm">Thermal 80mm</option>
+          <option value="paper-50mm">Thermal 50mm</option>
+        </select>
+        <button class="btn-back-step" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="margin:0;">🏠 Dashboard</button>
       </div>
 
-      <div id="printableBillContainer" class="paper-a4">
+      <div id="printableBillContainer">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
         </div>
         
         <div class="bill-content-layer">
-          <div class="bill-header-layout">
+          <div class="bill-header">
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
             <div style="text-align:center;">
-              <h2 style="margin:1px 0; color:#000000; font-size:20px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:1px 0; font-size:10px;"><strong id="billPropLabel">Proprietor:</strong> Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
-              <p style="margin:1px 0; font-size:9.5px;">💬 WhatsApp: 0333-5255117 | 📧 rehmatraders786@gmail.com</p>
+              <h2 style="margin:1px 0; color:#000000; font-size:14px; font-weight:800;">REHMA TRADERS</h2>
+              <p style="margin:1px 0; font-size:8px;">Proprietor: Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
             </div>
           </div>
 
-          <div id="billPrintContent" style="margin:8px 0; font-size:10.5px;"></div>
+          <div id="billPrintContent" style="margin:4px 0;"></div>
 
-          <div style="text-align:center; margin-top:8px; border-top:1px dashed #000000; padding-top:4px;">
-            <p id="billNoteTxt" style="margin:1px 0; font-size:9.5px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
-          </div>
-
-          <div class="bill-footer-grid">
-            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:4px 6px; border-radius:4px; background:transparent;">
-              <span id="payTitle" style="font-size:9px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-              <span id="payName" style="font-size:9px; font-weight:bold; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
+          <div class="bill-footer">
+            <div class="bill-footer-grid">
+              <div style="text-align:left; border:0.5px solid #000; padding:2px; border-radius:2px; font-size:7.5px;">
+                <strong>Payment:</strong> JazzCash: 03074015100 | ABL: PK44ABPA0010140074540011 (Muhammad Javed)
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:7.5px; font-weight:bold; display:block;">Owner Signature</span>
+                <span class="signature-box">M. Javed</span>
+              </div>
             </div>
-
-            <div style="text-align:right;">
-              <span id="ownerSigLabel" style="font-size:9.5px; font-weight:bold; display:block;">Owner Signature</span>
-              <span class="signature-box">M. Javed</span>
+            <div style="text-align:center; border-top:0.5px solid #000; padding-top:2px; margin-top:3px;">
+              <p style="margin:0; font-size:7.5px; font-weight:bold;">Note: Bought items can be exchanged if faulty. / نوٹ: خریدے ہوئے مال میں فالٹ ہو تو تبدیل ہو سکتا ہے۔</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="no-print" style="display:flex; gap:4px; margin-top:10px; border-top:1px solid #ddd; padding-top:8px; flex-wrap:wrap;">
-        <button id="closePreviewBtn" onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Back / Close</button>
-        <button id="shareJpgBtn" onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖼️ Share JPG</button>
-        <button id="confirmPrintBtn" onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:8px; border-radius:15px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Confirm & Print</button>
+      <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px;">
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Close</button>
+        <button onclick="exportBillJpgAndShare()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">🖼️ Share JPG</button>
+        <button onclick="executeFinalPrint()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Print</button>
       </div>
     </div>
   </div>
 
   <script src="app.js"></script>
   <script>
+    let navHistory = ['mainDashboardMenu'];
+
+    function switchView(viewId, pushHistory = true) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
+      const target = document.getElementById(viewId);
+      if (target) target.classList.remove('hidden-section');
+      
+      if (pushHistory && navHistory[navHistory.length - 1] !== viewId) {
+        navHistory.push(viewId);
+      }
+
+      if (viewId === 'sectionRateList') renderRateList();
+      if (viewId === 'sectionStock') renderStockTable();
+      if (viewId === 'sectionLedger') renderLedger();
+    }
+
+    function goBackStep() {
+      if (navHistory.length > 1) {
+        navHistory.pop();
+        switchView(navHistory[navHistory.length - 1], false);
+      } else {
+        switchView('mainDashboardMenu', false);
+      }
+    }
+
     function handleTopMenuSelect(selectEl) {
       const val = selectEl.value;
       if (!val) return;
-
-      if (val === 'exportBackup') {
-        exportDataBackup();
-      } else if (val === 'importBackup') {
-        document.getElementById('importBackupInput').click();
-      } else {
-        switchView(val);
-      }
+      if (val === 'exportBackup') exportDataBackup();
+      else if (val === 'importBackup') document.getElementById('importBackupInput').click();
+      else switchView(val);
       selectEl.value = '';
     }
   </script>
