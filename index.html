@@ -415,9 +415,9 @@
       padding: 14px;
     }
 
-    .paper-a4 { width: 100%; max-width: 100%; }
-    .paper-80mm { width: 280px; margin: 0 auto; font-size: 10px; }
-    .paper-50mm { width: 190px; margin: 0 auto; font-size: 8.5px; }
+    .paper-a4 { width: 100%; max-width: 100%; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; }
+    .paper-80mm { width: 280px; margin: 0 auto; font-size: 10px; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; }
+    .paper-50mm { width: 190px; margin: 0 auto; font-size: 8.5px; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; }
 
     #printableBillContainer, #rateListCaptureArea {
       background: #ffffff !important;
@@ -437,6 +437,7 @@
       line-height: 1.05 !important;
       border-collapse: collapse !important;
       margin-top: 4px !important;
+      width: 100%;
     }
     #printableBillContainer tr {
       height: auto !important;
@@ -465,37 +466,70 @@
     }
 
     .watermark-img {
-      opacity: 0.14 !important;
-      max-width: 60% !important;
+      opacity: 0.12 !important;
+      max-width: 55% !important;
       height: auto !important;
       pointer-events: none !important;
       display: block !important;
     }
     
-    .bill-content-layer { position: relative; z-index: 1; }
+    .bill-content-layer { 
+      position: relative; 
+      z-index: 1; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+      height: 100%; 
+      flex-grow: 1;
+    }
 
     .bill-header-layout {
       display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #000; padding-bottom: 3px;
     }
-    .bill-header-layout img { max-height: 42px; width: auto; }
+    .bill-header-layout img { max-height: 40px; width: auto; }
+
+    /* 📌 صفحے کے بالکل نچلے حصے پر فوٹر اور باریک سائن و بینک تفصیلات */
+    .bill-bottom-footer {
+      margin-top: auto;
+      padding-top: 4px;
+      width: 100%;
+    }
 
     .bill-footer-grid {
-      display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding-top: 3px;
+      display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2px;
     }
 
+    /* 🖋️ انتہائی چھوٹا اور باریک سگنیچر باکس */
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
-      font-size: 18px; color: #000000; border-bottom: 1px solid #000000;
-      padding: 0 6px 1px 6px; display: inline-block; letter-spacing: 1px; transform: rotate(-3deg);
+      font-size: 13px !important; 
+      color: #000000; 
+      border-bottom: 0.5px solid #000000;
+      padding: 0 3px 0px 3px; 
+      display: inline-block; 
+      letter-spacing: 0.3px; 
+      transform: rotate(-2deg);
     }
 
-    .multi-item-container {
-      max-height: 140px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; padding: 4px; margin: 4px 0;
+    /* 💳 انتہائی کمپیکٹ اور باریک آن لائن پے منٹ باکس */
+    #billPaymentBox {
+      text-align: left; 
+      border: 0.5px solid #000; 
+      padding: 1px 3px !important; 
+      border-radius: 2px; 
+      background: transparent;
+      line-height: 1.15;
     }
-    .multi-item-row {
-      display: flex; align-items: center; justify-content: space-between; padding: 4px 4px; border-bottom: 1px solid var(--border-dark);
+    #billPaymentBox span {
+      font-size: 6.5px !important;
+      margin-top: 0px !important;
     }
-    .multi-item-row:last-child { border-bottom: none; }
+
+    .footer-divider-line {
+      border-bottom: 0.5px solid #000000;
+      margin: 2px 0;
+      width: 100%;
+    }
 
     @media print {
       body { background: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; }
@@ -504,11 +538,11 @@
       .modal-overlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
       .modal-box { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; padding: 0 !important; background: #ffffff !important; border: none !important; color: #000000 !important; }
       .no-print { display: none !important; }
-      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; padding: 0mm !important; margin: 0 !important; background: #ffffff !important; color: #000000 !important; }
+      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100vh !important; padding: 0mm !important; margin: 0 !important; background: #ffffff !important; color: #000000 !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }
       #printableBillContainer * { color: #000000 !important; }
       #printableBillContainer th, #printableBillContainer td, #printableBillContainer tr { background: transparent !important; color: #000000 !important; border-color: #000000 !important; }
       .watermark-container { display: flex !important; }
-      .watermark-img { display: block !important; opacity: 0.15 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .watermark-img { display: block !important; opacity: 0.12 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
 </head>
@@ -748,44 +782,52 @@
         </div>
       </div>
 
-      <!-- 🧾 انتہائی باریک، پتلی روز (Rows) اور صاف پرنٹ کا لے آؤٹ -->
+      <!-- 🧾 صفحے کے بالکل نچلے حصے پر باریک بینک تفصیلات، سگنیچر اور نوٹ کا لے آؤٹ -->
       <div id="printableBillContainer" class="paper-a4">
         <div class="watermark-container">
           <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
         </div>
         
         <div class="bill-content-layer">
-          <div class="bill-header-layout">
-            <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
+          <!-- اوپر کا حصہ (ہیڈر + بل آئٹمز) -->
+          <div>
+            <div class="bill-header-layout">
+              <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
+              <div style="text-align:center;">
+                <h2 style="margin:1px 0; color:#000000; font-size:16px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
+                <p style="margin:1px 0; font-size:8.5px; line-height: 1.2;">
+                  <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
+                  <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
+                </p>
+                <p style="margin:1px 0; font-size:8px; line-height: 1.2;">
+                  <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+            <div id="billPrintContent" style="margin:4px 0; font-size:8.5px;"></div>
+          </div>
+
+          <!-- 📌 صفحے کے بالکل نچلے حصے پر الٹرا-باریک فوٹر -->
+          <div class="bill-bottom-footer">
+            <div class="bill-footer-grid">
+              <div id="billPaymentBox">
+                <span id="payTitle" style="font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
+                <span id="payJazz" class="phone-no-break" style="display:block; color:#000;">JazzCash Account: 03074015100</span>
+                <span id="payAbl" class="phone-no-break" style="display:block; color:#000;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
+                <span id="payName" style="display:block; color:#000;">Account Title: Muhammad Javed</span>
+              </div>
+
+              <div style="text-align:right;">
+                <span id="ownerSigLabel" style="font-size:7px; font-weight:bold; display:block;">Owner Signature</span>
+                <span class="signature-box">M. Javed</span>
+              </div>
+            </div>
+
+            <div class="footer-divider-line"></div>
+
             <div style="text-align:center;">
-              <h2 style="margin:1px 0; color:#000000; font-size:17px; font-weight:800;" id="billHeaderTitle">REHMA TRADERS</h2>
-              <p style="margin:1px 0; font-size:9px; line-height: 1.25;">
-                <strong id="billPropLabel">Proprietor:</strong> Muhammad Javed<br>
-                <span class="phone-no-break">📱 0307-4015100</span> | <span class="phone-no-break">📱 0339-1020030</span>
-              </p>
-              <p style="margin:1px 0; font-size:8.5px; line-height: 1.25;">
-                <span class="phone-no-break">💬 WhatsApp: 0333-5255117</span> | <span class="phone-no-break">📧 rehmatraders786@gmail.com</span>
-              </p>
-            </div>
-          </div>
-
-          <div id="billPrintContent" style="margin:4px 0; font-size:8.5px;"></div>
-
-          <div style="text-align:center; margin-top:5px; border-top:1px dashed #000000; padding-top:2px;">
-            <p id="billNoteTxt" style="margin:1px 0; font-size:8.5px; font-weight:bold;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
-          </div>
-
-          <div class="bill-footer-grid">
-            <div id="billPaymentBox" style="text-align:left; border:1px solid #000; padding:2px 4px; border-radius:3px; background:transparent;">
-              <span id="payTitle" style="font-size:8px; font-weight:bold; display:block; color:#000; text-decoration:underline;">Online Payment Details:</span>
-              <span id="payJazz" class="phone-no-break" style="font-size:8px; display:block; color:#000; margin-top:1px;">JazzCash Account: 03074015100</span>
-              <span id="payAbl" class="phone-no-break" style="font-size:8px; display:block; color:#000; margin-top:1px;">Allied Bank (ABL) IBAN: PK44ABPA0010140074540011</span>
-              <span id="payName" style="font-size:8px; display:block; color:#000; margin-top:1px;">Account Title: Muhammad Javed</span>
-            </div>
-
-            <div style="text-align:right;">
-              <span id="ownerSigLabel" style="font-size:8.5px; font-weight:bold; display:block;">Owner Signature</span>
-              <span class="signature-box">M. Javed</span>
+              <p id="billNoteTxt" style="margin:0; font-size:7px; font-weight:normal; color:#333;">Note: Bought items can be exchanged or returned if faulty. / نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔</p>
             </div>
           </div>
         </div>
@@ -838,25 +880,58 @@
       }
     }
 
-    /* ↩️ ↪️ انڈو اور ری ڈو فنکشنز (app.js کی ہسٹری کے لیے گلوبل ہینڈلر) */
+    /* ↩️ ↪️ انڈو اور ری ڈو کا مکمل ورکنگ ہینڈلر (Full Input Stack History) */
+    let inputStateHistory = [];
+    let historyStepIndex = -1;
+
+    function captureStateSnapshot() {
+      const state = {};
+      document.querySelectorAll('input[type="text"], input[type="number"], select').forEach((input, index) => {
+        const id = input.id || 'input_' + index;
+        state[id] = input.value;
+      });
+      
+      if (historyStepIndex < inputStateHistory.length - 1) {
+        inputStateHistory = inputStateHistory.slice(0, historyStepIndex + 1);
+      }
+      inputStateHistory.push(state);
+      historyStepIndex = inputStateHistory.length - 1;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      captureStateSnapshot();
+      document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+          captureStateSnapshot();
+        }
+      });
+    });
+
     function triggerUndoAction() {
-      if (typeof undoLastChange === 'function') {
-        undoLastChange();
-      } else if (typeof undo === 'function') {
-        undo();
-      } else if (document.queryCommandSupported && document.queryCommandSupported('undo')) {
-        document.execCommand('undo');
+      if (historyStepIndex > 0) {
+        historyStepIndex--;
+        const previousState = inputStateHistory[historyStepIndex];
+        applyStateSnapshot(previousState);
       }
     }
 
     function triggerRedoAction() {
-      if (typeof redoLastChange === 'function') {
-        redoLastChange();
-      } else if (typeof redo === 'function') {
-        redo();
-      } else if (document.queryCommandSupported && document.queryCommandSupported('redo')) {
-        document.execCommand('redo');
+      if (historyStepIndex < inputStateHistory.length - 1) {
+        historyStepIndex++;
+        const nextState = inputStateHistory[historyStepIndex];
+        applyStateSnapshot(nextState);
       }
+    }
+
+    function applyStateSnapshot(state) {
+      if (!state) return;
+      Object.keys(state).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = state[id];
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      });
     }
 
     function handleTopMenuSelect(selectEl) {
@@ -877,7 +952,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v5';
+          const CACHE_NAME = 'rehma-traders-v7';
           const urlsToCache = [
             './',
             './index.html',
