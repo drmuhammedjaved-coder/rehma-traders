@@ -916,40 +916,32 @@
       }
     }
 
-    /* ⌨️ 🎯 100% پرفیکٹ فکس: انٹر دبانے پر صرف اور صرف اسی کالم کی نیچے والی رو (Same Column, Next Row) میں جانا */
+    /* ⌨️ 🎯 100% حتمی اور فول پروف فکس: انٹر دبانے پر اسی کالم کی اگلی رو (Same Column, Next Row) میں جانا */
     window.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const activeEl = document.activeElement;
         if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
-          
           const currentTd = activeEl.closest('td');
           const currentRow = activeEl.closest('tr');
 
           if (currentTd && currentRow) {
             e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation();
 
-            // اسی ٹیبل رو میں کالم (Cell) کا نمبر بتائیں
-            const colIndex = Array.from(currentRow.children).indexOf(currentTd);
+            const cells = Array.from(currentRow.children);
+            const colIndex = cells.indexOf(currentTd);
             const nextRow = currentRow.nextElementSibling;
 
             if (nextRow) {
-              const targetTd = nextRow.children[colIndex];
+              const targetCells = Array.from(nextRow.children);
+              const targetTd = targetCells[colIndex];
               const targetInput = targetTd ? targetTd.querySelector('input, select') : null;
               if (targetInput) {
                 targetInput.focus();
                 if (targetInput.select) targetInput.select();
                 return false;
               }
-            }
-          } else {
-            // اگر عام فارم فیلڈز میں ہوں
-            e.preventDefault();
-            const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), select'));
-            const currentIndex = allInputs.indexOf(activeEl);
-            if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
-              allInputs[currentIndex + 1].focus();
-              if (allInputs[currentIndex + 1].select) allInputs[currentIndex + 1].select();
             }
           }
         }
@@ -1042,7 +1034,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
-          const CACHE_NAME = 'rehma-traders-v13';
+          const CACHE_NAME = 'rehma-traders-v14';
           const urlsToCache = [
             './',
             './index.html',
