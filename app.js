@@ -166,6 +166,40 @@ function switchView(targetId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* 📲 ایپ منیمائز ہونے پر ادھورا بل خودکار محفوظ (Auto Draft Save) کرنے کا فنکشن */
+function saveActiveBillDraft() {
+  const draftData = {
+    custName: document.getElementById('custName')?.value || '',
+    custPhone: document.getElementById('custPhone')?.value || '',
+    prevBalance: document.getElementById('prevBalanceInput')?.value || '',
+    discount: document.getElementById('discountInput')?.value || '',
+    currentBillItems: currentBillItems
+  };
+  localStorage.setItem('rehma_active_draft', JSON.stringify(draftData));
+}
+
+function restoreActiveBillDraft() {
+  try {
+    const savedDraft = localStorage.getItem('rehma_active_draft');
+    if (savedDraft) {
+      const draft = JSON.parse(savedDraft);
+      if (draft.custName) document.getElementById('custName').value = draft.custName;
+      if (draft.custPhone) document.getElementById('custPhone').value = draft.custPhone;
+      if (draft.prevBalance) document.getElementById('prevBalanceInput').value = draft.prevBalance;
+      if (draft.discount) document.getElementById('discountInput').value = draft.discount;
+      if (draft.currentBillItems && draft.currentBillItems.length > 0) {
+        currentBillItems = draft.currentBillItems;
+        renderCurrentBillTable();
+        calculateBillTotals();
+      }
+    }
+  } catch (e) {}
+}
+
+function clearActiveBillDraft() {
+  localStorage.removeItem('rehma_active_draft');
+}
+
 function captureGlobalState() {
   return JSON.stringify({
     itemsList: itemsList,
@@ -179,6 +213,7 @@ function captureGlobalState() {
 }
 
 function registerGlobalChange() {
+  saveActiveBillDraft();
   globalUndoStack.push(captureGlobalState());
   if (globalUndoStack.length > 30) globalUndoStack.shift();
   globalRedoStack = [];
@@ -206,6 +241,7 @@ function applyGlobalState(stateStr) {
   calculateBillTotals();
   updateDashboard();
   renderLedger(dbBills);
+  saveActiveBillDraft();
 }
 
 function triggerGlobalUndo() {
@@ -249,6 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDashboard();
   renderLedger(dbBills);
   updateNextBillNo();
+  
+  // ایپ دوبارہ کھلنے پر ادھورا بل خود بخود بحال کریں
+  restoreActiveBillDraft();
+});
+
+// موبائل اسکرین منیمائز یا بیک گراؤنڈ میں جانے پر فوراً ڈرافٹ سیو کریں
+window.addEventListener('beforeunload', saveActiveBillDraft);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    saveActiveBillDraft();
+  }
 });
 
 function toggleLanguage() {
@@ -281,6 +328,7 @@ async function pickContact() {
         registerGlobalChange();
         if (contacts[0].name && contacts[0].name[0]) document.getElementById('custName').value = contacts[0].name[0];
         if (contacts[0].tel && contacts[0].tel[0]) document.getElementById('custPhone').value = contacts[0].tel[0];
+        saveActiveBillDraft();
       }
     } catch (err) {}
   } else {
@@ -348,6 +396,7 @@ function addSelectedMultipleItems() {
 
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function renderRateListTable() {
@@ -468,6 +517,7 @@ function removeBillItem(index) {
   currentBillItems.splice(index, 1);
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function renderCurrentBillTable() {
@@ -488,13 +538,14 @@ function renderCurrentBillTable() {
   });
 }
 
-function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); }
+function updateBillItemCode(idx, val) { registerGlobalChange(); currentBillItems[idx].code = val.trim(); saveActiveBillDraft(); }
 function updateBillItemQty(idx, val) {
   registerGlobalChange();
   let newQty = parseInt(val) || 1;
   currentBillItems[idx].qty = newQty;
   currentBillItems[idx].total = newQty * currentBillItems[idx].rate;
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function updateBillItemRate(idx, val) {
@@ -503,6 +554,7 @@ function updateBillItemRate(idx, val) {
   currentBillItems[idx].rate = newRate;
   currentBillItems[idx].total = currentBillItems[idx].qty * newRate;
   calculateBillTotals();
+  saveActiveBillDraft();
 }
 
 function calculateBillTotals() {
@@ -512,6 +564,7 @@ function calculateBillTotals() {
 
   let netTotal = (subtotal - discount) + prevBalance;
   document.getElementById('grandTotalTxt').innerText = 'Rs. ' + netTotal;
+  saveActiveBillDraft();
 }
 
 function openBillPreview() {
@@ -587,6 +640,9 @@ function executeFinalPrint() {
   document.getElementById('prevBalanceInput').value = '';
   document.getElementById('grandTotalTxt').innerText = 'Rs. 0';
 
+  // بل پرنٹ مکمل ہونے پر عارضی ڈرافٹ صاف کر دیں
+  clearActiveBillDraft();
+
   updateDashboard();
   renderLedger(dbBills);
   renderRateListTable();
@@ -645,6 +701,7 @@ function cloneAndRepeatBill(index) {
 
   renderCurrentBillTable();
   calculateBillTotals();
+  saveActiveBillDraft();
   switchView('sectionBill');
 }
 
@@ -654,7 +711,6 @@ function renderBillToPrintArea(b) {
   document.getElementById('billHeaderTitle').innerText = isUr ? 'رحمہ ٹریڈرز' : 'REHMA TRADERS';
   document.getElementById('billPropLabel').innerText = isUr ? 'پروپرائٹر:' : 'Proprietor:';
 
-  // زبان کے حساب سے نوٹ اور ادائیگی کی تفصیلات کو سیٹ کرنا
   if (isUr) {
     document.getElementById('billNoteTxt').innerText = 'نوٹ: خریدے ہوئے مال میں کوئی فالٹ ہو تو خریدا ہوا مال تبدیل یا واپس کر سکتے ہیں۔';
     document.getElementById('payTitle').innerText = 'آن لائن ادائیگی کے لیے:';
