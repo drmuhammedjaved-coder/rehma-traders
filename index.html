@@ -77,7 +77,7 @@
       100% { opacity: 0.7; text-shadow: 0 0 5px rgba(251, 191, 36, 0.4); transform: scale(0.99); }
     }
 
-    /* 🎯 ورٹیکل بٹنز بار (اسلامی بینر کے نیچے) */
+    /* 🎯 ورٹیکل بٹنز بار (بینر کے نیچے) */
     .top-bar-clean {
       display: flex;
       flex-direction: column;
@@ -116,7 +116,7 @@
     .header-card h1 { color: var(--text-bright); margin: 0 0 2px 0; font-size: 18px; font-weight: 800; }
     .header-card p { margin: 2px 0; font-size: 11px; color: var(--text-sub); }
 
-    /* 📊 ڈیش بورڈ سیلز کارڈز (اصلی اور درست حالت میں) */
+    /* 📊 ڈیش بورڈ سیلز کارڈز */
     .dashboard-grid-vertical { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .dash-card-row {
       background: var(--panel-bg);
@@ -231,7 +231,7 @@
     </div>
   </div>
 
-  <!-- 🏠 ڈیش بورڈ (ڈیلی، ویکلی، منتھلی اور ٹوٹل سیلز کے اصل کارڈز کے ساتھ) -->
+  <!-- 🏠 ڈیش بورڈ -->
   <div id="mainDashboardMenu" class="section">
     <div class="header-card">
       <img src="logo.png" id="mainHeaderLogo" alt="Rehma Traders Logo" class="main-logo" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -259,8 +259,15 @@
         <h2 id="dashSales">Rs. 0</h2>
       </div>
     </div>
+
+    <!-- 💾 ڈائریکٹ بیک اپ بٹنز (ڈیش بورڈ کے نیچے بھی شامل کر دیے گئے ہیں) -->
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button class="btn-silver" onclick="exportDataBackup()" style="flex:1; background:#0284c7; color:#fff; font-weight:bold;">💾 Download Backup</button>
+      <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; background:#059669; color:#fff; font-weight:bold;">📂 Restore Backup</button>
+    </div>
   </div>
 
+  <!-- 📂 فائل انپٹ (بیک اپ ریسٹور کے لیے) -->
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
 
   <!-- 📝 بل ونڈو -->
