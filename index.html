@@ -417,7 +417,6 @@
       display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding-top: 10px;
     }
 
-    /* 🖋️ انتہائی خوبصورت اور سٹائلش سگنیچر فونٹ فیملی */
     .signature-box {
       font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive, sans-serif;
       font-size: 28px;
@@ -567,6 +566,16 @@
     </div>
   </div>
 
+  <!-- 🎯 مین ڈیش بورڈ پر بیک اپ ڈاؤن لوڈ اور ریستور کے نئے نمایاں بٹن -->
+  <div class="section" style="border: 2px solid var(--accent-main); padding: 16px; margin-bottom: 20px;">
+    <h3 style="text-align:center; border:none; margin-bottom:12px; font-size:16px;">💾 ڈیٹا بیک اپ اور بحالی (Data Backup & Restore)</h3>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn-gold" onclick="exportDataBackup()" style="flex:1; font-weight:bold; padding:14px; font-size:14px;">💾 <span data-key="backup">Download Ledger Backup</span></button>
+      <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; font-weight:bold; padding:14px; font-size:14px; background:#1e293b; color:#fff; border:1px solid var(--accent-main);">📂 Restore Backup (ڈیٹا بحال کریں)</button>
+      <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+    </div>
+  </div>
+
   <div id="mainDashboardMenu" class="section">
     <h3 style="text-align:center; border:none; margin-bottom:16px;">🎛️ Main Menu / مین مینو</h3>
     <div class="menu-nav-grid">
@@ -693,14 +702,8 @@
     </div>
     <h3>🔍 <span data-key="ledgerHeader">Customer Ledger & History</span></h3>
     <input type="text" id="searchCust" placeholder="Search Customer / کسٹمر کا نام لکھ کر تلاش کریں..." oninput="filterLedger()">
-    
-    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-      <button class="btn-silver" id="exportBackupBtn" onclick="exportDataBackup()" style="flex:1;">💾 <span data-key="backup">Download Ledger Backup</span></button>
-      <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 Restore Backup (ڈیٹا بحال کریں)</button>
-      <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
-    </div>
 
-    <div style="margin-bottom: 12px;">
+    <div style="margin-bottom: 12px; margin-top: 14px;">
       <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 12px;">🗑️ Delete Marked Bills (مقررہ نشان زدہ بل حذف کریں)</button>
     </div>
     
