@@ -347,17 +347,25 @@
       position: relative;
     }
 
-    /* 🖼️ پرنٹ فارمیٹ اور ٹیبل کے لیے لائیٹ واٹر مارک کا شفاف سیٹ اپ */
+    .watermark-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
     .watermark-img {
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      opacity: 0.15 !important;
-      max-width: 75% !important;
+      opacity: 0.14 !important;
+      max-width: 65% !important;
       height: auto !important;
       pointer-events: none !important;
-      z-index: 0 !important;
       display: block !important;
     }
     
@@ -366,7 +374,6 @@
       z-index: 1;
     }
 
-    /* بل کے ٹیبل اور کالمز کو ٹرانسپیرنٹ کرنا تاکہ پیچھے واٹر مارک دکھے */
     #printableBillContainer table {
       background: transparent !important;
     }
@@ -449,9 +456,12 @@
         background: transparent !important;
         background-color: transparent !important;
       }
+      .watermark-container {
+        display: flex !important;
+      }
       .watermark-img {
         display: block !important;
-        opacity: 0.16 !important;
+        opacity: 0.15 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -638,6 +648,7 @@
     <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:14px; font-size:16px; padding:14px;">💾 Save All Stock Inventory</button>
   </div>
 
+  <!-- کسٹمر لیجر و ہسٹری (مارکڈ بل ڈیلیٹ کرنے کے آپشن کے ساتھ) -->
   <div id="sectionLedger" class="section hidden-section">
     <div class="back-nav-bar">
       <button class="back-btn" onclick="switchView('mainDashboardMenu')">⬅️ Back to Dashboard</button>
@@ -650,10 +661,16 @@
       <button class="btn-gold" onclick="document.getElementById('importBackupInput').click()" style="flex:1;">📂 Restore Backup (ڈیٹا بحال کریں)</button>
       <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
     </div>
+
+    <!-- مارک کیے گئے بلوں کو ڈیلیٹ کرنے کا بٹن -->
+    <div style="margin-bottom: 12px;">
+      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="width: 100%; font-weight: bold; padding: 12px;">🗑️ Delete Marked Bills (مقررہ نشان زدہ بل حذف کریں)</button>
+    </div>
     
     <table id="ledgerTable">
       <thead>
         <tr>
+          <th style="width: 40px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
           <th data-key="billNoHeader">Bill #</th>
           <th data-key="custHeader">Customer</th>
           <th data-key="dateHeader">Date & Time</th>
@@ -677,8 +694,10 @@
       </div>
 
       <div id="printableBillContainer" class="paper-a4">
-        <!-- 🖼️ واٹر مارک کا لوگو -->
-        <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
+        <div class="watermark-container">
+          <img id="printWatermarkImg" src="logo.png" class="watermark-img" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
+        </div>
+        
         <div class="bill-content-layer">
           <div class="bill-header-layout">
             <img id="printHeaderLogo" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
