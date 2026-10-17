@@ -1,8 +1,8 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js
+   REHMA TRADERS - Complete app.js (With Safe Restore Default App Structure)
    ========================================================================== */
 
-let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
+const defaultRateList = [
   { code: '2017594941000', nameEn: '3 Pcs Chab', nameUr: '3 پیس چھاب', rate: 300, stock: 50 },
   { code: '2011476521000', nameEn: 'Single Chab', nameUr: 'سنگل چھاب', rate: 190, stock: 40 },
   { code: '2011476521000', nameEn: 'Naan Chab', nameUr: 'نان چھاب', rate: 200, stock: 35 },
@@ -15,6 +15,7 @@ let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
   { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 }
 ];
 
+let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let billItems = [];
 let currentLang = 'en';
@@ -37,6 +38,25 @@ function initApp() {
   renderLedger();
   updateDashboardStats();
   generateNextBillNumber();
+}
+
+/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (جو لیجر اور کسٹمرز کو بالکل محفوظ رکھتا ہے) */
+function confirmResetToDefaultApp() {
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nक्या आप ऐप के कोड और स्ट्रक्चर को रीसेट करना चाहते हैं?\n(आपका ग्राहक लेजर और बिल का डेटा 100% सुरक्षित रहेगा)।");
+  if (confirmation) {
+    rateList = JSON.parse(JSON.stringify(defaultRateList));
+    localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+    
+    // کینشے صاف کریں اور سروس ورکرز کو ڈیفالٹ پر لائیں
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+
+    initApp();
+    alert('App structure successfully restored to default! Your Ledger data is 100% safe.');
+  }
 }
 
 function saveStateToHistory() {
@@ -607,7 +627,6 @@ function downloadBillPdf() {
   }
 }
 
-// ✨ یونیورسل پرنٹ فنکشن (جو موبائل سے جڑے کسی بھی A4 Wi-Fi، بلوٹوتھ یا نیٹ ورک پرنٹر کو پرنٹ ڈائیلاگ کے ذریعے چلا دیتا ہے)
 function printBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
