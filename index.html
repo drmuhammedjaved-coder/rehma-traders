@@ -164,7 +164,15 @@
   </div>
 
   <div class="top-bar-clean">
-    <div style="color:var(--accent-main); font-weight:bold; font-size:13px;">REHMA TRADERS</div>
+    <div style="color:var(--accent-main); font-weight:bold; font-size:13px; display:flex; justify-content:space-between; width:100%; align-items:center;">
+      <span>REHMA TRADERS</span>
+      <!-- ✨ ان ڈو اور ری ڈو کے بٹنز -->
+      <div style="display:flex; gap:4px;">
+        <button onclick="triggerUndo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Undo">↩️ Undo</button>
+        <button onclick="triggerRedo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Redo">↪️ Redo</button>
+      </div>
+    </div>
+    
     <div class="top-buttons-group">
       <select class="btn-compact btn-compact-green" onchange="handleTopMenuSelect(this)">
         <option value="" selected disabled>🎛️ Menu ▾</option>
@@ -219,11 +227,6 @@
       <button class="btn-silver" onclick="exportDataBackup()" style="flex:1; background:#0284c7; color:#fff; font-weight:bold;">💾 Download Backup</button>
       <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; background:#059669; color:#fff; font-weight:bold;">📂 Restore Backup</button>
     </div>
-
-    <!-- ✨ ڈیش بورڈ پر سیف فیکٹری ڈیفالٹ ری سیٹ کا بٹن -->
-    <div style="margin-top:6px;">
-      <button class="btn-danger" onclick="confirmResetToDefaultApp()" style="width:100%; font-weight:bold; padding:7px;">🔄 Restore Default App Structure</button>
-    </div>
   </div>
 
   <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
@@ -233,10 +236,10 @@
     <h3>📝 Create New Bill (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
     
     <div style="display:flex; gap:6px;">
-      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام">
+      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="saveStateToHistory()">
       <button class="btn-silver" onclick="pickContact()" style="width:90px; font-weight:bold;">📱 Contacts</button>
     </div>
-    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر">
+    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="saveStateToHistory()">
     
     <label style="font-size:11px; color:var(--accent-main); font-weight:bold;">📦 Select Items & Stock:</label>
     <div class="multi-item-container" id="multiItemBox"></div>
@@ -251,8 +254,8 @@
 
     <div style="margin-top:8px;">
       <div style="display:flex; gap:4px;">
-        <input type="number" id="prevBalanceInput" placeholder="Prev Balance" oninput="calculateBillTotals()">
-        <input type="number" id="discountInput" placeholder="Discount" oninput="calculateBillTotals()">
+        <input type="number" id="prevBalanceInput" placeholder="Prev Balance" oninput="calculateBillTotals(); saveStateToHistory();">
+        <input type="number" id="discountInput" placeholder="Discount" oninput="calculateBillTotals(); saveStateToHistory();">
       </div>
       
       <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px; margin:6px 0; padding:6px; background:var(--bg-dark); border-radius:6px;">
@@ -416,6 +419,15 @@
       else if (val === 'importBackup') document.getElementById('importBackupInput').click();
       else switchView(val);
       selectEl.value = '';
+    }
+
+    // ✨ سروس ورکر رجسٹر کریں تاکہ آف لائن چلے
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker Registered!', reg))
+          .catch(err => console.log('Service Worker Registration Failed:', err));
+      });
     }
   </script>
 </body>
