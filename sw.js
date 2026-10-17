@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rehma-traders-v2';
+const CACHE_NAME = 'rehma-traders-v3';
 const assetsToCache = [
   './',
   './index.html',
@@ -42,7 +42,6 @@ self.addEventListener('fetch', event => {
           return fetchResponse;
         });
       }).catch(() => {
-        // اگر نیٹ ورک نہ ہو اور کیشے میں بھی نہ ملے تو فالব্যাক
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
