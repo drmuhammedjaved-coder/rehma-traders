@@ -166,7 +166,6 @@
   <div class="top-bar-clean">
     <div style="color:var(--accent-main); font-weight:bold; font-size:13px; display:flex; justify-content:space-between; width:100%; align-items:center;">
       <span>REHMA TRADERS</span>
-      <!-- ✨ ان ڈو اور ری ڈو کے بٹنز -->
       <div style="display:flex; gap:4px;">
         <button onclick="triggerUndo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Undo">↩️ Undo</button>
         <button onclick="triggerRedo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Redo">↪️ Redo</button>
@@ -333,7 +332,7 @@
     <div class="modal-box">
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:4px;">
         <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; font-size:11px; padding:2px;">
-          <option value="paper-a4">A4 Standard</option>
+          <option value="paper-a4">A4 Standard (Wi-Fi/BT Printer)</option>
           <option value="paper-80mm">Thermal 80mm</option>
           <option value="paper-50mm">Thermal 50mm</option>
         </select>
@@ -375,12 +374,13 @@
         </div>
       </div>
 
+      <!-- ✨ صاف اور کلین پرنٹنگ کنٹرولز (A4 Wi-Fi/BT پرنٹرز اور تھرمل پرنٹرز کے لیے) -->
       <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px; flex-wrap:wrap;">
-        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">✏️ Close</button>
-        <button onclick="repeatCurrentBill()" style="flex:1; background:#8b5cf6; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">🔁 Repeat Bill</button>
-        <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">📥 Save PDF</button>
-        <button onclick="shareBillJpgWhatsApp()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">📤 Share WA</button>
-        <button onclick="printBillPdf()" style="flex:1; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10.5px;">🖨️ Print</button>
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">✏️ Close</button>
+        <button onclick="repeatCurrentBill()" style="flex:1; background:#8b5cf6; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">🔁 Repeat</button>
+        <button onclick="printBillPdf()" style="flex:2; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">🖨️ Print (Wi-Fi/BT/A4/Thermal)</button>
+        <button onclick="shareBillJpgWhatsApp()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">📤 Share WA</button>
+        <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">📥 PDF</button>
       </div>
     </div>
   </div>
@@ -421,7 +421,6 @@
       selectEl.value = '';
     }
 
-    // ✨ سروس ورکر رجسٹر کریں تاکہ آف لائن چلے
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
