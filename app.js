@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Updated with English & Urdu Permission)
+   REHMA TRADERS - Complete & Final app.js (100% Full Code)
    ========================================================================== */
 
 const defaultRateList = [
@@ -40,9 +40,9 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (انگلش اور اردو میں) */
+/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (صرف انگلش اور اردو میں) */
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا चाहते ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
