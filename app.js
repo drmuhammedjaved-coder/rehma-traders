@@ -1,8 +1,8 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (With Safe Factory Default Reset)
+   REHMA TRADERS - Complete app.js (Offline & Undo/Redo Integrated)
    ========================================================================== */
 
-const defaultRateList = [
+let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
   { code: '2017594941000', nameEn: '3 Pcs Chab', nameUr: '3 پیس چھاب', rate: 300, stock: 50 },
   { code: '2011476521000', nameEn: 'Single Chab', nameUr: 'سنگل چھاب', rate: 190, stock: 40 },
   { code: '2011476521000', nameEn: 'Naan Chab', nameUr: 'نان چھاب', rate: 200, stock: 35 },
@@ -15,16 +15,20 @@ const defaultRateList = [
   { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 }
 ];
 
-let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let billItems = [];
 let currentLang = 'en';
 let activeViewingBillIndex = null;
 
+// ✨ ان ڈو / ری ڈو ہسٹری اسٹیک
+let undoStack = [];
+let redoStack = [];
+
 window.addEventListener('DOMContentLoaded', () => {
   initApp();
   const savedTheme = localStorage.getItem('rehma_theme') || 'navy';
   changeAppTheme(savedTheme, false);
+  saveStateToHistory();
 });
 
 function initApp() {
@@ -36,15 +40,65 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (جو لیجر کو محفوظ رکھتا ہے) */
-function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING:\n\nAre you sure you want to reset the app structure and rate list to factory defaults?\n\n(Your existing Customer Ledger & Bills History will remain SAFE).");
-  if (confirmation) {
-    rateList = JSON.parse(JSON.stringify(defaultRateList));
-    localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
-    initApp();
-    alert('App structure successfully restored to default! Your Ledger data is safe.');
+// ✨ اسٹیٹ ہسٹری سیو کریں (ان ڈو کے لیے)
+function saveStateToHistory() {
+  const currentState = {
+    custName: document.getElementById('custName') ? document.getElementById('custName').value : '',
+    custPhone: document.getElementById('custPhone') ? document.getElementById('custPhone').value : '',
+    prevBalance: document.getElementById('prevBalanceInput') ? document.getElementById('prevBalanceInput').value : '',
+    discount: document.getElementById('discountInput') ? document.getElementById('discountInput').value : '',
+    billItems: JSON.parse(JSON.stringify(billItems)),
+    rateList: JSON.parse(JSON.stringify(rateList))
+  };
+
+  // اگر پچھلی اسٹیٹ سے میچ نہ کرے تو پش کریں
+  if (undoStack.length === 0 || JSON.stringify(undoStack[undoStack.length - 1]) !== JSON.stringify(currentState)) {
+    undoStack.push(currentState);
+    if (undoStack.length > 25) undoStack.shift(); // زیادہ سے زیادہ 25 اسٹیٹس
+    redoStack = []; // نیا عمل ہونے پر ری ڈو صاف کر دیں
   }
+}
+
+// ✨ ان ڈو فنکشن
+function triggerUndo() {
+  if (undoStack.length <= 1) {
+    alert('Nothing more to undo!');
+    return;
+  }
+  const currentState = undoStack.pop();
+  redoStack.push(currentState);
+  
+  const prevState = undoStack[undoStack.length - 1];
+  applyState(prevState);
+}
+
+// ✨ ری ڈو فنکشن
+function triggerRedo() {
+  if (redoStack.length === 0) {
+    alert('Nothing to redo!');
+    return;
+  }
+  const nextState = redoStack.pop();
+  undoStack.push(nextState);
+  
+  applyState(nextState);
+}
+
+// ✨ اسٹیٹ اپلائی کریں
+function applyState(state) {
+  if (!state) return;
+  if (document.getElementById('custName')) document.getElementById('custName').value = state.custName || '';
+  if (document.getElementById('custPhone')) document.getElementById('custPhone').value = state.custPhone || '';
+  if (document.getElementById('prevBalanceInput')) document.getElementById('prevBalanceInput').value = state.prevBalance || '';
+  if (document.getElementById('discountInput')) document.getElementById('discountInput').value = state.discount || '';
+  
+  billItems = JSON.parse(JSON.stringify(state.billItems || []));
+  rateList = JSON.parse(JSON.stringify(state.rateList || rateList));
+
+  renderBillItemsTable();
+  renderRateList();
+  renderMultiItemSelector();
+  renderStockTable();
 }
 
 function getItemName(item) {
@@ -128,6 +182,7 @@ function addSelectedMultipleItems() {
     }
   });
   renderBillItemsTable();
+  saveStateToHistory();
 }
 
 function renderBillItemsTable() {
@@ -162,16 +217,19 @@ function handleInputKeydown(event) {
 function updateBillItemQty(index, val) {
   billItems[index].qty = parseFloat(val) || 0;
   calculateBillTotals();
+  saveStateToHistory();
 }
 
 function updateBillItemRate(index, val) {
   billItems[index].rate = parseFloat(val) || 0;
   calculateBillTotals();
+  saveStateToHistory();
 }
 
 function removeBillItem(index) {
   billItems.splice(index, 1);
   renderBillItemsTable();
+  saveStateToHistory();
 }
 
 function calculateBillTotals() {
@@ -219,6 +277,7 @@ function updateRateField(index, field, value) {
     rateList[index][field] = value;
   }
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+  saveStateToHistory();
 }
 
 function addNewItem() {
@@ -239,11 +298,13 @@ function addNewItem() {
   document.getElementById('newItemNameUr').value = '';
   document.getElementById('newItemCode').value = '';
   document.getElementById('newItemRate').value = '';
+  saveStateToHistory();
 }
 
 function deleteRateItem(index) {
   rateList.splice(index, 1);
   savePermanentRatesList();
+  saveStateToHistory();
 }
 
 function savePermanentRatesList() {
@@ -275,6 +336,7 @@ function renderStockTable() {
 function updateStockQty(index, val) {
   rateList[index].stock = parseFloat(val) || 0;
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+  saveStateToHistory();
 }
 
 function getBillTotal(bill) {
@@ -393,6 +455,7 @@ function repeatCurrentBill() {
   closeBillPreview();
   switchView('sectionBill');
   renderBillItemsTable();
+  saveStateToHistory();
   
   alert('Bill loaded successfully as a new Repeat Bill! Check new Invoice number.');
 }
