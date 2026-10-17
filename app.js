@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (With Safe Restore Default App Structure)
+   REHMA TRADERS - Complete app.js (Updated with English & Urdu Permission)
    ========================================================================== */
 
 const defaultRateList = [
@@ -40,14 +40,14 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (جو لیجر اور کسٹمرز کو بالکل محفوظ رکھتا ہے) */
+/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (انگلش اور اردو میں) */
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nक्या आप ऐप के कोड और स्ट्रक्चर को रीसेट करना चाहते हैं?\n(आपका ग्राहक लेजर और बिल का डेटा 100% सुरक्षित रहेगा)।");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
     localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
     
-    // کینشے صاف کریں اور سروس ورکرز کو ڈیفالٹ پر لائیں
     if ('caches' in window) {
       caches.keys().then(names => {
         for (let name of names) caches.delete(name);
@@ -55,7 +55,7 @@ function confirmResetToDefaultApp() {
     }
 
     initApp();
-    alert('App structure successfully restored to default! Your Ledger data is 100% safe.');
+    alert('App structure successfully restored to default!\n(آپ کا لیجر ڈیٹا بالکل محفوظ ہے)');
   }
 }
 
