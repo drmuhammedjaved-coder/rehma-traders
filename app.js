@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Offline & Undo/Redo Integrated)
+   REHMA TRADERS - Complete app.js
    ========================================================================== */
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || [
@@ -20,7 +20,6 @@ let billItems = [];
 let currentLang = 'en';
 let activeViewingBillIndex = null;
 
-// ✨ ان ڈو / ری ڈو ہسٹری اسٹیک
 let undoStack = [];
 let redoStack = [];
 
@@ -40,7 +39,6 @@ function initApp() {
   generateNextBillNumber();
 }
 
-// ✨ اسٹیٹ ہسٹری سیو کریں (ان ڈو کے لیے)
 function saveStateToHistory() {
   const currentState = {
     custName: document.getElementById('custName') ? document.getElementById('custName').value : '',
@@ -51,15 +49,13 @@ function saveStateToHistory() {
     rateList: JSON.parse(JSON.stringify(rateList))
   };
 
-  // اگر پچھلی اسٹیٹ سے میچ نہ کرے تو پش کریں
   if (undoStack.length === 0 || JSON.stringify(undoStack[undoStack.length - 1]) !== JSON.stringify(currentState)) {
     undoStack.push(currentState);
-    if (undoStack.length > 25) undoStack.shift(); // زیادہ سے زیادہ 25 اسٹیٹس
-    redoStack = []; // نیا عمل ہونے پر ری ڈو صاف کر دیں
+    if (undoStack.length > 25) undoStack.shift();
+    redoStack = [];
   }
 }
 
-// ✨ ان ڈو فنکشن
 function triggerUndo() {
   if (undoStack.length <= 1) {
     alert('Nothing more to undo!');
@@ -72,7 +68,6 @@ function triggerUndo() {
   applyState(prevState);
 }
 
-// ✨ ری ڈو فنکشن
 function triggerRedo() {
   if (redoStack.length === 0) {
     alert('Nothing to redo!');
@@ -84,7 +79,6 @@ function triggerRedo() {
   applyState(nextState);
 }
 
-// ✨ اسٹیٹ اپلائی کریں
 function applyState(state) {
   if (!state) return;
   if (document.getElementById('custName')) document.getElementById('custName').value = state.custName || '';
@@ -613,6 +607,7 @@ function downloadBillPdf() {
   }
 }
 
+// ✨ یونیورسل پرنٹ فنکشن (جو موبائل سے جڑے کسی بھی A4 Wi-Fi، بلوٹوتھ یا نیٹ ورک پرنٹر کو پرنٹ ڈائیلاگ کے ذریعے چلا دیتا ہے)
 function printBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
