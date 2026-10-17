@@ -227,7 +227,6 @@
       <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; background:#059669; color:#fff; font-weight:bold;">📂 Restore Backup</button>
     </div>
 
-    <!-- ✨ ڈیش بورڈ پر سیف فیکٹری ڈیفالٹ ری سیٹ بٹن -->
     <div style="margin-top:6px;">
       <button class="btn-danger" onclick="confirmResetToDefaultApp()" style="width:100%; font-weight:bold; padding:7px;">🔄 Restore Default App Structure</button>
     </div>
@@ -345,11 +344,12 @@
       </div>
 
       <div id="printableBillContainer">
-        <img src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous" onerror="this.style.display='none'">
+        <!-- ✨ آف لائن محفوظ لوگو سورس تاکہ نیٹ کے بغیر بھی لوگو اور واٹر مارک کبھی غائب نہ ہوں -->
+        <img id="billWatermarkImg" src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous">
 
         <div class="bill-content-layer">
           <div class="bill-header">
-            <img src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous" onerror="this.style.display='none'">
+            <img id="billHeaderLogoImg" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous">
             <div class="bill-header-text">
               <h2>REHMA TRADERS</h2>
               <p>Proprietor: Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
