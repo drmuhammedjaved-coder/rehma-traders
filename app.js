@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (100% Full Code)
+   REHMA TRADERS - Complete app.js (Repeat Bill Customer Name & Phone Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -40,9 +40,9 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (صرف انگلش اور اردو میں) */
+/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (انگلش اور اردو میں) */
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا चाहते ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
@@ -452,6 +452,7 @@ function viewBillDetails(index) {
   if (modal) modal.style.display = 'block';
 }
 
+/* ✨ فکس شدہ ریپیٹ بل فنکشن (جو کسٹمر کا نام اور نمبر فوراً آٹومیٹک اٹھائے گا) */
 function repeatCurrentBill() {
   if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
     alert('No bill selected for repeat!');
@@ -460,9 +461,14 @@ function repeatCurrentBill() {
 
   const oldBill = billsHistory[activeViewingBillIndex];
 
-  document.getElementById('custName').value = oldBill.custName || oldBill.customerName || '';
-  document.getElementById('custPhone').value = oldBill.custPhone || oldBill.phone || '';
+  // کسٹمر کا نام اور فون نمبر آٹومیٹک اینٹری فیلڈ میں سیٹ کریں
+  const custNameVal = oldBill.custName || oldBill.customerName || oldBill.customer || '';
+  const custPhoneVal = oldBill.custPhone || oldBill.phone || oldBill.customerPhone || '';
+
+  if (document.getElementById('custName')) document.getElementById('custName').value = custNameVal;
+  if (document.getElementById('custPhone')) document.getElementById('custPhone').value = custPhoneVal;
   
+  // پرانے بل کا سامان اور مقادیر نیا بل بنانے کے لیے منتقل کریں
   billItems = JSON.parse(JSON.stringify(oldBill.items || oldBill.billItems || []));
   generateNextBillNumber();
   
@@ -471,7 +477,7 @@ function repeatCurrentBill() {
   renderBillItemsTable();
   saveStateToHistory();
   
-  alert('Bill loaded successfully as a new Repeat Bill! Check new Invoice number.');
+  alert('Bill & Customer details loaded successfully as a new Repeat Bill!');
 }
 
 function filterLedger() {
