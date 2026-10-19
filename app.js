@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Backup Import Fully Fixed)
+   REHMA TRADERS - Complete app.js (Fixed 15 Original Items & Backup Import)
    ========================================================================== */
 
 const defaultRateList = [
@@ -11,13 +11,13 @@ const defaultRateList = [
   { code: '2013147621000', nameEn: 'Large Box Round', nameUr: 'لارج باکس راؤنڈ', rate: 380, stock: 20 },
   { code: '2019580141000', nameEn: 'Square Small', nameUr: 'اسکوائر سمال', rate: 280, stock: 25 },
   { code: '2013147621000', nameEn: 'Square Large', nameUr: 'اسکوائر لارج', rate: 380, stock: 15 },
-  { code: '2011476821000', nameEn: 'Gloves Pair', nameUr: 'گلوز پیئر', rate: 155, stock: 60 },
+  { code: '2011476821000', nameEn: 'Oven Gloves Pair', nameUr: 'اوون گلوز پیئر', rate: 155, stock: 60 },
   { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 },
-  { code: '2017447652000', nameEn: 'Pot Holders', nameUr: 'پاٹ ہولڈرز', rate: 120, stock: 50 },
-  { code: '2017447653000', nameEn: 'Tea Cozy', nameUr: 'ٹی کوزی', rate: 180, stock: 30 },
-  { code: '2017447654000', nameEn: 'Fabric Container', nameUr: 'فیبرک کنٹینر', rate: 250, stock: 40 },
-  { code: '2017447655000', nameEn: 'Square Fabric Box', nameUr: 'اسکوائر فیبرک باکس', rate: 300, stock: 25 },
-  { code: '2017447656000', nameEn: 'Oven Mitt', nameUr: 'اوون مٹ', rate: 140, stock: 45 }
+  { code: '2017447657000', nameEn: 'Iron Board Cover Small', nameUr: 'آئرن بورڈ کور سمال', rate: 250, stock: 30 },
+  { code: '2017447658000', nameEn: 'Iron Board Cover Large', nameUr: 'آئرن بورڈ کور لارج', rate: 350, stock: 25 },
+  { code: '2017447653000', nameEn: 'Tea Cozy Small', nameUr: 'ٹی کوزی سمال', rate: 150, stock: 40 },
+  { code: '2017447659000', nameEn: 'Tea Cozy Large', nameUr: 'ٹی کوزی لارج', rate: 220, stock: 30 },
+  { code: '2017447652000', nameEn: 'Pot Holders / Direct', nameUr: 'پاٹ ہولڈر / ڈائریکٹ', rate: 120, stock: 50 }
 ];
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
@@ -765,7 +765,6 @@ function exportDataBackup() {
   link.click();
 }
 
-/* ✨ فکس شدہ بیک اپ ریسٹور فنکشن (100% صحیح کام کرے گا) */
 function importDataBackup(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -773,18 +772,24 @@ function importDataBackup(event) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const data = JSON.parse(e.target.result);
+      const rawData = JSON.parse(e.target.result);
 
-      if (data.ratelist && Array.isArray(data.ratelist)) {
-        rateList = data.ratelist;
+      if (rawData.ratelist && Array.isArray(rawData.ratelist)) {
+        rateList = rawData.ratelist;
+        localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
+      } else if (rawData.rateList && Array.isArray(rawData.rateList)) {
+        rateList = rawData.rateList;
         localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
       }
 
-      if (data.bills && Array.isArray(data.bills)) {
-        billsHistory = data.bills;
+      if (rawData.bills && Array.isArray(rawData.bills)) {
+        billsHistory = rawData.bills;
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
-      } else if (Array.isArray(data)) {
-        billsHistory = data;
+      } else if (rawData.billsHistory && Array.isArray(rawData.billsHistory)) {
+        billsHistory = rawData.billsHistory;
+        localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+      } else if (Array.isArray(rawData)) {
+        billsHistory = rawData;
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       }
 
@@ -794,9 +799,9 @@ function importDataBackup(event) {
         switchView('mainDashboardMenu');
       }
 
-      alert('بیک اپ کامیابی سے ریسٹور ہو گیا ہے!');
+      alert('مبارک ہو! بیک اپ کامیابی سے ریسٹور ہو گیا ہے۔');
     } catch (err) {
-      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ درست JSON فائل منتخب کریں۔');
+      alert('فائل پڑھنے میں مسئلہ آیا ہے۔ براہ کرم درست JSON بیک اپ فائل منتخب کریں۔');
     }
   };
   reader.readAsText(file);
