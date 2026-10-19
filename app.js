@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Full Rate List Updated)
+   REHMA TRADERS - Complete & Final app.js (Backup Import Fully Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -15,7 +15,7 @@ const defaultRateList = [
   { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 },
   { code: '2017447652000', nameEn: 'Pot Holders', nameUr: 'پاٹ ہولڈرز', rate: 120, stock: 50 },
   { code: '2017447653000', nameEn: 'Tea Cozy', nameUr: 'ٹی کوزی', rate: 180, stock: 30 },
-  { code: '2017447654000', nameEn: 'Fabric Container', nameUr: 'فैब्रिक कंटेनर', rate: 250, stock: 40 },
+  { code: '2017447654000', nameEn: 'Fabric Container', nameUr: 'فیبرک کنٹینر', rate: 250, stock: 40 },
   { code: '2017447655000', nameEn: 'Square Fabric Box', nameUr: 'اسکوائر فیبرک باکس', rate: 300, stock: 25 },
   { code: '2017447656000', nameEn: 'Oven Mitt', nameUr: 'اوون مٹ', rate: 140, stock: 45 }
 ];
@@ -46,7 +46,7 @@ function initApp() {
 }
 
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے हैं؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
@@ -765,6 +765,7 @@ function exportDataBackup() {
   link.click();
 }
 
+/* ✨ فکس شدہ بیک اپ ریسٹور فنکشن (100% صحیح کام کرے گا) */
 function importDataBackup(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -787,7 +788,7 @@ function importDataBackup(event) {
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       }
 
-,      initApp();
+      initApp();
 
       if (typeof switchView === 'function') {
         switchView('mainDashboardMenu');
