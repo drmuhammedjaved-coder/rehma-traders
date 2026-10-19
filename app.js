@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Repeat Bill Customer Name & Phone Fixed)
+   REHMA TRADERS - Complete app.js (Repeat Bill & Logo Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -40,7 +40,6 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ سیف فیکٹری ڈیفالٹ ری سیٹ کا فنکشن (انگلش اور اردو میں) */
 function confirmResetToDefaultApp() {
   const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
   
@@ -452,7 +451,7 @@ function viewBillDetails(index) {
   if (modal) modal.style.display = 'block';
 }
 
-/* ✨ فکس شدہ ریپیٹ بل فنکشن (جو کسٹمر کا نام اور نمبر فوراً آٹومیٹک اٹھائے گا) */
+/* ✨ ریپیٹ بل کا فکس شدہ مکمل کوڈ (کوئی غیر متوقع Unverified لیبل نہیں آئے گا) */
 function repeatCurrentBill() {
   if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
     alert('No bill selected for repeat!');
@@ -461,15 +460,21 @@ function repeatCurrentBill() {
 
   const oldBill = billsHistory[activeViewingBillIndex];
 
-  // کسٹمر کا نام اور فون نمبر آٹومیٹک اینٹری فیلڈ میں سیٹ کریں
   const custNameVal = oldBill.custName || oldBill.customerName || oldBill.customer || '';
   const custPhoneVal = oldBill.custPhone || oldBill.phone || oldBill.customerPhone || '';
 
   if (document.getElementById('custName')) document.getElementById('custName').value = custNameVal;
   if (document.getElementById('custPhone')) document.getElementById('custPhone').value = custPhoneVal;
   
-  // پرانے بل کا سامان اور مقادیر نیا بل بنانے کے لیے منتقل کریں
-  billItems = JSON.parse(JSON.stringify(oldBill.items || oldBill.billItems || []));
+  // پرانے بل کے سامان کی بالکل اصلی کاپی بغیر کسی تبدیلی کے
+  const oldItems = oldBill.items || oldBill.billItems || [];
+  billItems = oldItems.map(item => ({
+    code: getItemCode(item),
+    name: getItemName(item),
+    rate: getItemRate(item),
+    qty: getItemQty(item)
+  }));
+
   generateNextBillNumber();
   
   closeBillPreview();
@@ -477,7 +482,7 @@ function repeatCurrentBill() {
   renderBillItemsTable();
   saveStateToHistory();
   
-  alert('Bill & Customer details loaded successfully as a new Repeat Bill!');
+  alert('Bill & Customer details successfully copied for Repeat Bill!');
 }
 
 function filterLedger() {
