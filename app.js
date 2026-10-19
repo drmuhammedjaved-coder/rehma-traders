@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Restore Default & HD JPG Export Fixed)
+   REHMA TRADERS - Complete & Final app.js (Flexible Print & Dual Layouts)
    ========================================================================== */
 
 const defaultRateList = [
@@ -51,7 +51,6 @@ function initApp() {
   generateNextBillNumber();
 }
 
-/* ✨ اپڈیٹ شدہ ریستور ڈیفالٹ فنکشن (جو اب بالکل نئی 15 آئٹمز والی لسٹ بحال کرے گا) */
 function confirmResetToDefaultApp() {
   const confirmation = confirm("⚠️ کیا آپ واقعی ریٹ لسٹ اور ایپ کا اسٹرکچر ڈیفالٹ پر ریستور کرنا چاہتے ہیں؟\n\n(نوٹ: آپ کے پرانے کسٹمر بلز اور لیجر کا ڈیٹا 100% محفوظ رہے گا)");
   
@@ -404,38 +403,34 @@ function renderLedger() {
   });
 }
 
-function saveAllLedgerData() {
-  localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
-  alert('All Ledger bills successfully saved!');
-}
-
-function viewBillDetails(index) {
-  const bill = billsHistory[index];
-  if (!bill) return;
-
-  activeViewingBillIndex = index;
-
-  const contentDiv = document.getElementById('billPrintContent');
-  if (!contentDiv) return;
-
+// HTML Generator for a Single Bill Box
+function buildSingleBillHtml(bill, exactBillNo) {
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
   const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
   const totalAmount = getBillTotal(bill);
-  const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
 
   let itemsHtml = `
-    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
-      <div><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</div>
-      <div style="display:flex; justify-content:space-between; margin-top:2px;">
-        <span><strong>Bill #:</strong> ${exactBillNo}</span>
-        <span><strong>Date:</strong> ${bill.date || '-'}</span>
+    <div style="border: 1px solid #002147; padding: 10px; border-radius: 5px; background: #fff; font-family: Arial, sans-serif; height:100%; box-sizing:border-box;">
+      <div style="text-align: center; border-bottom: 1.5px solid #d4af37; padding-bottom: 4px; margin-bottom: 6px;">
+        <h3 style="margin: 0; color: #002147; font-size: 15px;">REHMA TRADERS</h3>
+        <p style="margin: 0; font-size: 9px; color: #555;">Proprietor: Muhammad Javed | 0307-4015100</p>
       </div>
-    </div>
-    <table>
-      <thead>
-        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
-      </thead>
-      <tbody>
+      <div style="display: flex; justify-content: space-between; font-size: 9.5px; margin-bottom: 6px;">
+        <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
+        <span><strong>Bill #:</strong> ${exactBillNo} | <strong>Date:</strong> ${bill.date || '-'}</span>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 9.5px;">
+        <thead>
+          <tr style="background: #002147; color: #fff;">
+            <th style="padding: 3px; border: 1px solid #002147;">#</th>
+            <th style="padding: 3px; border: 1px solid #002147; text-align: left;">Item</th>
+            <th style="padding: 3px; border: 1px solid #002147; text-align: center;">Code</th>
+            <th style="padding: 3px; border: 1px solid #002147; text-align: center;">Qty</th>
+            <th style="padding: 3px; border: 1px solid #002147; text-align: right;">Rate</th>
+            <th style="padding: 3px; border: 1px solid #002147; text-align: right;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
   `;
 
   let calculatedSubTotal = 0;
@@ -448,24 +443,158 @@ function viewBillDetails(index) {
       const qty = getItemQty(item);
       const rowTotal = rate * qty;
       calculatedSubTotal += rowTotal;
-      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${code}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
+      itemsHtml += `
+        <tr>
+          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${idx + 1}</td>
+          <td style="padding: 2px 3px; border: 1px solid #ccc;">${name}</td>
+          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${code}</td>
+          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${qty}</td>
+          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: right;">Rs. ${rate}</td>
+          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: right;">Rs. ${rowTotal}</td>
+        </tr>
+      `;
     });
   }
 
   const finalNet = totalAmount > 0 ? totalAmount : calculatedSubTotal;
 
   itemsHtml += `
-      </tbody>
-    </table>
-    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
-      <div>SubTotal: Rs. ${calculatedSubTotal || finalNet}</div>
-      <div><strong>Net Total: Rs. ${finalNet}</strong></div>
+        </tbody>
+      </table>
+      <div style="margin-top: 6px; text-align: right; font-size: 10.5px; font-weight: bold; color: #002147;">
+        Grand Total: Rs. ${finalNet}
+      </div>
     </div>
   `;
+  return itemsHtml;
+}
 
-  contentDiv.innerHTML = itemsHtml;
+// Print 2 Selected Bills from Ledger with Format Support
+function printSelectedTwoBillsOnA4() {
+  const chks = document.querySelectorAll('.bill-select-chk:checked');
+  if (chks.length !== 2) {
+    alert('براہ کرم ایک صفحے پر پرنٹ کرنے کے لیے صرف دو (2) بل منتخب کریں۔');
+    return;
+  }
+
+  const index1 = parseInt(chks[0].getAttribute('data-index'));
+  const index2 = parseInt(chks[1].getAttribute('data-index'));
+
+  const bill1 = billsHistory[index1];
+  const bill2 = billsHistory[index2];
+
+  const format = prompt("پرنٹ کا فارمیٹ منتخب کریں:\n1. Vertical (اوپر نیچے)\n2. Horizontal (بائیں دائیں)", "1");
+  const isHoriz = (format === "2" || format?.toLowerCase().includes("horiz"));
+
+  const dualPrintWindow = window.open('', '_blank');
+  dualPrintWindow.document.write(`
+    <html>
+      <head>
+        <title>Dual Bill Print - Rehma Traders</title>
+        <style>
+          @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
+          body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
+          .a4-container { width: 100%; height: 100%; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; gap: 10px; }
+          .bill-box { ${isHoriz ? 'width: 48%; height: 100%;' : 'width: 100%; height: 48%;'} box-sizing: border-box; }
+          .cut-line { ${isHoriz ? 'width: 2px; border-left: 2px dashed #888;' : 'height: 2px; border-bottom: 2px dashed #888;'} margin: auto; }
+        </style>
+      </head>
+      <body onload="window.print(); window.close();">
+        <div class="a4-container">
+          <div class="bill-box">
+            ${buildSingleBillHtml(bill1, bill1.billNo || ('INV-' + (1001 + index1)))}
+          </div>
+          <div class="cut-line"></div>
+          <div class="bill-box">
+            ${buildSingleBillHtml(bill2, bill2.billNo || ('INV-' + (1001 + index2)))}
+          </div>
+        </div>
+      </body>
+    </html>
+  `);
+  dualPrintWindow.document.close();
+}
+
+function viewBillDetails(index) {
+  const bill = billsHistory[index];
+  if (!bill) return;
+
+  activeViewingBillIndex = index;
+  const contentDiv = document.getElementById('billPrintContent');
+  if (!contentDiv) return;
+
+  const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
+  contentDiv.innerHTML = buildSingleBillHtml(bill, exactBillNo);
+  
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'block';
+}
+
+// Execute Print from Preview based on Selected Format
+function executeCustomPrint() {
+  if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
+    alert('کوئی بل سلیکٹ نہیں ہے!');
+    return;
+  }
+
+  const bill = billsHistory[activeViewingBillIndex];
+  const exactBillNo = bill.billNo || ('INV-' + (1001 + activeViewingBillIndex));
+  const format = document.getElementById('printFormatSelect').value;
+
+  const pWin = window.open('', '_blank');
+
+  if (format === 'thermal') {
+    pWin.document.write(`
+      <html>
+        <head><title>Thermal Receipt</title>
+        <style>body { font-family: monospace; width: 72mm; margin: 0; padding: 5px; font-size: 11px; }</style>
+        </head>
+        <body onload="window.print(); window.close();">
+          ${buildSingleBillHtml(bill, exactBillNo)}
+        </body>
+      </html>
+    `);
+  } else if (format === 'a4-dual-vert' || format === 'a4-dual-horiz') {
+    const isHoriz = (format === 'a4-dual-horiz');
+    pWin.document.write(`
+      <html>
+        <head>
+          <title>Dual Bill Print</title>
+          <style>
+            @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
+            .a4-container { width: 100%; height: 100%; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; gap: 10px; }
+            .bill-box { ${isHoriz ? 'width: 48%; height: 100%;' : 'width: 100%; height: 48%;'} box-sizing: border-box; }
+            .cut-line { ${isHoriz ? 'width: 2px; border-left: 2px dashed #888;' : 'height: 2px; border-bottom: 2px dashed #888;'} margin: auto; }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+          <div class="a4-container">
+            <div class="bill-box">${buildSingleBillHtml(bill, exactBillNo)}</div>
+            <div class="cut-line"></div>
+            <div class="bill-box">${buildSingleBillHtml(bill, exactBillNo)}</div>
+          </div>
+        </body>
+      </html>
+    `);
+  } else {
+    // A4 Single Full Page
+    pWin.document.write(`
+      <html>
+        <head>
+          <title>A4 Bill Print</title>
+          <style>
+            @page { size: A4; margin: 15mm; }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+          ${buildSingleBillHtml(bill, exactBillNo)}
+        </body>
+      </html>
+    `);
+  }
+  pWin.document.close();
 }
 
 function repeatCurrentBill() {
@@ -475,7 +604,6 @@ function repeatCurrentBill() {
   }
 
   const oldBill = billsHistory[activeViewingBillIndex];
-
   const custNameVal = oldBill.custName || oldBill.customerName || oldBill.customer || '';
   const custPhoneVal = oldBill.custPhone || oldBill.phone || oldBill.customerPhone || '';
 
@@ -499,10 +627,8 @@ function repeatCurrentBill() {
   generateNextBillNumber();
   closeBillPreview();
   switchView('sectionBill');
-  
   renderBillItemsTable();
   saveStateToHistory();
-  
   alert('Bill & All Items successfully loaded as a Repeat Bill!');
 }
 
@@ -546,12 +672,6 @@ function updateDashboardStats() {
   
   const dashToday = document.getElementById('dashTodaySales');
   if (dashToday) dashToday.innerText = `Rs. ${todaySales}`;
-
-  const dashWeekly = document.getElementById('dashWeeklySales');
-  if (dashWeekly) dashWeekly.innerText = `Rs. ${total}`;
-
-  const dashMonthly = document.getElementById('dashMonthlySales');
-  if (dashMonthly) dashMonthly.innerText = `Rs. ${total}`;
 }
 
 function openBillPreview() {
@@ -561,7 +681,6 @@ function openBillPreview() {
   }
   const custNameInput = document.getElementById('custName');
   const custName = (custNameInput && custNameInput.value.trim() !== '') ? custNameInput.value.trim() : 'Cash Customer';
-  
   const custPhoneInput = document.getElementById('custPhone');
   const custPhone = custPhoneInput ? custPhoneInput.value : '';
 
@@ -574,41 +693,6 @@ function openBillPreview() {
 
   const currentBillNo = document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001';
 
-  const contentDiv = document.getElementById('billPrintContent');
-  let itemsHtml = `
-    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
-      <div><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</div>
-      <div style="display:flex; justify-content:space-between; margin-top:2px;">
-        <span><strong>Bill #:</strong> ${currentBillNo}</span>
-        <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
-      </div>
-    </div>
-    <table>
-      <thead>
-        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
-      </thead>
-      <tbody>
-  `;
-
-  billItems.forEach((item, idx) => {
-    itemsHtml += `<tr><td>${idx+1}</td><td>${getItemName(item)}</td><td>${getItemCode(item)}</td><td>${getItemQty(item)}</td><td>${getItemRate(item)}</td><td>${getItemRate(item) * getItemQty(item)}</td></tr>`;
-  });
-
-  itemsHtml += `
-      </tbody>
-    </table>
-    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
-      <div>SubTotal: Rs. ${subTotal}</div>
-      ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
-      ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
-      <div><strong>Net Total: Rs. ${netTotal}</strong></div>
-    </div>
-  `;
-
-  if (contentDiv) contentDiv.innerHTML = itemsHtml;
-  const modal = document.getElementById('previewModal');
-  if (modal) modal.style.display = 'block';
-
   const billRecord = {
     billNo: currentBillNo,
     custName: custName,
@@ -617,6 +701,7 @@ function openBillPreview() {
     netTotal: netTotal,
     items: JSON.parse(JSON.stringify(billItems))
   };
+
   billsHistory.push(billRecord);
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   
@@ -629,84 +714,19 @@ function openBillPreview() {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   updateDashboardStats();
   generateNextBillNumber();
+
+  activeViewingBillIndex = billsHistory.length - 1;
+  const contentDiv = document.getElementById('billPrintContent');
+  if (contentDiv) contentDiv.innerHTML = buildSingleBillHtml(billRecord, currentBillNo);
+
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'block';
+  renderLedger();
 }
 
 function closeBillPreview() {
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'none';
-}
-
-function changePaperSize(sizeClass) {
-  const container = document.getElementById('printableBillContainer');
-  if (container) container.className = sizeClass;
-}
-
-function downloadBillPdf() {
-  const container = document.getElementById('printableBillContainer');
-  if (!container) return;
-
-  if (window.html2canvas) {
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('Rehma_Traders_Bill.pdf');
-    });
-  }
-}
-
-function printBillPdf() {
-  const container = document.getElementById('printableBillContainer');
-  if (!container) return;
-
-  if (window.html2canvas && window.jspdf) {
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      
-      const pdfBlobUrl = pdf.output('bloburl');
-      const printWindow = window.open(pdfBlobUrl, '_blank');
-      if (printWindow) {
-        printWindow.print();
-      } else {
-        window.print();
-      }
-    });
-  } else {
-    window.print();
-  }
-}
-
-function shareBillJpgWhatsApp() {
-  const container = document.getElementById('printableBillContainer');
-  if (window.html2canvas && container) {
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      canvas.toBlob(blob => {
-        const file = new File([blob], 'rehma-bill.jpg', { type: 'image/jpeg' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({
-            files: [file],
-            title: 'Rehma Traders Bill',
-            text: 'Here is your bill from Rehma Traders.'
-          }).catch(err => console.log('Sharing failed', err));
-        } else {
-          const link = document.createElement('a');
-          link.download = 'rehma-bill.jpg';
-          link.href = URL.createObjectURL(blob);
-          link.click();
-        }
-      }, 'image/jpeg', 0.9);
-    });
-  }
 }
 
 function exportRateListJpg() {
