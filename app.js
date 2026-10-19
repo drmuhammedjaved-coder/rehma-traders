@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Flexible Print & Dual Layouts)
+   REHMA TRADERS - Complete & Final app.js (Original UI + Flexible Print + 15 Items)
    ========================================================================== */
 
 const defaultRateList = [
@@ -162,20 +162,27 @@ function renderMultiItemSelector() {
   container.innerHTML = '';
   rateList.forEach((item, idx) => {
     const div = document.createElement('div');
-    div.className = 'multi-item-row';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'space-between';
+    div.style.background = '#fff';
+    div.style.padding = '6px 10px';
+    div.style.border = '1px solid #e1e8ed';
+    div.style.borderRadius = '4px';
+
     const stockQty = item.stock !== undefined ? item.stock : 50;
     const name = getItemName(item);
     const rate = getItemRate(item);
     const code = getItemCode(item);
+
     div.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px; flex:1;">
-        <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main);">
-        <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
-          <strong>${name}</strong> ${code !== '-' ? '(' + code + ')' : ''} 
-          <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
+      <div style="display:flex; align-items:center; gap:8px; flex:1; overflow:hidden;">
+        <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main); cursor:pointer;">
+        <label for="chk_item_${idx}" style="font-size:12px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${name}">
+          <strong>${name}</strong> <span style="color:var(--accent-main); font-weight:bold;">(${rate} Rs)</span>
         </label>
       </div>
-      <input type="number" id="qty_item_${idx}" value="1" min="1" inputmode="numeric" style="width:50px; padding:2px; text-align:center; font-size:11px;" onkeydown="handleInputKeydown(event)">
+      <input type="number" id="qty_item_${idx}" value="1" min="1" inputmode="numeric" style="width:45px; padding:2px; text-align:center; font-size:12px;" onkeydown="handleInputKeydown(event)">
     `;
     container.appendChild(div);
   });
@@ -226,10 +233,10 @@ function renderBillItemsTable() {
       <td>${index + 1}</td>
       <td>${itemName}</td>
       <td>${itemCode}</td>
-      <td><input type="number" value="${itemQty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:50px; text-align:center; padding:2px;"></td>
-      <td><input type="number" value="${itemRate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:60px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${itemQty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:55px; text-align:center;"></td>
+      <td><input type="number" value="${itemRate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:70px; text-align:center;"></td>
       <td>Rs. ${total}</td>
-      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 5px; font-size:10px;">❌</button></td>
+      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:3px 8px; font-size:11px;">❌</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -285,15 +292,15 @@ function renderRateList() {
     const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="border:1px solid #000; color:#000;">
-        <div style="display:flex; gap:2px;">
-          <input type="text" value="${nameEn}" oninput="updateRateField(${index}, 'nameEn', this.value)" placeholder="English" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
-          <input type="text" value="${nameUr}" oninput="updateRateField(${index}, 'nameUr', this.value)" placeholder="اردو" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
+      <td>
+        <div style="display:flex; gap:5px;">
+          <input type="text" value="${nameEn}" oninput="updateRateField(${index}, 'nameEn', this.value)" placeholder="English" style="width:50%;">
+          <input type="text" value="${nameUr}" oninput="updateRateField(${index}, 'nameUr', this.value)" placeholder="اردو" style="width:50%;">
         </div>
       </td>
-      <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
-      <td style="border:1px solid #000; color:#000;"><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
-      <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
+      <td><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; font-weight:bold;"></td>
+      <td><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; font-weight:bold;"></td>
+      <td class="no-print-col"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:4px 8px;">🗑️</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -356,7 +363,7 @@ function renderStockTable() {
     tr.innerHTML = `
       <td>${name}</td>
       <td>${code}</td>
-      <td><input type="number" inputmode="numeric" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
+      <td><input type="number" inputmode="numeric" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:80px; text-align:center;"></td>
     `;
     tbody.appendChild(tr);
   });
@@ -397,37 +404,37 @@ function renderLedger() {
       <td>${customer}</td>
       <td>${bill.date || '-'}</td>
       <td>Rs. ${totalAmount}</td>
-      <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
+      <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:3px 8px;">👁️ View</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// HTML Generator for a Single Bill Box
+// Bill Box HTML Builder
 function buildSingleBillHtml(bill, exactBillNo) {
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
   const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
   const totalAmount = getBillTotal(bill);
 
   let itemsHtml = `
-    <div style="border: 1px solid #002147; padding: 10px; border-radius: 5px; background: #fff; font-family: Arial, sans-serif; height:100%; box-sizing:border-box;">
-      <div style="text-align: center; border-bottom: 1.5px solid #d4af37; padding-bottom: 4px; margin-bottom: 6px;">
-        <h3 style="margin: 0; color: #002147; font-size: 15px;">REHMA TRADERS</h3>
-        <p style="margin: 0; font-size: 9px; color: #555;">Proprietor: Muhammad Javed | 0307-4015100</p>
+    <div style="border: 1px solid var(--accent-main); padding: 10px; border-radius: 6px; background: #fff; font-family: Arial, sans-serif; height:100%; box-sizing:border-box;">
+      <div style="text-align: center; border-bottom: 2px solid var(--accent-gold); padding-bottom: 4px; margin-bottom: 6px;">
+        <h3 style="margin: 0; color: var(--accent-main); font-size: 16px;">REHMA TRADERS</h3>
+        <p style="margin: 0; font-size: 9.5px; color: #555;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
       </div>
-      <div style="display: flex; justify-content: space-between; font-size: 9.5px; margin-bottom: 6px;">
+      <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px;">
         <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
         <span><strong>Bill #:</strong> ${exactBillNo} | <strong>Date:</strong> ${bill.date || '-'}</span>
       </div>
-      <table style="width: 100%; border-collapse: collapse; font-size: 9.5px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
         <thead>
-          <tr style="background: #002147; color: #fff;">
-            <th style="padding: 3px; border: 1px solid #002147;">#</th>
-            <th style="padding: 3px; border: 1px solid #002147; text-align: left;">Item</th>
-            <th style="padding: 3px; border: 1px solid #002147; text-align: center;">Code</th>
-            <th style="padding: 3px; border: 1px solid #002147; text-align: center;">Qty</th>
-            <th style="padding: 3px; border: 1px solid #002147; text-align: right;">Rate</th>
-            <th style="padding: 3px; border: 1px solid #002147; text-align: right;">Total</th>
+          <tr style="background: var(--accent-main); color: #fff;">
+            <th style="padding: 4px; border: 1px solid var(--accent-main);">#</th>
+            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: left;">Item Description</th>
+            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: center;">Code</th>
+            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: center;">Qty</th>
+            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: right;">Rate</th>
+            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: right;">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -445,12 +452,12 @@ function buildSingleBillHtml(bill, exactBillNo) {
       calculatedSubTotal += rowTotal;
       itemsHtml += `
         <tr>
-          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${idx + 1}</td>
-          <td style="padding: 2px 3px; border: 1px solid #ccc;">${name}</td>
-          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${code}</td>
-          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: center;">${qty}</td>
-          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: right;">Rs. ${rate}</td>
-          <td style="padding: 2px 3px; border: 1px solid #ccc; text-align: right;">Rs. ${rowTotal}</td>
+          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${idx + 1}</td>
+          <td style="padding: 3px; border: 1px solid #ddd;">${name}</td>
+          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${code}</td>
+          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${qty}</td>
+          <td style="padding: 3px; border: 1px solid #ddd; text-align: right;">Rs. ${rate}</td>
+          <td style="padding: 3px; border: 1px solid #ddd; text-align: right;">Rs. ${rowTotal}</td>
         </tr>
       `;
     });
@@ -461,7 +468,7 @@ function buildSingleBillHtml(bill, exactBillNo) {
   itemsHtml += `
         </tbody>
       </table>
-      <div style="margin-top: 6px; text-align: right; font-size: 10.5px; font-weight: bold; color: #002147;">
+      <div style="margin-top: 6px; text-align: right; font-size: 11px; font-weight: bold; color: var(--accent-main);">
         Grand Total: Rs. ${finalNet}
       </div>
     </div>
@@ -469,11 +476,11 @@ function buildSingleBillHtml(bill, exactBillNo) {
   return itemsHtml;
 }
 
-// Print 2 Selected Bills from Ledger with Format Support
+// Print 2 Selected Bills from Ledger with Layout Choice
 function printSelectedTwoBillsOnA4() {
   const chks = document.querySelectorAll('.bill-select-chk:checked');
   if (chks.length !== 2) {
-    alert('براہ کرم ایک صفحے پر پرنٹ کرنے کے لیے صرف دو (2) بل منتخب کریں۔');
+    alert('براہ کرم لیجر میں سے ایک صفحے پر پرنٹ کرنے کے لیے بالکل دو (2) بل منتخب کریں۔');
     return;
   }
 
@@ -483,7 +490,7 @@ function printSelectedTwoBillsOnA4() {
   const bill1 = billsHistory[index1];
   const bill2 = billsHistory[index2];
 
-  const format = prompt("پرنٹ کا فارمیٹ منتخب کریں:\n1. Vertical (اوپر نیچے)\n2. Horizontal (بائیں دائیں)", "1");
+  const format = prompt("پرنٹ کا لے آؤٹ منتخب کریں:\n1. Vertical (اوپر نیچے - Portrait)\n2. Horizontal (بائیں دائیں - Landscape)", "1");
   const isHoriz = (format === "2" || format?.toLowerCase().includes("horiz"));
 
   const dualPrintWindow = window.open('', '_blank');
@@ -530,7 +537,6 @@ function viewBillDetails(index) {
   if (modal) modal.style.display = 'block';
 }
 
-// Execute Print from Preview based on Selected Format
 function executeCustomPrint() {
   if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
     alert('کوئی بل سلیکٹ نہیں ہے!');
@@ -578,7 +584,6 @@ function executeCustomPrint() {
       </html>
     `);
   } else {
-    // A4 Single Full Page
     pWin.document.write(`
       <html>
         <head>
@@ -754,31 +759,31 @@ function exportRateListJpg() {
         <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 11px;">${index + 1}</td>
         <td style="padding: 6px 8px; border: 1px solid #ccc; font-size: 11px;"><strong>${nameEn}</strong> / ${nameUr}</td>
         <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 10px;">${code !== '-' ? code : ''}</td>
-        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: right; font-size: 12px; font-weight: bold; color: #002147;">Rs. ${rate}</td>
+        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: right; font-size: 12px; font-weight: bold; color: var(--accent-main);">Rs. ${rate}</td>
       </tr>
     `;
   });
 
   hiddenCard.innerHTML = `
-    <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 12px;">
-      <h2 style="margin: 0; color: #002147; font-size: 20px; text-transform: uppercase;">REHMA TRADERS</h2>
+    <div style="text-align: center; border-bottom: 2px solid var(--accent-gold); padding-bottom: 10px; margin-bottom: 12px;">
+      <h2 style="margin: 0; color: var(--accent-main); font-size: 20px; text-transform: uppercase;">REHMA TRADERS</h2>
       <p style="margin: 2px 0; font-size: 11px; color: #555;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
-      <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color: #d4af37;">OFFICIAL RATE LIST / آفیشل ریٹ لسٹ</p>
+      <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color: var(--accent-gold);">OFFICIAL RATE LIST / آفیشل ریٹ لسٹ</p>
     </div>
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
-        <tr style="background-color: #002147; color: #ffffff;">
-          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">#</th>
-          <th style="padding: 8px; border: 1px solid #002147; text-align: left; font-size: 11px;">Item Description</th>
-          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">Code</th>
-          <th style="padding: 8px; border: 1px solid #002147; text-align: right; font-size: 11px;">Rate</th>
+        <tr style="background-color: var(--accent-main); color: #ffffff;">
+          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: center; font-size: 11px;">#</th>
+          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: left; font-size: 11px;">Item Description</th>
+          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: center; font-size: 11px;">Code</th>
+          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: right; font-size: 11px;">Rate</th>
         </tr>
       </thead>
       <tbody>
         ${tableRowsHtml}
       </tbody>
     </table>
-    <div style="margin-top: 15px; border-top: 1px solid #d4af37; padding-top: 8px; text-align: center; font-size: 10px; color: #666;">
+    <div style="margin-top: 15px; border-top: 1px solid var(--accent-gold); padding-top: 8px; text-align: center; font-size: 10px; color: #666;">
       <p style="margin: 0; font-weight: bold;">رہما ٹریڈر - معیاری فیبرک مصنوعات</p>
     </div>
   `;
