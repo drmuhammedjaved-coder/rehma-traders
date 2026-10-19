@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Repeat Bill & Logo Fixed)
+   REHMA TRADERS - Complete & Final app.js (Full Rate List Updated)
    ========================================================================== */
 
 const defaultRateList = [
@@ -12,7 +12,12 @@ const defaultRateList = [
   { code: '2019580141000', nameEn: 'Square Small', nameUr: 'اسکوائر سمال', rate: 280, stock: 25 },
   { code: '2013147621000', nameEn: 'Square Large', nameUr: 'اسکوائر لارج', rate: 380, stock: 15 },
   { code: '2011476821000', nameEn: 'Gloves Pair', nameUr: 'گلوز پیئر', rate: 155, stock: 60 },
-  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 }
+  { code: '2017447641000', nameEn: 'Fridge Handle Cover', nameUr: 'فریج ہینڈل کور', rate: 90, stock: 45 },
+  { code: '2017447652000', nameEn: 'Pot Holders', nameUr: 'پاٹ ہولڈرز', rate: 120, stock: 50 },
+  { code: '2017447653000', nameEn: 'Tea Cozy', nameUr: 'ٹی کوزی', rate: 180, stock: 30 },
+  { code: '2017447654000', nameEn: 'Fabric Container', nameUr: 'فैब्रिक कंटेनर', rate: 250, stock: 40 },
+  { code: '2017447655000', nameEn: 'Square Fabric Box', nameUr: 'اسکوائر فیبرک باکس', rate: 300, stock: 25 },
+  { code: '2017447656000', nameEn: 'Oven Mitt', nameUr: 'اوون مٹ', rate: 140, stock: 45 }
 ];
 
 let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
@@ -41,7 +46,7 @@ function initApp() {
 }
 
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے हैं؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
@@ -204,14 +209,19 @@ function renderBillItemsTable() {
   tbody.innerHTML = '';
   
   billItems.forEach((item, index) => {
-    const total = (item.rate || 0) * (item.qty || 0);
+    const itemName = getItemName(item);
+    const itemRate = getItemRate(item);
+    const itemQty = getItemQty(item);
+    const itemCode = getItemCode(item);
+    const total = itemRate * itemQty;
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td>${item.name}</td>
-      <td>${item.code || '-'}</td>
-      <td><input type="number" value="${item.qty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:50px; text-align:center; padding:2px;"></td>
-      <td><input type="number" value="${item.rate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:60px; text-align:center; padding:2px;"></td>
+      <td>${itemName}</td>
+      <td>${itemCode}</td>
+      <td><input type="number" value="${itemQty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:50px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${itemRate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:60px; text-align:center; padding:2px;"></td>
       <td>Rs. ${total}</td>
       <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 5px; font-size:10px;">❌</button></td>
     `;
@@ -246,7 +256,7 @@ function removeBillItem(index) {
 }
 
 function calculateBillTotals() {
-  const subTotal = billItems.reduce((acc, item) => acc + ((item.rate || 0) * (item.qty || 0)), 0);
+  const subTotal = billItems.reduce((acc, item) => acc + (getItemRate(item) * getItemQty(item)), 0);
   const prevBalanceInput = document.getElementById('prevBalanceInput');
   const discountInput = document.getElementById('discountInput');
   const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
@@ -451,7 +461,6 @@ function viewBillDetails(index) {
   if (modal) modal.style.display = 'block';
 }
 
-/* ✨ ریپیٹ بل کا فکس شدہ مکمل کوڈ (کوئی غیر متوقع Unverified لیبل نہیں آئے گا) */
 function repeatCurrentBill() {
   if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
     alert('No bill selected for repeat!');
@@ -466,23 +475,28 @@ function repeatCurrentBill() {
   if (document.getElementById('custName')) document.getElementById('custName').value = custNameVal;
   if (document.getElementById('custPhone')) document.getElementById('custPhone').value = custPhoneVal;
   
-  // پرانے بل کے سامان کی بالکل اصلی کاپی بغیر کسی تبدیلی کے
   const oldItems = oldBill.items || oldBill.billItems || [];
-  billItems = oldItems.map(item => ({
-    code: getItemCode(item),
-    name: getItemName(item),
-    rate: getItemRate(item),
-    qty: getItemQty(item)
-  }));
+  billItems = [];
+
+  if (Array.isArray(oldItems) && oldItems.length > 0) {
+    oldItems.forEach(item => {
+      billItems.push({
+        code: getItemCode(item),
+        name: getItemName(item),
+        rate: getItemRate(item),
+        qty: getItemQty(item)
+      });
+    });
+  }
 
   generateNextBillNumber();
-  
   closeBillPreview();
   switchView('sectionBill');
+  
   renderBillItemsTable();
   saveStateToHistory();
   
-  alert('Bill & Customer details successfully copied for Repeat Bill!');
+  alert('Bill & All Items successfully loaded as a Repeat Bill!');
 }
 
 function filterLedger() {
@@ -548,7 +562,7 @@ function openBillPreview() {
   const discountInput = document.getElementById('discountInput');
   const prevBalance = prevBalanceInput ? (parseFloat(prevBalanceInput.value) || 0) : 0;
   const discount = discountInput ? (parseFloat(discountInput.value) || 0) : 0;
-  const subTotal = billItems.reduce((acc, item) => acc + (item.rate * item.qty), 0);
+  const subTotal = billItems.reduce((acc, item) => acc + (getItemRate(item) * getItemQty(item)), 0);
   const netTotal = subTotal + prevBalance - discount;
 
   const currentBillNo = document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001';
@@ -570,7 +584,7 @@ function openBillPreview() {
   `;
 
   billItems.forEach((item, idx) => {
-    itemsHtml += `<tr><td>${idx+1}</td><td>${item.name}</td><td>${item.code || '-'}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.rate * item.qty}</td></tr>`;
+    itemsHtml += `<tr><td>${idx+1}</td><td>${getItemName(item)}</td><td>${getItemCode(item)}</td><td>${getItemQty(item)}</td><td>${getItemRate(item)}</td><td>${getItemRate(item) * getItemQty(item)}</td></tr>`;
   });
 
   itemsHtml += `
@@ -594,15 +608,15 @@ function openBillPreview() {
     custPhone: custPhone,
     date: new Date().toLocaleDateString(),
     netTotal: netTotal,
-    items: [...billItems]
+    items: JSON.parse(JSON.stringify(billItems))
   };
   billsHistory.push(billRecord);
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   
   billItems.forEach(bi => {
-    const match = rateList.find(r => getItemName(r) === bi.name);
+    const match = rateList.find(r => getItemName(r) === getItemName(bi));
     if (match) {
-      match.stock = Math.max(0, (match.stock !== undefined ? match.stock : 50) - bi.qty);
+      match.stock = Math.max(0, (match.stock !== undefined ? match.stock : 50) - getItemQty(bi));
     }
   });
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
@@ -773,7 +787,7 @@ function importDataBackup(event) {
         localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
       }
 
-      initApp();
+,      initApp();
 
       if (typeof switchView === 'function') {
         switchView('mainDashboardMenu');
