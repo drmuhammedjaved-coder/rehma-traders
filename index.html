@@ -124,6 +124,12 @@
       width: 55%; opacity: 0.08; pointer-events: none; z-index: 0;
     }
 
+    /* تھرمل پرنٹنگ کے لیے واٹر مارک خود بخود ہائیڈ ہو جائے گا */
+    #printableBillContainer.paper-80mm .watermark-bg,
+    #printableBillContainer.paper-50mm .watermark-bg {
+      display: none !important;
+    }
+
     .bill-content-layer { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; flex-grow: 1; }
 
     .bill-header { display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 6px; }
@@ -343,13 +349,12 @@
         <button class="btn-back-step" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="margin:0;">🏠 Dashboard</button>
       </div>
 
-      <div id="printableBillContainer">
-        <!-- ✨ آف لائن محفوظ لوگو سورس تاکہ نیٹ کے بغیر بھی لوگو اور واٹر مارک کبھی غائب نہ ہوں -->
-        <img id="billWatermarkImg" src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous">
+      <div id="printableBillContainer" class="paper-a4">
+        <img src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous">
 
         <div class="bill-content-layer">
           <div class="bill-header">
-            <img id="billHeaderLogoImg" src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous">
+            <img src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous">
             <div class="bill-header-text">
               <h2>REHMA TRADERS</h2>
               <p>Proprietor: Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
