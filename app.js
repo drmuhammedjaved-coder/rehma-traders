@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (HD Rate List JPG Export Fixed)
+   REHMA TRADERS - Complete & Final app.js (Restore Default & HD JPG Export Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -51,8 +51,9 @@ function initApp() {
   generateNextBillNumber();
 }
 
+/* ✨ اپڈیٹ شدہ ریستور ڈیفالٹ فنکشن (جو اب بالکل نئی 15 آئٹمز والی لسٹ بحال کرے گا) */
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟)");
+  const confirmation = confirm("⚠️ کیا آپ واقعی ریٹ لسٹ اور ایپ کا اسٹرکچر ڈیفالٹ پر ریستور کرنا چاہتے ہیں؟\n\n(نوٹ: آپ کے پرانے کسٹمر بلز اور لیجر کا ڈیٹا 100% محفوظ رہے گا)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
@@ -65,7 +66,7 @@ function confirmResetToDefaultApp() {
     }
 
     initApp();
-    alert('App structure successfully restored to default!');
+    alert('ریٹ لسٹ کامیابی سے ڈیفالٹ (15 اصل آئٹمز) پر ریستور ہو گئی ہے!');
   }
 }
 
@@ -708,9 +709,7 @@ function shareBillJpgWhatsApp() {
   }
 }
 
-/* ✨ فکس شدہ HD ریٹ لسٹ JPG ایکسپورٹ فنکشن (بغیر کسی ڈسٹورشن یا مکسنگ کے) */
 function exportRateListJpg() {
-  // عارضی طور پر ایک پرفیکٹ، صاف اور فکسڈ چوڑائی کا کینوس بیک گراؤنڈ میں بنائیں گے
   const hiddenCard = document.createElement('div');
   hiddenCard.style.position = 'fixed';
   hiddenCard.style.left = '-9999px';
