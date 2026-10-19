@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Fixed 15 Original Items & Backup Import)
+   REHMA TRADERS - Complete app.js (Auto-Force Load RateList & Backup Fix)
    ========================================================================== */
 
 const defaultRateList = [
@@ -20,7 +20,14 @@ const defaultRateList = [
   { code: '2017447652000', nameEn: 'Pot Holders / Direct', nameUr: 'پاٹ ہولڈر / ڈائریکٹ', rate: 120, stock: 50 }
 ];
 
-let rateList = JSON.parse(localStorage.getItem('rehma_ratelist')) || JSON.parse(JSON.stringify(defaultRateList));
+// اگر لوکل اسٹوریج خالی ہو یا آئٹمز کم ہوں تو ڈیفالٹ ریٹ لسٹ آٹو لوڈ کرے
+let storedList = JSON.parse(localStorage.getItem('rehma_ratelist'));
+if (!storedList || !Array.isArray(storedList) || storedList.length === 0) {
+  storedList = JSON.parse(JSON.stringify(defaultRateList));
+  localStorage.setItem('rehma_ratelist', JSON.stringify(storedList));
+}
+
+let rateList = storedList;
 let billsHistory = JSON.parse(localStorage.getItem('rehma_bills')) || [];
 let billItems = [];
 let currentLang = 'en';
@@ -46,7 +53,7 @@ function initApp() {
 }
 
 function confirmResetToDefaultApp() {
-  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟ آپ کا کسٹمر لیجر اور پرانے بلز 100% محفوظ رہیں گے)");
+  const confirmation = confirm("⚠️ WARNING / پرمیشن کا سوال:\n\nAre you sure you want to restore default app structure?\n\n(کیا آپ واقعی ایپ کا بنیادی اسٹرکچر اور ریٹ لسٹ ری سیٹ کرنا چاہتے ہیں؟)");
   
   if (confirmation) {
     rateList = JSON.parse(JSON.stringify(defaultRateList));
@@ -59,7 +66,7 @@ function confirmResetToDefaultApp() {
     }
 
     initApp();
-    alert('App structure successfully restored to default!\n(آپ کا لیجر ڈیٹا بالکل محفوظ ہے)');
+    alert('App structure successfully restored to default!');
   }
 }
 
