@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Original UI + Flexible Print + 15 Items)
+   REHMA TRADERS - Complete & Final app.js (Restore Default & HD JPG Export Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -51,6 +51,7 @@ function initApp() {
   generateNextBillNumber();
 }
 
+/* ✨ اپڈیٹ شدہ ریستور ڈیفالٹ فنکشن (جو اب بالکل نئی 15 آئٹمز والی لسٹ بحال کرے گا) */
 function confirmResetToDefaultApp() {
   const confirmation = confirm("⚠️ کیا آپ واقعی ریٹ لسٹ اور ایپ کا اسٹرکچر ڈیفالٹ پر ریستور کرنا چاہتے ہیں؟\n\n(نوٹ: آپ کے پرانے کسٹمر بلز اور لیجر کا ڈیٹا 100% محفوظ رہے گا)");
   
@@ -162,27 +163,20 @@ function renderMultiItemSelector() {
   container.innerHTML = '';
   rateList.forEach((item, idx) => {
     const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.alignItems = 'center';
-    div.style.justifyContent = 'space-between';
-    div.style.background = '#fff';
-    div.style.padding = '6px 10px';
-    div.style.border = '1px solid #e1e8ed';
-    div.style.borderRadius = '4px';
-
+    div.className = 'multi-item-row';
     const stockQty = item.stock !== undefined ? item.stock : 50;
     const name = getItemName(item);
     const rate = getItemRate(item);
     const code = getItemCode(item);
-
     div.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px; flex:1; overflow:hidden;">
-        <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main); cursor:pointer;">
-        <label for="chk_item_${idx}" style="font-size:12px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${name}">
-          <strong>${name}</strong> <span style="color:var(--accent-main); font-weight:bold;">(${rate} Rs)</span>
+      <div style="display:flex; align-items:center; gap:8px; flex:1;">
+        <input type="checkbox" id="chk_item_${idx}" value="${code}" style="width:16px; height:16px; accent-color:var(--accent-main);">
+        <label for="chk_item_${idx}" style="font-size:11px; cursor:pointer;">
+          <strong>${name}</strong> ${code !== '-' ? '(' + code + ')' : ''} 
+          <span style="color:var(--accent-main);">(Rate: ${rate} | Stock: ${stockQty})</span>
         </label>
       </div>
-      <input type="number" id="qty_item_${idx}" value="1" min="1" inputmode="numeric" style="width:45px; padding:2px; text-align:center; font-size:12px;" onkeydown="handleInputKeydown(event)">
+      <input type="number" id="qty_item_${idx}" value="1" min="1" inputmode="numeric" style="width:50px; padding:2px; text-align:center; font-size:11px;" onkeydown="handleInputKeydown(event)">
     `;
     container.appendChild(div);
   });
@@ -233,10 +227,10 @@ function renderBillItemsTable() {
       <td>${index + 1}</td>
       <td>${itemName}</td>
       <td>${itemCode}</td>
-      <td><input type="number" value="${itemQty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:55px; text-align:center;"></td>
-      <td><input type="number" value="${itemRate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:70px; text-align:center;"></td>
+      <td><input type="number" value="${itemQty}" min="1" inputmode="numeric" oninput="updateBillItemQty(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:50px; text-align:center; padding:2px;"></td>
+      <td><input type="number" value="${itemRate}" inputmode="numeric" oninput="updateBillItemRate(${index}, this.value)" onkeydown="handleInputKeydown(event)" style="width:60px; text-align:center; padding:2px;"></td>
       <td>Rs. ${total}</td>
-      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:3px 8px; font-size:11px;">❌</button></td>
+      <td><button class="btn-danger" onclick="removeBillItem(${index})" style="padding:2px 5px; font-size:10px;">❌</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -292,15 +286,15 @@ function renderRateList() {
     const code = getItemCode(item);
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>
-        <div style="display:flex; gap:5px;">
-          <input type="text" value="${nameEn}" oninput="updateRateField(${index}, 'nameEn', this.value)" placeholder="English" style="width:50%;">
-          <input type="text" value="${nameUr}" oninput="updateRateField(${index}, 'nameUr', this.value)" placeholder="اردو" style="width:50%;">
+      <td style="border:1px solid #000; color:#000;">
+        <div style="display:flex; gap:2px;">
+          <input type="text" value="${nameEn}" oninput="updateRateField(${index}, 'nameEn', this.value)" placeholder="English" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
+          <input type="text" value="${nameUr}" oninput="updateRateField(${index}, 'nameUr', this.value)" placeholder="اردو" style="width:50%; background:transparent; border:none; text-align:center; color:#000; font-size:11px;">
         </div>
       </td>
-      <td><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; font-weight:bold;"></td>
-      <td><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; font-weight:bold;"></td>
-      <td class="no-print-col"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:4px 8px;">🗑️</button></td>
+      <td style="border:1px solid #000; color:#000;"><input type="text" value="${code !== '-' ? code : ''}" oninput="updateRateField(${index}, 'code', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td style="border:1px solid #000; color:#000;"><input type="number" inputmode="numeric" value="${rate}" oninput="updateRateField(${index}, 'rate', this.value)" style="width:90%; background:transparent; border:none; text-align:center; color:#000; font-weight:bold;"></td>
+      <td class="no-print-col" style="border:1px solid #000; color:#000;"><button class="btn-danger" onclick="deleteRateItem(${index})" style="padding:2px 6px;">🗑️</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -363,7 +357,7 @@ function renderStockTable() {
     tr.innerHTML = `
       <td>${name}</td>
       <td>${code}</td>
-      <td><input type="number" inputmode="numeric" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:80px; text-align:center;"></td>
+      <td><input type="number" inputmode="numeric" value="${stockQty}" oninput="updateStockQty(${index}, this.value)" style="width:70px; text-align:center; padding:2px;"></td>
     `;
     tbody.appendChild(tr);
   });
@@ -404,40 +398,44 @@ function renderLedger() {
       <td>${customer}</td>
       <td>${bill.date || '-'}</td>
       <td>Rs. ${totalAmount}</td>
-      <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:3px 8px;">👁️ View</button></td>
+      <td><button class="btn-silver" onclick="viewBillDetails(${idx})" style="padding:2px 6px;">👁️</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// Bill Box HTML Builder
-function buildSingleBillHtml(bill, exactBillNo) {
+function saveAllLedgerData() {
+  localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
+  alert('All Ledger bills successfully saved!');
+}
+
+function viewBillDetails(index) {
+  const bill = billsHistory[index];
+  if (!bill) return;
+
+  activeViewingBillIndex = index;
+
+  const contentDiv = document.getElementById('billPrintContent');
+  if (!contentDiv) return;
+
   const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
   const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
   const totalAmount = getBillTotal(bill);
+  const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
 
   let itemsHtml = `
-    <div style="border: 1px solid var(--accent-main); padding: 10px; border-radius: 6px; background: #fff; font-family: Arial, sans-serif; height:100%; box-sizing:border-box;">
-      <div style="text-align: center; border-bottom: 2px solid var(--accent-gold); padding-bottom: 4px; margin-bottom: 6px;">
-        <h3 style="margin: 0; color: var(--accent-main); font-size: 16px;">REHMA TRADERS</h3>
-        <p style="margin: 0; font-size: 9.5px; color: #555;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${exactBillNo}</span>
+        <span><strong>Date:</strong> ${bill.date || '-'}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px;">
-        <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
-        <span><strong>Bill #:</strong> ${exactBillNo} | <strong>Date:</strong> ${bill.date || '-'}</span>
-      </div>
-      <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
-        <thead>
-          <tr style="background: var(--accent-main); color: #fff;">
-            <th style="padding: 4px; border: 1px solid var(--accent-main);">#</th>
-            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: left;">Item Description</th>
-            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: center;">Code</th>
-            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: center;">Qty</th>
-            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: right;">Rate</th>
-            <th style="padding: 4px; border: 1px solid var(--accent-main); text-align: right;">Total</th>
-          </tr>
-        </thead>
-        <tbody>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
   `;
 
   let calculatedSubTotal = 0;
@@ -450,156 +448,24 @@ function buildSingleBillHtml(bill, exactBillNo) {
       const qty = getItemQty(item);
       const rowTotal = rate * qty;
       calculatedSubTotal += rowTotal;
-      itemsHtml += `
-        <tr>
-          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${idx + 1}</td>
-          <td style="padding: 3px; border: 1px solid #ddd;">${name}</td>
-          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${code}</td>
-          <td style="padding: 3px; border: 1px solid #ddd; text-align: center;">${qty}</td>
-          <td style="padding: 3px; border: 1px solid #ddd; text-align: right;">Rs. ${rate}</td>
-          <td style="padding: 3px; border: 1px solid #ddd; text-align: right;">Rs. ${rowTotal}</td>
-        </tr>
-      `;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${code}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
     });
   }
 
   const finalNet = totalAmount > 0 ? totalAmount : calculatedSubTotal;
 
   itemsHtml += `
-        </tbody>
-      </table>
-      <div style="margin-top: 6px; text-align: right; font-size: 11px; font-weight: bold; color: var(--accent-main);">
-        Grand Total: Rs. ${finalNet}
-      </div>
+      </tbody>
+    </table>
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
+      <div>SubTotal: Rs. ${calculatedSubTotal || finalNet}</div>
+      <div><strong>Net Total: Rs. ${finalNet}</strong></div>
     </div>
   `;
-  return itemsHtml;
-}
 
-// Print 2 Selected Bills from Ledger with Layout Choice
-function printSelectedTwoBillsOnA4() {
-  const chks = document.querySelectorAll('.bill-select-chk:checked');
-  if (chks.length !== 2) {
-    alert('براہ کرم لیجر میں سے ایک صفحے پر پرنٹ کرنے کے لیے بالکل دو (2) بل منتخب کریں۔');
-    return;
-  }
-
-  const index1 = parseInt(chks[0].getAttribute('data-index'));
-  const index2 = parseInt(chks[1].getAttribute('data-index'));
-
-  const bill1 = billsHistory[index1];
-  const bill2 = billsHistory[index2];
-
-  const format = prompt("پرنٹ کا لے آؤٹ منتخب کریں:\n1. Vertical (اوپر نیچے - Portrait)\n2. Horizontal (بائیں دائیں - Landscape)", "1");
-  const isHoriz = (format === "2" || format?.toLowerCase().includes("horiz"));
-
-  const dualPrintWindow = window.open('', '_blank');
-  dualPrintWindow.document.write(`
-    <html>
-      <head>
-        <title>Dual Bill Print - Rehma Traders</title>
-        <style>
-          @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
-          body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
-          .a4-container { width: 100%; height: 100%; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; gap: 10px; }
-          .bill-box { ${isHoriz ? 'width: 48%; height: 100%;' : 'width: 100%; height: 48%;'} box-sizing: border-box; }
-          .cut-line { ${isHoriz ? 'width: 2px; border-left: 2px dashed #888;' : 'height: 2px; border-bottom: 2px dashed #888;'} margin: auto; }
-        </style>
-      </head>
-      <body onload="window.print(); window.close();">
-        <div class="a4-container">
-          <div class="bill-box">
-            ${buildSingleBillHtml(bill1, bill1.billNo || ('INV-' + (1001 + index1)))}
-          </div>
-          <div class="cut-line"></div>
-          <div class="bill-box">
-            ${buildSingleBillHtml(bill2, bill2.billNo || ('INV-' + (1001 + index2)))}
-          </div>
-        </div>
-      </body>
-    </html>
-  `);
-  dualPrintWindow.document.close();
-}
-
-function viewBillDetails(index) {
-  const bill = billsHistory[index];
-  if (!bill) return;
-
-  activeViewingBillIndex = index;
-  const contentDiv = document.getElementById('billPrintContent');
-  if (!contentDiv) return;
-
-  const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
-  contentDiv.innerHTML = buildSingleBillHtml(bill, exactBillNo);
-  
+  contentDiv.innerHTML = itemsHtml;
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'block';
-}
-
-function executeCustomPrint() {
-  if (activeViewingBillIndex === null || !billsHistory[activeViewingBillIndex]) {
-    alert('کوئی بل سلیکٹ نہیں ہے!');
-    return;
-  }
-
-  const bill = billsHistory[activeViewingBillIndex];
-  const exactBillNo = bill.billNo || ('INV-' + (1001 + activeViewingBillIndex));
-  const format = document.getElementById('printFormatSelect').value;
-
-  const pWin = window.open('', '_blank');
-
-  if (format === 'thermal') {
-    pWin.document.write(`
-      <html>
-        <head><title>Thermal Receipt</title>
-        <style>body { font-family: monospace; width: 72mm; margin: 0; padding: 5px; font-size: 11px; }</style>
-        </head>
-        <body onload="window.print(); window.close();">
-          ${buildSingleBillHtml(bill, exactBillNo)}
-        </body>
-      </html>
-    `);
-  } else if (format === 'a4-dual-vert' || format === 'a4-dual-horiz') {
-    const isHoriz = (format === 'a4-dual-horiz');
-    pWin.document.write(`
-      <html>
-        <head>
-          <title>Dual Bill Print</title>
-          <style>
-            @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
-            .a4-container { width: 100%; height: 100%; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; gap: 10px; }
-            .bill-box { ${isHoriz ? 'width: 48%; height: 100%;' : 'width: 100%; height: 48%;'} box-sizing: border-box; }
-            .cut-line { ${isHoriz ? 'width: 2px; border-left: 2px dashed #888;' : 'height: 2px; border-bottom: 2px dashed #888;'} margin: auto; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-          <div class="a4-container">
-            <div class="bill-box">${buildSingleBillHtml(bill, exactBillNo)}</div>
-            <div class="cut-line"></div>
-            <div class="bill-box">${buildSingleBillHtml(bill, exactBillNo)}</div>
-          </div>
-        </body>
-      </html>
-    `);
-  } else {
-    pWin.document.write(`
-      <html>
-        <head>
-          <title>A4 Bill Print</title>
-          <style>
-            @page { size: A4; margin: 15mm; }
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-          ${buildSingleBillHtml(bill, exactBillNo)}
-        </body>
-      </html>
-    `);
-  }
-  pWin.document.close();
 }
 
 function repeatCurrentBill() {
@@ -609,6 +475,7 @@ function repeatCurrentBill() {
   }
 
   const oldBill = billsHistory[activeViewingBillIndex];
+
   const custNameVal = oldBill.custName || oldBill.customerName || oldBill.customer || '';
   const custPhoneVal = oldBill.custPhone || oldBill.phone || oldBill.customerPhone || '';
 
@@ -632,8 +499,10 @@ function repeatCurrentBill() {
   generateNextBillNumber();
   closeBillPreview();
   switchView('sectionBill');
+  
   renderBillItemsTable();
   saveStateToHistory();
+  
   alert('Bill & All Items successfully loaded as a Repeat Bill!');
 }
 
@@ -677,6 +546,12 @@ function updateDashboardStats() {
   
   const dashToday = document.getElementById('dashTodaySales');
   if (dashToday) dashToday.innerText = `Rs. ${todaySales}`;
+
+  const dashWeekly = document.getElementById('dashWeeklySales');
+  if (dashWeekly) dashWeekly.innerText = `Rs. ${total}`;
+
+  const dashMonthly = document.getElementById('dashMonthlySales');
+  if (dashMonthly) dashMonthly.innerText = `Rs. ${total}`;
 }
 
 function openBillPreview() {
@@ -686,6 +561,7 @@ function openBillPreview() {
   }
   const custNameInput = document.getElementById('custName');
   const custName = (custNameInput && custNameInput.value.trim() !== '') ? custNameInput.value.trim() : 'Cash Customer';
+  
   const custPhoneInput = document.getElementById('custPhone');
   const custPhone = custPhoneInput ? custPhoneInput.value : '';
 
@@ -698,6 +574,41 @@ function openBillPreview() {
 
   const currentBillNo = document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001';
 
+  const contentDiv = document.getElementById('billPrintContent');
+  let itemsHtml = `
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${currentBillNo}</span>
+        <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+  `;
+
+  billItems.forEach((item, idx) => {
+    itemsHtml += `<tr><td>${idx+1}</td><td>${getItemName(item)}</td><td>${getItemCode(item)}</td><td>${getItemQty(item)}</td><td>${getItemRate(item)}</td><td>${getItemRate(item) * getItemQty(item)}</td></tr>`;
+  });
+
+  itemsHtml += `
+      </tbody>
+    </table>
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
+      <div>SubTotal: Rs. ${subTotal}</div>
+      ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
+      ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
+      <div><strong>Net Total: Rs. ${netTotal}</strong></div>
+    </div>
+  `;
+
+  if (contentDiv) contentDiv.innerHTML = itemsHtml;
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'block';
+
   const billRecord = {
     billNo: currentBillNo,
     custName: custName,
@@ -706,7 +617,6 @@ function openBillPreview() {
     netTotal: netTotal,
     items: JSON.parse(JSON.stringify(billItems))
   };
-
   billsHistory.push(billRecord);
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   
@@ -719,19 +629,84 @@ function openBillPreview() {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   updateDashboardStats();
   generateNextBillNumber();
-
-  activeViewingBillIndex = billsHistory.length - 1;
-  const contentDiv = document.getElementById('billPrintContent');
-  if (contentDiv) contentDiv.innerHTML = buildSingleBillHtml(billRecord, currentBillNo);
-
-  const modal = document.getElementById('previewModal');
-  if (modal) modal.style.display = 'block';
-  renderLedger();
 }
 
 function closeBillPreview() {
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'none';
+}
+
+function changePaperSize(sizeClass) {
+  const container = document.getElementById('printableBillContainer');
+  if (container) container.className = sizeClass;
+}
+
+function downloadBillPdf() {
+  const container = document.getElementById('printableBillContainer');
+  if (!container) return;
+
+  if (window.html2canvas) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('Rehma_Traders_Bill.pdf');
+    });
+  }
+}
+
+function printBillPdf() {
+  const container = document.getElementById('printableBillContainer');
+  if (!container) return;
+
+  if (window.html2canvas && window.jspdf) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      
+      const pdfBlobUrl = pdf.output('bloburl');
+      const printWindow = window.open(pdfBlobUrl, '_blank');
+      if (printWindow) {
+        printWindow.print();
+      } else {
+        window.print();
+      }
+    });
+  } else {
+    window.print();
+  }
+}
+
+function shareBillJpgWhatsApp() {
+  const container = document.getElementById('printableBillContainer');
+  if (window.html2canvas && container) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'rehma-bill.jpg', { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            files: [file],
+            title: 'Rehma Traders Bill',
+            text: 'Here is your bill from Rehma Traders.'
+          }).catch(err => console.log('Sharing failed', err));
+        } else {
+          const link = document.createElement('a');
+          link.download = 'rehma-bill.jpg';
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        }
+      }, 'image/jpeg', 0.9);
+    });
+  }
 }
 
 function exportRateListJpg() {
@@ -759,31 +734,31 @@ function exportRateListJpg() {
         <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 11px;">${index + 1}</td>
         <td style="padding: 6px 8px; border: 1px solid #ccc; font-size: 11px;"><strong>${nameEn}</strong> / ${nameUr}</td>
         <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 10px;">${code !== '-' ? code : ''}</td>
-        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: right; font-size: 12px; font-weight: bold; color: var(--accent-main);">Rs. ${rate}</td>
+        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: right; font-size: 12px; font-weight: bold; color: #002147;">Rs. ${rate}</td>
       </tr>
     `;
   });
 
   hiddenCard.innerHTML = `
-    <div style="text-align: center; border-bottom: 2px solid var(--accent-gold); padding-bottom: 10px; margin-bottom: 12px;">
-      <h2 style="margin: 0; color: var(--accent-main); font-size: 20px; text-transform: uppercase;">REHMA TRADERS</h2>
+    <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 12px;">
+      <h2 style="margin: 0; color: #002147; font-size: 20px; text-transform: uppercase;">REHMA TRADERS</h2>
       <p style="margin: 2px 0; font-size: 11px; color: #555;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
-      <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color: var(--accent-gold);">OFFICIAL RATE LIST / آفیشل ریٹ لسٹ</p>
+      <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color: #d4af37;">OFFICIAL RATE LIST / آفیشل ریٹ لسٹ</p>
     </div>
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
-        <tr style="background-color: var(--accent-main); color: #ffffff;">
-          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: center; font-size: 11px;">#</th>
-          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: left; font-size: 11px;">Item Description</th>
-          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: center; font-size: 11px;">Code</th>
-          <th style="padding: 8px; border: 1px solid var(--accent-main); text-align: right; font-size: 11px;">Rate</th>
+        <tr style="background-color: #002147; color: #ffffff;">
+          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">#</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: left; font-size: 11px;">Item Description</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">Code</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: right; font-size: 11px;">Rate</th>
         </tr>
       </thead>
       <tbody>
         ${tableRowsHtml}
       </tbody>
     </table>
-    <div style="margin-top: 15px; border-top: 1px solid var(--accent-gold); padding-top: 8px; text-align: center; font-size: 10px; color: #666;">
+    <div style="margin-top: 15px; border-top: 1px solid #d4af37; padding-top: 8px; text-align: center; font-size: 10px; color: #666;">
       <p style="margin: 0; font-weight: bold;">رہما ٹریڈر - معیاری فیبرک مصنوعات</p>
     </div>
   `;
