@@ -124,7 +124,6 @@
       width: 55%; opacity: 0.08; pointer-events: none; z-index: 0;
     }
 
-    /* تھرمل پرنٹنگ کے لیے واٹر مارک خود بخود ہائیڈ ہو جائے گا */
     #printableBillContainer.paper-80mm .watermark-bg,
     #printableBillContainer.paper-50mm .watermark-bg {
       display: none !important;
@@ -324,7 +323,7 @@
     
     <div style="display:flex; gap:6px; margin:6px 0;">
       <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="flex:1;">🗑️ Delete Marked Bills</button>
-      <button class="btn-gold" onclick="saveAllLedgerData()" style="flex:1;">💾 Save All</button>
+      <button class="btn-gold" onclick="printSelectedTwoBillsOnA4()" style="flex:1; background:#0284c7;">🖨️ Print 2 Bills on A4</button>
     </div>
 
     <table id="ledgerTable">
@@ -343,6 +342,8 @@
       <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:4px;">
         <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; font-size:11px; padding:2px;">
           <option value="paper-a4">A4 Standard (Wi-Fi/BT Printer)</option>
+          <option value="paper-a4-dual-vert">A4 Dual (2 Bills - Vertical Top/Bottom)</option>
+          <option value="paper-a4-dual-horiz">A4 Dual (2 Bills - Horizontal Left/Right)</option>
           <option value="paper-80mm">Thermal 80mm</option>
           <option value="paper-50mm">Thermal 50mm</option>
         </select>
