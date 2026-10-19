@@ -1,339 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rehma Traders - Billing & Inventory Management</title>
-  <style>
-    :root {
-      --bg-main: #f4f6f9;
-      --card-bg: #ffffff;
-      --text-main: #333333;
-      --accent-main: #002147;
-      --accent-gold: #d4af37;
-      --btn-text: #ffffff;
-    }
-
-    /* App Themes */
-    body.theme-navy { --accent-main: #002147; --accent-gold: #d4af37; }
-    body.theme-slate { --accent-main: #34495e; --accent-gold: #e67e22; }
-    body.theme-sage { --accent-main: #2c3e50; --accent-gold: #16a085; }
-    body.theme-mocha { --accent-main: #4a3b32; --accent-gold: #c0392b; }
-    body.theme-indigo { --accent-main: #3f51b5; --accent-gold: #ff9800; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      margin: 0;
-      padding: 0;
-    }
-
-    .app-header {
-      background-color: var(--accent-main);
-      color: #fff;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 0 15px;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    button {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    button:hover { opacity: 0.9; }
-
-    .btn-primary { background-color: var(--accent-main); color: #fff; }
-    .btn-gold { background-color: var(--accent-gold); color: #fff; }
-    .btn-danger { background-color: #c0392b; color: #fff; }
-    .btn-silver { background-color: #7f8c8d; color: #fff; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px 10px;
-      text-align: left;
-      font-size: 13px;
-    }
-    th {
-      background-color: var(--accent-main);
-      color: #fff;
-    }
-
-    input, select {
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 13px;
-    }
-
-    .hidden { display: none !important; }
-
-    /* Urdu Language Support Class */
-    body.lang-ur { direction: rtl; font-family: 'Jameel Noori Nastaleeq', 'Urdu Typesetting', Arial, sans-serif; }
-  </style>
-
-  <!-- External Libraries for PDF & Canvas -->
+  <title>REHMA TRADERS - Billing & Inventory PWA</title>
+  <link rel="manifest" href="manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
-<body class="theme-navy">
+  <style>
+    body.theme-navy {
+      --bg-dark: #0f172a; --panel-bg: #1e293b; --card-bg: #334155;
+      --accent-main: #38bdf8; --text-bright: #f8fafc; --text-sub: #94a3b8;
+      --border-dark: #475569; --btn-grad: linear-gradient(135deg, #0284c7, #0369a1);
+    }
+    body.theme-slate {
+      --bg-dark: #121212; --panel-bg: #1e1e1e; --card-bg: #2d2d2d;
+      --accent-main: #e2e8f0; --text-bright: #ffffff; --text-sub: #a1a1aa;
+      --border-dark: #3f3f46; --btn-grad: linear-gradient(135deg, #52525b, #3f3f46);
+    }
+    body.theme-sage {
+      --bg-dark: #13221b; --panel-bg: #1c3328; --card-bg: #284738;
+      --accent-main: #6ee7b7; --text-bright: #ecfdf5; --text-sub: #a7f3d0;
+      --border-dark: #375a49; --btn-grad: linear-gradient(135deg, #059669, #047857);
+    }
+    body.theme-mocha {
+      --bg-dark: #1c1917; --panel-bg: #292524; --card-bg: #44403c;
+      --accent-main: #fdba74; --text-bright: #fafaf9; --text-sub: #d6d3d1;
+      --border-dark: #57534e; --btn-grad: linear-gradient(135deg, #c2410c, #9a3412);
+    }
+    body.theme-indigo {
+      --bg-dark: #1e1b4b; --panel-bg: #312e81; --card-bg: #3730a3;
+      --accent-main: #818cf8; --text-bright: #e0e7ff; --text-sub: #c7d2fe;
+      --border-dark: #4f46e5; --btn-grad: linear-gradient(135deg, #6366f1, #4f46e5);
+    }
 
-  <!-- Header Section -->
-  <div class="app-header">
-    <div>
-      <h2 style="margin:0; font-size:22px; letter-spacing:0.5px;">REHMA TRADERS</h2>
-      <small style="opacity: 0.8;">Billing & Inventory Management System</small>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-bright);
+      margin: 0;
+      padding: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .islamic-banner { text-align: center; margin-bottom: 6px; }
+    .islamic-bismillah { margin: 0; font-size: 14px; color: var(--accent-main); font-weight: bold; }
+    
+    .islamic-razzaq {
+      margin: 0;
+      font-family: 'Amiri', serif;
+      font-size: min(8.5vw, 32px);
+      font-weight: 900;
+      animation: multiColorGlow 4s infinite alternate ease-in-out;
+    }
+
+    @keyframes multiColorGlow {
+      0% { color: #fbbf24; text-shadow: 0 0 4px #d4af37, 0 0 10px #f59e0b; }
+      33% { color: #38bdf8; text-shadow: 0 0 6px #0284c7, 0 0 15px #38bdf8; }
+      66% { color: #34d399; text-shadow: 0 0 6px #059669, 0 0 15px #34d399; }
+      100% { color: #f43f5e; text-shadow: 0 0 6px #e11d48, 0 0 15px #fb7185; }
+    }
+
+    .top-bar-clean {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: var(--panel-bg); padding: 8px; border-radius: 12px; border: 1px solid var(--border-dark); margin-bottom: 10px;
+    }
+    .top-buttons-group { display: flex; flex-direction: column; width: 100%; gap: 4px; align-items: center; }
+    .btn-compact {
+      background: var(--bg-dark); color: var(--text-bright); border: 1px solid var(--border-dark);
+      font-weight: 700; padding: 4px 10px; border-radius: 15px; font-size: 11px; width: 100%; max-width: 150px; text-align: center; cursor: pointer;
+    }
+    .btn-compact-green { background: #059669 !important; color: #fff !important; }
+
+    .header-card { background: var(--panel-bg); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px; text-align: center; margin-bottom: 10px; }
+    .header-card h1 { margin: 0; font-size: 16px; font-weight: 800; }
+    .header-card p { margin: 2px 0; font-size: 10.5px; color: var(--text-sub); }
+
+    .dashboard-grid-vertical { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .dash-card-row {
+      background: var(--panel-bg); border: 1px solid var(--border-dark); border-left: 5px solid var(--accent-main);
+      border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .dash-card-row h4 { margin: 0; font-size: 12px; color: var(--text-sub); text-transform: uppercase; }
+    .dash-card-row h2 { margin: 0; color: var(--text-bright); font-size: 15px; font-weight: 800; }
+
+    .section { background: var(--panel-bg); border-radius: 12px; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-dark); }
+    .hidden-section { display: none !important; }
+
+    .btn-back-step { background: #475569; color: #fff; border: none; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+    
+    input, select {
+      width: 100%; padding: 7px; margin: 3px 0; border-radius: 6px; border: 1px solid var(--border-dark);
+      background: var(--bg-dark); color: var(--text-bright); font-size: 12px; box-sizing: border-box; outline: none;
+    }
+    button.btn-gold { background: var(--btn-grad); color: #fff; font-weight: bold; border: none; border-radius: 15px; padding: 8px; cursor: pointer; font-size: 12px; }
+    button.btn-silver { background: var(--card-bg); color: #fff; border: 1px solid var(--border-dark); border-radius: 15px; padding: 6px 10px; cursor: pointer; font-size: 11px; }
+    button.btn-danger { background: #dc2626; color: #fff; border: none; border-radius: 15px; padding: 6px 10px; cursor: pointer; font-size: 11px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    th, td { border: 1px solid var(--border-dark); padding: 5px 3px; text-align: center; font-size: 11px; }
+    th { background: var(--bg-dark); }
+
+    .multi-item-container { max-height: 130px; overflow-y: auto; background: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 6px; padding: 4px; margin: 4px 0; }
+    .multi-item-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px; border-bottom: 1px solid var(--border-dark); font-size: 11px; }
+
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 19, 43, 0.9); z-index: 9999; overflow-y: auto; padding: 8px; box-sizing: border-box;
+    }
+    .modal-box {
+      background: #ffffff !important; color: #000000 !important;
+      width: 100%; max-width: 440px; margin: 10px auto; border-radius: 8px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    #printableBillContainer {
+      background: #ffffff !important; color: #000000 !important; padding: 12px; box-sizing: border-box; width: 100%; font-size: 11px !important;
+      position: relative; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    #printableBillContainer * { color: #000000 !important; }
+
+    .watermark-bg {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 55%; opacity: 0.08; pointer-events: none; z-index: 0;
+    }
+
+    /* تھرمل پرنٹنگ کے لیے واٹر مارک خود بخود ہائیڈ ہو جائے گا */
+    #printableBillContainer.paper-80mm .watermark-bg,
+    #printableBillContainer.paper-50mm .watermark-bg {
+      display: none !important;
+    }
+
+    .bill-content-layer { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; flex-grow: 1; }
+
+    .bill-header { display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 6px; }
+    .bill-header img { max-height: 45px; width: auto; }
+    .bill-header-text { text-align: center; }
+    .bill-header-text h2 { margin: 0; font-size: 16px; font-weight: 800; }
+    .bill-header-text p { margin: 1px 0; font-size: 8.5px; line-height: 1.2; }
+
+    #printableBillContainer table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    #printableBillContainer th, #printableBillContainer td {
+      border: 0.5px solid #444444 !important; padding: 3px 4px !important; font-size: 9.5px !important; line-height: 1.2 !important; text-align: center;
+    }
+    #printableBillContainer th { background: #f1f5f9 !important; font-weight: bold; }
+
+    .bill-footer { margin-top: auto; border-top: 0.5px solid #000; padding-top: 6px; }
+    .bill-footer-grid { display: flex; justify-content: space-between; align-items: flex-end; }
+    .payment-info-box { text-align: left; border: 0.5px solid #000; padding: 4px 6px; border-radius: 4px; font-size: 8px; line-height: 1.3; max-width: 65%; }
+    .signature-area { text-align: right; font-size: 8px; font-weight: bold; }
+    .signature-box { font-family: 'Great Vibes', cursive; font-size: 14px; border-bottom: 1px solid #000; padding: 0 6px; display: inline-block; margin-top: 2px; }
+
+    @media print {
+      @page { size: A4 portrait; margin: 5mm; }
+      body { background: #fff !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
+      body * { visibility: hidden !important; }
+      #previewModal, #previewModal * { visibility: visible !important; }
+      .modal-overlay { position: fixed !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: #fff !important; padding: 0 !important; margin: 0 !important; }
+      .modal-box { box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; border: none !important; background: #fff !important; }
+      .no-print { display: none !important; }
+      #printableBillContainer { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; min-height: 95vh !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; page-break-inside: avoid !important; }
+    }
+  </style>
+</head>
+<body class="lang-en theme-navy">
+
+  <div class="islamic-banner">
+    <p class="islamic-bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+    <h2 class="islamic-razzaq">وَاللَّهُ خَيْرُ الرَّازِقِينَ</h2>
+  </div>
+
+  <div class="top-bar-clean">
+    <div style="color:var(--accent-main); font-weight:bold; font-size:13px; display:flex; justify-content:space-between; width:100%; align-items:center;">
+      <span>REHMA TRADERS</span>
+      <div style="display:flex; gap:4px;">
+        <button onclick="triggerUndo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Undo">↩️ Undo</button>
+        <button onclick="triggerRedo()" class="btn-silver" style="padding:2px 8px; font-size:10px;" title="Redo">↪️ Redo</button>
+      </div>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
-      <select id="themeSelector" onchange="changeAppTheme(this.value)" style="background:#fff; color:#333; font-weight:bold;">
-        <option value="navy">Navy Blue</option>
-        <option value="slate">Slate Gray</option>
-        <option value="sage">Sage Dark</option>
-        <option value="mocha">Mocha Brown</option>
-        <option value="indigo">Royal Indigo</option>
+    
+    <div class="top-buttons-group">
+      <select class="btn-compact btn-compact-green" onchange="handleTopMenuSelect(this)">
+        <option value="" selected disabled>🎛️ Menu ▾</option>
+        <option value="mainDashboardMenu">🏠 Dashboard</option>
+        <option value="sectionBill">📝 Create Bill</option>
+        <option value="sectionRateList">⚙️ Rate List</option>
+        <option value="sectionStock">📦 Stock</option>
+        <option value="sectionLedger">🔍 Ledger</option>
+        <option value="exportBackup">💾 Download Backup</option>
+        <option value="importBackup">📂 Restore Backup</option>
       </select>
-      <button id="langToggleBtn" class="btn-gold" onclick="toggleLanguage()">🌐 English</button>
-      <button class="btn-danger" onclick="confirmResetToDefaultApp()">🔄 Reset Default</button>
+      <button class="btn-compact" id="langToggleBtn" onclick="toggleLanguage()">🌐 اردو/En</button>
+      <select id="themeSelector" class="btn-compact" onchange="changeAppTheme(this.value)">
+        <option value="navy" selected>🎨 Theme ▾</option>
+        <option value="navy">🔵 Corporate Navy</option>
+        <option value="slate">⚫ Slate Charcoal</option>
+        <option value="sage">🟢 Forest Sage</option>
+        <option value="mocha">🟤 Warm Mocha</option>
+        <option value="indigo">🟣 Royal Indigo</option>
+      </select>
     </div>
   </div>
 
-  <div class="container">
+  <div id="mainDashboardMenu" class="section">
+    <div class="header-card">
+      <img src="logo.png" style="max-height:40px;" onerror="this.style.display='none'">
+      <h1>REHMA TRADERS</h1>
+      <p>Proprietor: Muhammad Javed (محمد جاوید)</p>
+      <p>📱 0307-4015100 | 📱 0339-1020030 | 💬 0333-5255117</p>
+    </div>
 
-    <!-- Dashboard Main Menu -->
-    <div id="mainDashboardMenu" class="card">
-      <h3 style="margin-top:0; border-bottom:2px solid var(--accent-gold); padding-bottom:8px;">Dashboard & Actions</h3>
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;">
-        <button class="btn-primary" onclick="switchView('sectionBill')" style="padding:15px; font-size:15px;">🧾 Create New Bill</button>
-        <button class="btn-primary" onclick="switchView('sectionLedger')" style="padding:15px; font-size:15px;">📒 Customer Ledger / Bills</button>
-        <button class="btn-primary" onclick="switchView('sectionRateList')" style="padding:15px; font-size:15px;">📋 Rate List & Items</button>
-        <button class="btn-primary" onclick="switchView('sectionStock')" style="padding:15px; font-size:15px;">📦 Stock Management</button>
+    <div class="dashboard-grid-vertical">
+      <div class="dash-card-row" style="border-left-color: #34d399;">
+        <h4>Daily Sales</h4>
+        <h2 id="dashTodaySales" style="color: #34d399;">Rs. 0</h2>
       </div>
-
-      <div style="background:#f8f9fa; padding:15px; border-radius:6px; border-left:4px solid var(--accent-gold);">
-        <h4 style="margin:0 0 8px 0; color:var(--accent-main);">Quick Stats:</h4>
-        <div style="display:flex; gap:20px; flex-wrap:wrap; font-size:14px;">
-          <div>Total Sales: <span id="dashSales" style="font-weight:bold; color:var(--accent-main);">Rs. 0</span></div>
-          <div>Today's Sales: <span id="dashTodaySales" style="font-weight:bold; color:var(--accent-gold);">Rs. 0</span></div>
-        </div>
+      <div class="dash-card-row" style="border-left-color: var(--accent-main);">
+        <h4>Weekly Sales</h4>
+        <h2 id="dashWeeklySales" style="color: var(--accent-main);">Rs. 0</h2>
       </div>
-
-      <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn-gold" onclick="exportDataBackup()">💾 Export Backup (JSON)</button>
-        <input type="file" id="importFile" style="display:none;" onchange="importDataBackup(event)">
-        <button class="btn-primary" onclick="document.getElementById('importFile').click()">📂 Restore Backup</button>
+      <div class="dash-card-row" style="border-left-color: #fbbf24;">
+        <h4>Monthly Sales</h4>
+        <h2 id="dashMonthlySales" style="color: #fbbf24;">Rs. 0</h2>
+      </div>
+      <div class="dash-card-row" onclick="switchView('sectionLedger')" style="cursor:pointer; border-left-color: #f87171;">
+        <h4>Total Sales</h4>
+        <h2 id="dashSales">Rs. 0</h2>
       </div>
     </div>
 
-    <!-- 1. Billing Section -->
-    <div id="sectionBill" class="card hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 style="margin:0;">Create Bill (<span id="nextBillNo" style="color:var(--accent-gold);">INV-1001</span>)</h3>
-        <button onclick="switchView('mainDashboardMenu')" class="btn-danger">⬅ Back to Menu</button>
+    <div style="display:flex; gap:6px; margin-top:8px;">
+      <button class="btn-silver" onclick="exportDataBackup()" style="flex:1; background:#0284c7; color:#fff; font-weight:bold;">💾 Download Backup</button>
+      <button class="btn-silver" onclick="document.getElementById('importBackupInput').click()" style="flex:1; background:#059669; color:#fff; font-weight:bold;">📂 Restore Backup</button>
+    </div>
+
+    <div style="margin-top:6px;">
+      <button class="btn-danger" onclick="confirmResetToDefaultApp()" style="width:100%; font-weight:bold; padding:7px;">🔄 Restore Default App Structure</button>
+    </div>
+  </div>
+
+  <input type="file" id="importBackupInput" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+
+  <div id="sectionBill" class="section hidden-section">
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>📝 Create New Bill (<span id="nextBillNo" style="color: var(--accent-main);">INV-1001</span>)</h3>
+    
+    <div style="display:flex; gap:6px;">
+      <input type="text" id="custName" placeholder="Customer Name / کسٹمر کا نام" oninput="saveStateToHistory()">
+      <button class="btn-silver" onclick="pickContact()" style="width:90px; font-weight:bold;">📱 Contacts</button>
+    </div>
+    <input type="text" id="custPhone" placeholder="Mobile Number / فون نمبر" oninput="saveStateToHistory()">
+    
+    <label style="font-size:11px; color:var(--accent-main); font-weight:bold;">📦 Select Items & Stock:</label>
+    <div class="multi-item-container" id="multiItemBox"></div>
+    <button class="btn-gold" onclick="addSelectedMultipleItems()" style="width:100%; margin:4px 0;">➕ Add Items to Bill</button>
+
+    <table id="billItemsTable">
+      <thead>
+        <tr><th>Sr #</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div style="margin-top:8px;">
+      <div style="display:flex; gap:4px;">
+        <input type="number" id="prevBalanceInput" placeholder="Prev Balance" oninput="calculateBillTotals(); saveStateToHistory();">
+        <input type="number" id="discountInput" placeholder="Discount" oninput="calculateBillTotals(); saveStateToHistory();">
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px; margin:6px 0; padding:6px; background:var(--bg-dark); border-radius:6px;">
+        <div><strong>Net Total:</strong> <span id="grandTotalTxt" style="color: var(--accent-main); font-weight: bold;">Rs. 0</span></div>
+      </div>
+      
+      <button class="btn-gold" onclick="openBillPreview()" style="width:100%; padding:8px;">👁️ Print Preview & Confirm</button>
+    </div>
+  </div>
+
+  <div id="sectionRateList" class="section hidden-section">
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>⚙️ Rate List & Items</h3>
+    <button class="btn-silver" onclick="exportRateListJpg()" style="background:#059669; color:#fff; width:100%; margin-bottom:6px; padding:6px;">🖼️ Share Rate List JPG</button>
+
+    <div style="display:flex; gap:4px; flex-wrap:wrap; background:var(--bg-dark); padding:6px; border-radius:6px; margin-bottom:6px;">
+      <input type="text" id="newItemNameEn" placeholder="English Item Name" style="flex:2;" autocomplete="on" lang="en">
+      <input type="text" id="newItemNameUr" placeholder="اردو نام درج کریں" style="flex:2;" autocomplete="on" lang="ur">
+      <input type="text" id="newItemCode" placeholder="Code" style="flex:1;">
+      <input type="number" inputmode="numeric" id="newItemRate" placeholder="Rate" style="flex:1;">
+      <button class="btn-silver" onclick="addNewItem()" style="flex:1; font-weight:bold;">Add</button>
+    </div>
+
+    <div id="rateListCaptureArea" style="background:#fff; color:#000; padding:6px; border-radius:6px;">
+      <h3 style="text-align:center; color:#000; margin:2px 0; font-size:14px;">REHMA TRADERS - OFFICIAL RATE LIST</h3>
+      <table id="rateListTable" style="color:#000;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="border:1px solid #000;">Item Description</th>
+            <th style="border:1px solid #000;">Code</th>
+            <th style="border:1px solid #000;">Rate</th>
+            <th class="no-print-col" style="border:1px solid #000;">Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save All / Save Rates</button>
+  </div>
+
+  <div id="sectionStock" class="section hidden-section">
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>📦 Stock Inventory Management</h3>
+    <table id="stockReportTable">
+      <thead>
+        <tr><th>Item Name</th><th>Code</th><th>Available Stock Qty</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn-gold" onclick="savePermanentRatesList()" style="width:100%; margin-top:8px;">💾 Save All / Save Stock</button>
+  </div>
+
+  <div id="sectionLedger" class="section hidden-section">
+    <div><button class="btn-back-step" onclick="goBackStep()">⬅️ Back</button></div>
+    <h3>🔍 Customer Ledger & History</h3>
+    <input type="text" id="searchCust" placeholder="Search Customer..." oninput="filterLedger()">
+    
+    <div style="display:flex; gap:6px; margin:6px 0;">
+      <button class="btn-danger" onclick="deleteSelectedMarkedBills()" style="flex:1;">🗑️ Delete Marked Bills</button>
+      <button class="btn-gold" onclick="saveAllLedgerData()" style="flex:1;">💾 Save All</button>
+    </div>
+
+    <table id="ledgerTable">
+      <thead>
+        <tr>
+          <th style="width: 25px;"><input type="checkbox" id="selectAllBillsCheckbox" onclick="toggleSelectAllBills(this)"></th>
+          <th>Bill #</th><th>Customer</th><th>Date</th><th>Amount</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="previewModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:4px;">
+        <select id="paperSizeSelect" onchange="changePaperSize(this.value)" style="width:auto; font-size:11px; padding:2px;">
+          <option value="paper-a4">A4 Standard (Wi-Fi/BT Printer)</option>
+          <option value="paper-80mm">Thermal 80mm</option>
+          <option value="paper-50mm">Thermal 50mm</option>
+        </select>
+        <button class="btn-back-step" onclick="closeBillPreview(); switchView('mainDashboardMenu');" style="margin:0;">🏠 Dashboard</button>
       </div>
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
-        <div>
-          <label style="font-weight:bold; display:block; margin-bottom:5px;">Customer Name:</label>
-          <input type="text" id="custName" placeholder="Enter customer name" style="width:100%; box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="font-weight:bold; display:block; margin-bottom:5px;">Phone Number:</label>
-          <div style="display:flex; gap:5px;">
-            <input type="text" id="custPhone" placeholder="Phone number" style="width:100%; box-sizing:border-box;">
-            <button class="btn-gold" onclick="pickContact()" title="Pick Contact">📇</button>
+      <div id="printableBillContainer" class="paper-a4">
+        <img src="logo.png" class="watermark-bg" alt="Watermark" crossorigin="anonymous">
+
+        <div class="bill-content-layer">
+          <div class="bill-header">
+            <img src="logo.png" alt="Rehma Traders Logo" crossorigin="anonymous">
+            <div class="bill-header-text">
+              <h2>REHMA TRADERS</h2>
+              <p>Proprietor: Muhammad Javed | 📱 0307-4015100 | 📱 0339-1020030</p>
+              <p>💬 WhatsApp: 0333-5255117 | ✉️ rehma.traders.pk@gmail.com</p>
+            </div>
+          </div>
+
+          <div id="billPrintContent" style="margin:4px 0; flex-grow:1;"></div>
+
+          <div class="bill-footer">
+            <div class="bill-footer-grid">
+              <div class="payment-info-box">
+                <strong>Payment Details:</strong><br>
+                • JazzCash: 0307-4015100<br>
+                • ABL Acc: PK44ABPA0010140074540011<br>
+                • Title: Muhammad Javed
+              </div>
+              <div class="signature-area">
+                <span>Owner Signature</span><br>
+                <span class="signature-box">M. Javed</span>
+              </div>
+            </div>
+            <div style="text-align:center; border-top:0.5px solid #000; padding-top:2px; margin-top:4px;">
+              <p style="margin:0; font-size:7.5px; font-weight:bold;">Note: Bought items can be exchanged if faulty. / نوٹ: خریدے ہوئے مال میں فالٹ ہو تو تبدیل ہو سکتا ہے۔</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Multi-Item Selector Box -->
-      <div style="border:1px solid #ddd; padding:12px; border-radius:6px; background:#fafafa; margin-bottom:15px;">
-        <strong>Select Items from Rate List:</strong>
-        <div id="multiItemBox" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:10px; max-height:180px; overflow-y:auto; padding-right:5px;"></div>
+      <div class="no-print" style="display:flex; gap:4px; margin-top:8px; border-top:1px solid #ddd; padding-top:6px; flex-wrap:wrap;">
+        <button onclick="closeBillPreview()" style="flex:1; background:#ef4444; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">✏️ Close</button>
+        <button onclick="repeatCurrentBill()" style="flex:1; background:#8b5cf6; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">🔁 Repeat</button>
+        <button onclick="printBillPdf()" style="flex:2; background:var(--accent-main); color:#000; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">🖨️ Print (Wi-Fi/BT/A4/Thermal)</button>
+        <button onclick="shareBillJpgWhatsApp()" style="flex:1; background:#059669; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">📤 Share WA</button>
+        <button onclick="downloadBillPdf()" style="flex:1; background:#0284c7; color:#fff; border:none; padding:6px; border-radius:12px; font-weight:bold; cursor:pointer; font-size:10px;">📥 PDF</button>
       </div>
-      <button class="btn-primary" onclick="addSelectedMultipleItems()" style="margin-bottom:20px;">➕ Add Selected Items to Bill</button>
-
-      <!-- Bill Items Table -->
-      <table id="billItemsTable">
-        <thead>
-          <tr>
-            <th>Sr</th>
-            <th>Item Description</th>
-            <th>Code</th>
-            <th>Qty</th>
-            <th>Rate</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <!-- Totals & Actions -->
-      <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; background:#f8f9fa; padding:15px; border-radius:6px;">
-        <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
-          <div>Prev Balance: <input type="number" id="prevBalanceInput" value="0" oninput="calculateBillTotals()" style="width:90px;"></div>
-          <div>Discount: <input type="number" id="discountInput" value="0" oninput="calculateBillTotals()" style="width:90px;"></div>
-        </div>
-        <div style="font-size:18px; font-weight:bold;">
-          Grand Total: <span id="grandTotalTxt" style="color:var(--accent-main);">Rs. 0</span>
-        </div>
-      </div>
-
-      <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn-gold" onclick="openBillPreview()" style="font-size:15px; padding:10px 20px;">👁️ Preview & Save Bill</button>
-        <button class="btn-silver" onclick="triggerUndo()">↩️ Undo</button>
-        <button class="btn-silver" onclick="triggerRedo()">🔁 Redo</button>
-      </div>
-    </div>
-
-    <!-- 2. Customer Ledger Section -->
-    <div id="sectionLedger" class="card hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 style="margin:0;">Customer Ledger & Saved Bills</h3>
-        <button onclick="switchView('mainDashboardMenu')" class="btn-danger">⬅ Back to Menu</button>
-      </div>
-
-      <div style="margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <input type="text" id="searchCust" placeholder="Search customer or bill..." oninput="filterLedger()" style="width:250px;">
-        <button class="btn-primary" onclick="printSelectedTwoBillsOnA4()">🖨️ Print Selected (2 on A4)</button>
-        <button class="btn-danger" onclick="deleteSelectedMarkedBills()">🗑️ Delete Selected</button>
-      </div>
-
-      <table id="ledgerTable">
-        <thead>
-          <tr>
-            <th style="width:40px;"><input type="checkbox" onclick="toggleSelectAllBills(this)"></th>
-            <th>Bill #</th>
-            <th>Customer Name</th>
-            <th>Date</th>
-            <th>Total Amount</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- 3. Rate List Section -->
-    <div id="sectionRateList" class="card hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 style="margin:0;">Official Rate List (15 Items)</h3>
-        <button onclick="switchView('mainDashboardMenu')" class="btn-danger">⬅ Back to Menu</button>
-      </div>
-
-      <!-- Add New Item Form -->
-      <div style="background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <input type="text" id="newItemNameEn" placeholder="English Name" style="flex:1; min-width:140px;">
-        <input type="text" id="newItemNameUr" placeholder="اردو نام" style="flex:1; min-width:120px;">
-        <input type="text" id="newItemCode" placeholder="Item Code" style="width:120px;">
-        <input type="number" id="newItemRate" placeholder="Rate (Rs)" style="width:100px;">
-        <button class="btn-primary" onclick="addNewItem()">Add Item</button>
-      </div>
-
-      <table id="rateListTable">
-        <thead>
-          <tr>
-            <th>Item Name (English / اردو)</th>
-            <th>Code</th>
-            <th>Rate (PKR)</th>
-            <th class="no-print-col" style="width:80px;">Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div style="margin-top:20px;">
-        <button class="btn-gold" onclick="exportRateListJpg()">📥 Share Rate List JPG</button>
-      </div>
-    </div>
-
-    <!-- 4. Stock Section -->
-    <div id="sectionStock" class="card hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 style="margin:0;">Stock Management</h3>
-        <button onclick="switchView('mainDashboardMenu')" class="btn-danger">⬅ Back to Menu</button>
-      </div>
-
-      <table id="stockReportTable">
-        <thead>
-          <tr>
-            <th>Item Name</th>
-            <th>Code</th>
-            <th>Current Stock Qty</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-  </div>
-
-  <!-- Bill Preview & Flexible Print Modal -->
-  <div id="previewModal" class="card hidden" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); width:92%; max-width:680px; z-index:999; max-height:92vh; overflow-y:auto; border:2px solid var(--accent-main);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #ddd; padding-bottom:8px;">
-      <h3 style="margin:0;">Bill Preview & Print Options</h3>
-      <button onclick="closeBillPreview()" class="btn-danger" style="padding:4px 8px;">✕</button>
-    </div>
-
-    <!-- Print Format Options -->
-    <div style="background:#eef2f7; padding:10px; border-radius:6px; margin-bottom:15px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
-      <div>
-        <label style="font-weight:bold;">Print Format:</label>
-        <select id="printFormatSelect" style="padding:5px;">
-          <option value="a4-single">A4 Full Page (Single Bill)</option>
-          <option value="a4-dual-vert" selected>A4 Dual (2 Bills - Vertical Top/Bottom)</option>
-          <option value="a4-dual-horiz">A4 Dual (2 Bills - Horizontal Left/Right)</option>
-          <option value="thermal">Thermal Receipt (80mm)</option>
-        </select>
-      </div>
-    </div>
-
-    <div id="billPrintContent" style="background:#fff; padding:15px; border:1px solid #ccc; border-radius:6px; margin-bottom:15px;"></div>
-    
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn-primary" onclick="executeCustomPrint()" style="padding:10px 20px;">🖨️ Print Now</button>
-      <button class="btn-gold" onclick="repeatCurrentBill()">🔁 Repeat This Bill</button>
-      <button class="btn-silver" onclick="closeBillPreview()">Close Preview</button>
     </div>
   </div>
 
-  <!-- Script Navigation Utility -->
   <script src="app.js"></script>
   <script>
-    function switchView(viewId) {
-      document.getElementById('mainDashboardMenu').classList.add('hidden');
-      document.getElementById('sectionBill').classList.add('hidden');
-      document.getElementById('sectionLedger').classList.add('hidden');
-      document.getElementById('sectionRateList').classList.add('hidden');
-      document.getElementById('sectionStock').classList.add('hidden');
-      document.getElementById('previewModal').classList.add('hidden');
+    let navHistory = ['mainDashboardMenu'];
 
-      document.getElementById(viewId).classList.remove('hidden');
+    function switchView(viewId, pushHistory = true) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden-section'));
+      const target = document.getElementById(viewId);
+      if (target) target.classList.remove('hidden-section');
+      
+      if (pushHistory && navHistory[navHistory.length - 1] !== viewId) {
+        navHistory.push(viewId);
+      }
+
+      if (viewId === 'sectionRateList') renderRateList();
+      if (viewId === 'sectionStock') renderStockTable();
+      if (viewId === 'sectionLedger') renderLedger();
+    }
+
+    function goBackStep() {
+      if (navHistory.length > 1) {
+        navHistory.pop();
+        switchView(navHistory[navHistory.length - 1], false);
+      } else {
+        switchView('mainDashboardMenu', false);
+      }
+    }
+
+    function handleTopMenuSelect(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      if (val === 'exportBackup') exportDataBackup();
+      else if (val === 'importBackup') document.getElementById('importBackupInput').click();
+      else switchView(val);
+      selectEl.value = '';
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker Registered!', reg))
+          .catch(err => console.log('Service Worker Registration Failed:', err));
+      });
     }
   </script>
 </body>
