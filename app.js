@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete & Final app.js (Original + Ledger Dual Print Fixed)
+   REHMA TRADERS - Complete & Final app.js (Restore Default & HD JPG Export Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -51,6 +51,7 @@ function initApp() {
   generateNextBillNumber();
 }
 
+/* ✨ اپڈیٹ شدہ ریستور ڈیفالٹ فنکشن (جو اب بالکل نئی 15 آئٹمز والی لسٹ بحال کرے گا) */
 function confirmResetToDefaultApp() {
   const confirmation = confirm("⚠️ کیا آپ واقعی ریٹ لسٹ اور ایپ کا اسٹرکچر ڈیفالٹ پر ریستور کرنا چاہتے ہیں؟\n\n(نوٹ: آپ کے پرانے کسٹمر بلز اور لیجر کا ڈیٹا 100% محفوظ رہے گا)");
   
@@ -408,118 +409,6 @@ function saveAllLedgerData() {
   alert('All Ledger bills successfully saved!');
 }
 
-/* 🧾 سنگل بل ایچ ٹی ایم ایل جنریٹر */
-function buildSingleBillHtml(bill, exactBillNo) {
-  const customerName = bill.custName || bill.customerName || bill.customer || 'Cash Customer';
-  const phone = bill.custPhone || bill.phone || bill.customerPhone || '';
-  const totalAmount = getBillTotal(bill);
-
-  let itemsHtml = `
-    <div style="border: 0.5px solid #000; padding: 8px; border-radius: 4px; background: #fff; font-family: Arial, sans-serif; height:100%; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between;">
-      <div>
-        <div style="text-align: center; border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 4px;">
-          <h3 style="margin: 0; font-size: 14px; font-weight:800;">REHMA TRADERS</h3>
-          <p style="margin: 0; font-size: 8.5px;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px;">
-          <span><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</span>
-          <span><strong>Bill #:</strong> ${exactBillNo} | <strong>Date:</strong> ${bill.date || '-'}</span>
-        </div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 9px;">
-          <thead>
-            <tr style="background: #f1f5f9;">
-              <th style="padding: 2px; border: 0.5px solid #444;">Sr</th>
-              <th style="padding: 2px; border: 0.5px solid #444; text-align: left;">Item</th>
-              <th style="padding: 2px; border: 0.5px solid #444; text-align: center;">Code</th>
-              <th style="padding: 2px; border: 0.5px solid #444; text-align: center;">Qty</th>
-              <th style="padding: 2px; border: 0.5px solid #444; text-align: right;">Rate</th>
-              <th style="padding: 2px; border: 0.5px solid #444; text-align: right;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-  `;
-
-  let calculatedSubTotal = 0;
-  const itemsList = bill.items || bill.billItems || [];
-  if (Array.isArray(itemsList) && itemsList.length > 0) {
-    itemsList.forEach((item, idx) => {
-      const name = getItemName(item);
-      const code = getItemCode(item);
-      const rate = getItemRate(item);
-      const qty = getItemQty(item);
-      const rowTotal = rate * qty;
-      calculatedSubTotal += rowTotal;
-      itemsHtml += `
-        <tr>
-          <td style="padding: 2px; border: 0.5px solid #444; text-align: center;">${idx + 1}</td>
-          <td style="padding: 2px; border: 0.5px solid #444;">${name}</td>
-          <td style="padding: 2px; border: 0.5px solid #444; text-align: center;">${code}</td>
-          <td style="padding: 2px; border: 0.5px solid #444; text-align: center;">${qty}</td>
-          <td style="padding: 2px; border: 0.5px solid #444; text-align: right;">Rs. ${rate}</td>
-          <td style="padding: 2px; border: 0.5px solid #444; text-align: right;">Rs. ${rowTotal}</td>
-        </tr>
-      `;
-    });
-  }
-
-  const finalNet = totalAmount > 0 ? totalAmount : calculatedSubTotal;
-
-  itemsHtml += `
-          </tbody>
-        </table>
-      </div>
-      <div style="margin-top: 4px; text-align: right; font-size: 10px; font-weight: bold; border-top: 0.5px solid #000; padding-top: 3px;">
-        Grand Total: Rs. ${finalNet}
-      </div>
-    </div>
-  `;
-  return itemsHtml;
-}
-
-/* ✨ لیجر سے دو مختلف کسٹمرز کے بلز ایک ہی A4 صفحے پر پرنٹ کرنا */
-function printSelectedTwoBillsOnA4() {
-  const chks = document.querySelectorAll('.bill-select-chk:checked');
-  if (chks.length !== 2) {
-    alert('براہ کرم لیجر میں سے ایک صفحے پر پرنٹ کرنے کے لیے بالکل دو (2) بل منتخب کریں۔');
-    return;
-  }
-
-  const index1 = parseInt(chks[0].getAttribute('data-index'));
-  const index2 = parseInt(chks[1].getAttribute('data-index'));
-
-  const bill1 = billsHistory[index1];
-  const bill2 = billsHistory[index2];
-
-  const format = prompt("پرنٹ کا لے آؤٹ منتخب کریں:\n1. Vertical (اوپر نیچے - Top/Bottom)\n2. Horizontal (بائیں دائیں - Left/Right)", "1");
-  const isHoriz = (format === "2" || format?.toLowerCase().includes("horiz") || format?.toLowerCase().includes("left"));
-
-  const dualPrintWindow = window.open('', '_blank');
-  dualPrintWindow.document.write(`
-    <html>
-      <head>
-        <title>Dual Bill Print - Rehma Traders</title>
-        <style>
-          @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
-          body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; color: #000; }
-          .a4-container { width: 100%; height: 100vh; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; box-sizing: border-box; }
-          .bill-box { ${isHoriz ? 'width: 48.5%; height: 100%;' : 'width: 100%; height: 48.5%;'} box-sizing: border-box; }
-        </style>
-      </head>
-      <body onload="window.print(); window.close();">
-        <div class="a4-container">
-          <div class="bill-box">
-            ${buildSingleBillHtml(bill1, bill1.billNo || ('INV-' + (1001 + index1)))}
-          </div>
-          <div class="bill-box">
-            ${buildSingleBillHtml(bill2, bill2.billNo || ('INV-' + (1001 + index2)))}
-          </div>
-        </div>
-      </body>
-    </html>
-  `);
-  dualPrintWindow.document.close();
-}
-
 function viewBillDetails(index) {
   const bill = billsHistory[index];
   if (!bill) return;
@@ -534,7 +423,47 @@ function viewBillDetails(index) {
   const totalAmount = getBillTotal(bill);
   const exactBillNo = bill.billNo || ('INV-' + (1001 + index));
 
-  contentDiv.innerHTML = buildSingleBillHtml(bill, exactBillNo);
+  let itemsHtml = `
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${customerName} ${phone ? '(' + phone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${exactBillNo}</span>
+        <span><strong>Date:</strong> ${bill.date || '-'}</span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+  `;
+
+  let calculatedSubTotal = 0;
+  const itemsList = bill.items || bill.billItems || [];
+  if (Array.isArray(itemsList) && itemsList.length > 0) {
+    itemsList.forEach((item, idx) => {
+      const name = getItemName(item);
+      const code = getItemCode(item);
+      const rate = getItemRate(item);
+      const qty = getItemQty(item);
+      const rowTotal = rate * qty;
+      calculatedSubTotal += rowTotal;
+      itemsHtml += `<tr><td>${idx+1}</td><td>${name}</td><td>${code}</td><td>${qty}</td><td>${rate}</td><td>${rowTotal}</td></tr>`;
+    });
+  }
+
+  const finalNet = totalAmount > 0 ? totalAmount : calculatedSubTotal;
+
+  itemsHtml += `
+      </tbody>
+    </table>
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
+      <div>SubTotal: Rs. ${calculatedSubTotal || finalNet}</div>
+      <div><strong>Net Total: Rs. ${finalNet}</strong></div>
+    </div>
+  `;
+
+  contentDiv.innerHTML = itemsHtml;
   const modal = document.getElementById('previewModal');
   if (modal) modal.style.display = 'block';
 }
@@ -645,6 +574,41 @@ function openBillPreview() {
 
   const currentBillNo = document.getElementById('nextBillNo') ? document.getElementById('nextBillNo').innerText : 'INV-1001';
 
+  const contentDiv = document.getElementById('billPrintContent');
+  let itemsHtml = `
+    <div style="text-align:left; border-bottom:0.5px solid #000; padding-bottom:4px; margin-bottom:4px; font-size:10px;">
+      <div><strong>Customer:</strong> ${custName} ${custPhone ? '(' + custPhone + ')' : ''}</div>
+      <div style="display:flex; justify-content:space-between; margin-top:2px;">
+        <span><strong>Bill #:</strong> ${currentBillNo}</span>
+        <span><strong>Date:</strong> ${new Date().toLocaleDateString()}</span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Sr</th><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+  `;
+
+  billItems.forEach((item, idx) => {
+    itemsHtml += `<tr><td>${idx+1}</td><td>${getItemName(item)}</td><td>${getItemCode(item)}</td><td>${getItemQty(item)}</td><td>${getItemRate(item)}</td><td>${getItemRate(item) * getItemQty(item)}</td></tr>`;
+  });
+
+  itemsHtml += `
+      </tbody>
+    </table>
+    <div style="margin-top:6px; text-align:right; font-size:9.5px; line-height:1.2;">
+      <div>SubTotal: Rs. ${subTotal}</div>
+      ${prevBalance ? `<div>Prev Balance: Rs. ${prevBalance}</div>` : ''}
+      ${discount ? `<div>Discount: Rs. ${discount}</div>` : ''}
+      <div><strong>Net Total: Rs. ${netTotal}</strong></div>
+    </div>
+  `;
+
+  if (contentDiv) contentDiv.innerHTML = itemsHtml;
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'block';
+
   const billRecord = {
     billNo: currentBillNo,
     custName: custName,
@@ -653,13 +617,6 @@ function openBillPreview() {
     netTotal: netTotal,
     items: JSON.parse(JSON.stringify(billItems))
   };
-
-  const contentDiv = document.getElementById('billPrintContent');
-  if (contentDiv) contentDiv.innerHTML = buildSingleBillHtml(billRecord, currentBillNo);
-  
-  const modal = document.getElementById('previewModal');
-  if (modal) modal.style.display = 'block';
-
   billsHistory.push(billRecord);
   localStorage.setItem('rehma_bills', JSON.stringify(billsHistory));
   
@@ -672,7 +629,6 @@ function openBillPreview() {
   localStorage.setItem('rehma_ratelist', JSON.stringify(rateList));
   updateDashboardStats();
   generateNextBillNumber();
-  renderLedger();
 }
 
 function closeBillPreview() {
@@ -707,60 +663,27 @@ function printBillPdf() {
   const container = document.getElementById('printableBillContainer');
   if (!container) return;
 
-  const sizeSelect = document.getElementById('paperSizeSelect');
-  const format = sizeSelect ? sizeSelect.value : 'paper-a4';
-
-  const pWin = window.open('', '_blank');
-
-  if (format === 'paper-80mm' || format === 'paper-50mm') {
-    pWin.document.write(`
-      <html>
-        <head><title>Thermal Receipt</title>
-        <style>body { font-family: monospace; width: ${format === 'paper-80mm' ? '72mm' : '48mm'}; margin: 0; padding: 5px; font-size: 10px; }</style>
-        </head>
-        <body onload="window.print(); window.close();">
-          ${container.innerHTML}
-        </body>
-      </html>
-    `);
-  } else if (format === 'paper-a4-dual-vert' || format === 'paper-a4-dual-horiz') {
-    const isHoriz = (format === 'paper-a4-dual-horiz');
-    pWin.document.write(`
-      <html>
-        <head>
-          <title>Dual Bill Print</title>
-          <style>
-            @page { size: A4 ${isHoriz ? 'landscape' : 'portrait'}; margin: 8mm; }
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; color: #000; }
-            .a4-container { width: 100%; height: 100vh; display: flex; flex-direction: ${isHoriz ? 'row' : 'column'}; justify-content: space-between; box-sizing: border-box; }
-            .bill-box { ${isHoriz ? 'width: 48.5%; height: 100%;' : 'width: 100%; height: 48.5%;'} box-sizing: border-box; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-          <div class="a4-container">
-            <div class="bill-box">${container.innerHTML}</div>
-            <div class="bill-box">${container.innerHTML}</div>
-          </div>
-        </body>
-      </html>
-    `);
+  if (window.html2canvas && window.jspdf) {
+    html2canvas(container, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      
+      const pdfBlobUrl = pdf.output('bloburl');
+      const printWindow = window.open(pdfBlobUrl, '_blank');
+      if (printWindow) {
+        printWindow.print();
+      } else {
+        window.print();
+      }
+    });
   } else {
-    pWin.document.write(`
-      <html>
-        <head>
-          <title>A4 Bill Print</title>
-          <style>
-            @page { size: A4; margin: 15mm; }
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff; color: #000; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-          ${container.innerHTML}
-        </body>
-      </html>
-    `);
+    window.print();
   }
-  pWin.document.close();
 }
 
 function shareBillJpgWhatsApp() {
