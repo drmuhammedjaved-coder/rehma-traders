@@ -1,5 +1,5 @@
 /* ==========================================================================
-   REHMA TRADERS - Complete app.js (Auto-Force Load RateList & Backup Fix)
+   REHMA TRADERS - Complete & Final app.js (HD Rate List JPG Export Fixed)
    ========================================================================== */
 
 const defaultRateList = [
@@ -20,7 +20,6 @@ const defaultRateList = [
   { code: '2017447652000', nameEn: 'Pot Holders / Direct', nameUr: 'پاٹ ہولڈر / ڈائریکٹ', rate: 120, stock: 50 }
 ];
 
-// اگر لوکل اسٹوریج خالی ہو یا آئٹمز کم ہوں تو ڈیفالٹ ریٹ لسٹ آٹو لوڈ کرے
 let storedList = JSON.parse(localStorage.getItem('rehma_ratelist'));
 if (!storedList || !Array.isArray(storedList) || storedList.length === 0) {
   storedList = JSON.parse(JSON.stringify(defaultRateList));
@@ -709,17 +708,74 @@ function shareBillJpgWhatsApp() {
   }
 }
 
+/* ✨ فکس شدہ HD ریٹ لسٹ JPG ایکسپورٹ فنکشن (بغیر کسی ڈسٹورشن یا مکسنگ کے) */
 function exportRateListJpg() {
-  const container = document.getElementById('rateListCaptureArea');
-  if (window.html2canvas && container) {
-    html2canvas(container, { scale: 2 }).then(canvas => {
+  // عارضی طور پر ایک پرفیکٹ، صاف اور فکسڈ چوڑائی کا کینوس بیک گراؤنڈ میں بنائیں گے
+  const hiddenCard = document.createElement('div');
+  hiddenCard.style.position = 'fixed';
+  hiddenCard.style.left = '-9999px';
+  hiddenCard.style.top = '0';
+  hiddenCard.style.width = '600px';
+  hiddenCard.style.backgroundColor = '#ffffff';
+  hiddenCard.style.color = '#000000';
+  hiddenCard.style.padding = '20px';
+  hiddenCard.style.boxSizing = 'border-box';
+  hiddenCard.style.fontFamily = 'Arial, sans-serif';
+
+  let tableRowsHtml = '';
+  rateList.forEach((item, index) => {
+    const nameEn = item.nameEn || item.name || '';
+    const nameUr = item.nameUr || '';
+    const rate = getItemRate(item);
+    const code = getItemCode(item);
+    const bgCol = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+
+    tableRowsHtml += `
+      <tr style="background-color: ${bgCol};">
+        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 11px;">${index + 1}</td>
+        <td style="padding: 6px 8px; border: 1px solid #ccc; font-size: 11px;"><strong>${nameEn}</strong> / ${nameUr}</td>
+        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: center; font-size: 10px;">${code !== '-' ? code : ''}</td>
+        <td style="padding: 6px 8px; border: 1px solid #ccc; text-align: right; font-size: 12px; font-weight: bold; color: #002147;">Rs. ${rate}</td>
+      </tr>
+    `;
+  });
+
+  hiddenCard.innerHTML = `
+    <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 12px;">
+      <h2 style="margin: 0; color: #002147; font-size: 20px; text-transform: uppercase;">REHMA TRADERS</h2>
+      <p style="margin: 2px 0; font-size: 11px; color: #555;">Proprietor: Muhammad Javed | 📱 0307-4015100</p>
+      <p style="margin: 4px 0 0 0; font-size: 12px; font-weight: bold; color: #d4af37;">OFFICIAL RATE LIST / آفیشل ریٹ لسٹ</p>
+    </div>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #002147; color: #ffffff;">
+          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">#</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: left; font-size: 11px;">Item Description</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: center; font-size: 11px;">Code</th>
+          <th style="padding: 8px; border: 1px solid #002147; text-align: right; font-size: 11px;">Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRowsHtml}
+      </tbody>
+    </table>
+    <div style="margin-top: 15px; border-top: 1px solid #d4af37; padding-top: 8px; text-align: center; font-size: 10px; color: #666;">
+      <p style="margin: 0; font-weight: bold;">رہما ٹریڈر - معیاری فیبرک مصنوعات</p>
+    </div>
+  `;
+
+  document.body.appendChild(hiddenCard);
+
+  if (window.html2canvas) {
+    html2canvas(hiddenCard, { scale: 2, useCORS: true }).then(canvas => {
+      document.body.removeChild(hiddenCard);
       canvas.toBlob(blob => {
         const file = new File([blob], 'rehma-ratelist.jpg', { type: 'image/jpeg' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           navigator.share({
             files: [file],
             title: 'Rehma Traders Rate List',
-            text: 'Official Rate List'
+            text: 'Official Rate List from Rehma Traders'
           }).catch(err => console.log('Sharing failed', err));
         } else {
           const link = document.createElement('a');
@@ -727,8 +783,14 @@ function exportRateListJpg() {
           link.href = URL.createObjectURL(blob);
           link.click();
         }
-      }, 'image/jpeg', 0.9);
+      }, 'image/jpeg', 0.95);
+    }).catch(err => {
+      document.body.removeChild(hiddenCard);
+      alert('Failed to generate rate list image.');
     });
+  } else {
+    document.body.removeChild(hiddenCard);
+    alert('html2canvas library not loaded.');
   }
 }
 
